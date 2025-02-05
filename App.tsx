@@ -1,15 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import "./global.css"
+import { Text, View } from 'react-native';
+import tw from 'tailwind-react-native-classnames';
 
 export default function App() {
   return (
-    <View className='text-bold '>
-      <Text className='w-50 font-black mt-100'>Opennnn uppppppp App.tsx tttpppo start workipppng on yooour app!</Text>
-      <Text>Opennnn up App.tsx tttpppo start workipppng on yooour app!</Text>
-      <Text style={{ color:"red"}}>Opennnn up App.tsx tttpppo start workipppng on yooour app!</Text>
+    <View style={tw`flex-1 justify-center items-center bg-blue-500`}>
+      <Text style={tw`text-white text-lg`}>Hello Tailwind !</Text>
     </View>
   );
-
 }
+
 
