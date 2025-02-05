@@ -5,6 +5,7 @@ import Login from './login';
 const App = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
+  <Authentication></Authentication>
  <Login></Login> 
   
    
