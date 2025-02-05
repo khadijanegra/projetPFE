@@ -1,12 +1,14 @@
-import { Text, View } from 'react-native';
-import tw from 'tailwind-react-native-classnames';
+import React from 'react';
+import { SafeAreaView } from 'react-native';
+import Authentication from './authefication'; 
 
-export default function App() {
+const App = () => {
   return (
-    <View style={tw`flex-1 justify-center items-center bg-blue-500`}>
-      <Text style={tw`text-white text-lg`}>Hello Tailwind !</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Authentication />
+    </SafeAreaView>
   );
-}
+};
 
+export default App;
 
