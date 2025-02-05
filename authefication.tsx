@@ -50,7 +50,7 @@ const Authentication = () => {
 
       {/* Option d'inscription */}
       <Text style={tw`mt-4 text-center`}>
-        Pas de compte ? <Text style={tw`text-blue-500`}>S'inscrire</Text>
+        Pas de compte ? <Text style={tw`text-red-500`}>S'inscrire</Text>
       </Text>
     </View>
   );
