@@ -52,6 +52,9 @@ const Authentication = () => {
       <Text style={tw`mt-4 text-center`}>
         Pas de compte ? <Text style={tw`text-red-500`}>S'inscrire</Text>
       </Text>
+      <Text style={tw`mt-4 text-center`}>
+        Pas de compte ? <Text style={tw`text-red-500`}>S'inscrire222</Text>
+      </Text>
     </View>
   );
 };
