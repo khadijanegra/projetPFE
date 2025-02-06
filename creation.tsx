@@ -80,12 +80,13 @@ export default function Creation() {
 
   return (
     <SafeAreaView style={tw`flex-1 bg-gray-200 `}>
+      
       <View style={tw`items-center justify-center flex-1 px-6 `}>
         <Text style={tw`mb-6 text-2xl font-bold`}>S'inscrire </Text>
 
         {/* Nom */}
         <View
-          style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}
+          style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full `}
         >
           <Icon name="user" size={20} color="#888" style={tw`mr-2`} />
           <TextInput
