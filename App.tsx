@@ -3,13 +3,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native';
 import Authentication from './authefication';
 import Login from './login';
+import Creation from './creation';
 
 const App = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <Authentication />
-        <Login />
+       <Creation></Creation>
       </SafeAreaView>
     </SafeAreaProvider>
   );
