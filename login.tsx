@@ -4,7 +4,8 @@ import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-react-native-classnames';
 
-export default function Login({}) {
+export default function Login({ navigation }: { navigation: any }) {
+  const goTo = () => navigation.navigate("creation");
   const [checked, setChecked] = React.useState(true);
      const toggleCheckbox = () => setChecked(!checked);
   return (
@@ -37,10 +38,7 @@ export default function Login({}) {
         <TouchableOpacity style={tw`items-center justify-center w-full h-12 max-w-md mb-6 bg-yellow-500 rounded-full`}>
           <Text style={tw`text-lg font-bold text-white`}>Suivant</Text>
         </TouchableOpacity>
-        <Text style={tw`mb-2 text-gray-500`}>Vous n'avez pas encore un compte ?  </Text>
-        <TouchableOpacity style={tw`items-center justify-center w-full h-12 max-w-md mb-6 bg-yellow-500 rounded-full`}>
-          <Text style={tw`text-lg font-bold text-white`}>Créer un compte</Text>
-        </TouchableOpacity>
+        
 
         <Text style={tw`mb-4 text-gray-500`}>ou continuer avec </Text>
 
