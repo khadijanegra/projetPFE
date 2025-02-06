@@ -1,17 +1,13 @@
 import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SafeAreaView } from 'react-native';
-import Authentication from './authefication';
-import Login from './login';
-import Creation from './creation';
+import { NavigationContainer } from "@react-navigation/native";
+import Root from './Root';
+
 
 const App = () => {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-       <Creation></Creation>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <Root />
+    </NavigationContainer>
   );
 };
 
