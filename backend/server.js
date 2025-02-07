@@ -1,54 +1,24 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-
 const app = express();
-const port = 5000;
+const mongoose = require('mongoose');
+const userRoute = require('./routes/user.route');
+mongoose.connect('mongodb://localhost:27017/pfe', { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
 
-// Connecter à MongoDB
-mongoose.connect('mongodb://localhost:27017/pfe', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+const db = mongoose.connection;
 
-// Modèle user
-const userSchema = new mongoose.Schema({
-  nom: String,
-  prenom: String,
-  email: String,
-  password: String,
-  genre:String,
-  role:String,
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+  console.log('Connected to MongoDB');
+  //var collection = db.collection('user');
+  //collection.countDocuments().then(function(err, items) {console.info(err)})
+  //    console.info(collection.find())
+  //    collection.findOne({"prenom": "anis"}, function(err, item) {});
 });
 
-const user = mongoose.model('user', userSchema);
-
-// Route pour créer un nouveau visiteur
-app.post('/api/signup', async (req, res) => {
-  const { nom, prenom, email, password, genre } = req.body;
-
-  try {
-    const newuser = new user({
-      nom,
-      prenom,
-      email,
-      password,
-      genre,
-    });
-
-    await newuser.save();
-    res.status(201).send('Utilisateur créé avec succès');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Erreur de serveur');
-  }
-});
-
-// Démarrer le serveur
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/api', userRoute);
+app.listen(3000, function () {
+  console.log('Server listening on port 3000');
 });
