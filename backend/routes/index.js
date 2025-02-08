@@ -3,6 +3,17 @@ const router = express.Router();
 const User = require('../models/user'); // Assure-toi que tu as un modèle User
 const mongoose = require("mongoose");
 
+router.get('/', async (req, res) => {
+  res.json({ message: 'Hello from Express' });
+});
+
+router.post('/signup', async (req, res) => {
+  const user = await User.create(req.body);
+  if (!user?.id) {
+    res.status(400).json({ message: `User not created.` });
+  }
+  res.json({ message: `User ${user.nom} created.` });
+});
 
 router.get('/users', async (req, res) => {
   const users = await User.find();

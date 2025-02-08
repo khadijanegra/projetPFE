@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
-import axios from "axios"; // Importation d'axios
+import axios from "axios";
 import { RollInLeft } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -24,13 +24,18 @@ export default function Creation() {
       !nom ||
       !prenom ||
       !password ||
-      !localisation ||
-      !genre ||
-      !role
+      !localisation 
     ) {
       seterreur("veuillez entrer les donnees !")
-      Alert.alert("Erreur", "Tous les champs sont requis.");
-      return erreur;
+      // Alert.alert("Erreur", "Tous les champs sont requis.");
+      console.error({
+        localisation,
+        email,
+        nom,
+        prenom,
+        password
+      })
+      return;
     }
 
     // Validation de l'email avec une expression régulière simple
@@ -38,14 +43,14 @@ export default function Creation() {
     if (!emailRegex.test(email)) {
       seterreur("Veuillez entrer un email valide.");
       Alert.alert("Erreur", erreur); // Show the error alert with the message
-      return erreur ; // Stop further processing
+      return ; // Stop further processing
     }
 
     // Validation du mot de passe (par exemple, au moins 6 caractères)
     else if (password.length < 6) {
       seterreur("Veuillez entrer un mot de passe valide.")
       Alert.alert("Erreur",erreur);
-      return erreur;
+      return;
     }
 
     // Données à envoyer
@@ -61,10 +66,7 @@ export default function Creation() {
 
     try {
       // Envoi des données au serveur avec axios
-      const response = await axios.post(
-        "http://192.168.1.63:5000/api/signup",
-        userData
-      );
+      const response = await axios.post("http://localhost:3000/api/signup", userData);
 
       // Vérifier si la réponse est réussie
       if (response.status === 201) {
@@ -82,7 +84,7 @@ export default function Creation() {
     <SafeAreaView style={tw`flex-1 bg-gray-200 `}>
       
       <View style={tw`items-center justify-center flex-1 px-6 `}>
-        <Text style={tw`mb-6 text-2xl font-bold`}>S'inscrire </Text>
+        <Text style={tw`mb-6 text-2xl font-bold`}>S'inscrire</Text>
 
         {/* Nom */}
         <View
@@ -154,10 +156,10 @@ export default function Creation() {
 
         {/* Genre */}
         <View style={tw`flex-row items-center px-4 mb-4 `}>
-          <Text style={tw`mr-4`}>Genre :</Text>
+          {/* <Text style={tw`mr-4`}>Genre :</Text> */}
 
           {/* Homme Radio Button */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={tw`flex-row items-center mr-4`}
             onPress={() => setGenre("homme")}
           >
@@ -167,10 +169,10 @@ export default function Creation() {
               }`}
             />
             <Text style={tw`ml-2`}>Homme</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Femme Radio Button */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={tw`flex-row items-center`}
             onPress={() => setGenre("femme")}
           >
@@ -180,7 +182,7 @@ export default function Creation() {
               }`}
             />
             <Text style={tw`ml-2`}>Femme</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Button Create Account */}

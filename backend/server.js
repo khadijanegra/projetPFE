@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const userRoute = require('./routes/user.route');
+const cors = require('cors');
+const userRoute = require('./routes');
 mongoose.connect('mongodb://localhost:27017/pfe', { useNewUrlParser: true, useUnifiedTopology: true });
-
 
 const db = mongoose.connection;
 
@@ -16,9 +16,11 @@ db.once('open', function () {
   //    collection.findOne({"prenom": "anis"}, function(err, item) {});
 });
 
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', userRoute);
+
 app.listen(3000, function () {
   console.log('Server listening on port 3000');
 });
