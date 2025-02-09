@@ -4,11 +4,11 @@ import * as Animatable from 'react-native-animatable';
 import { View, Text, TouchableOpacity } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import Login from './login';
+import signup from './signup';
 
-
-const Authentication = ({ navigation }: { navigation: any }) => {
+const homepage = ({ navigation }: { navigation: any }) => {
   const goTo = () => navigation.navigate("Login");
-  const GoTO = () => navigation.navigate("creation")
+  const GoTO = () => navigation.navigate("signup")
   return (
     <View style={tw`items-center justify-center flex-1 px-6 bg-gray-200`}>
 
@@ -47,4 +47,4 @@ const Authentication = ({ navigation }: { navigation: any }) => {
   );
 };
 
-export default Authentication;
+export default homepage;

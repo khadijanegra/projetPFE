@@ -6,7 +6,7 @@ import axios from "axios";
 import { RollInLeft } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-export default function Creation() {
+export default function signup() {
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
