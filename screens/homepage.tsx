@@ -1,10 +1,8 @@
 import React from 'react';
-import LottieView from 'lottie-react-native';
 import * as Animatable from 'react-native-animatable';
 import { View, Text, TouchableOpacity } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
-import Login from './login';
-import signup from './signup';
+
 
 const homepage = ({ navigation }: { navigation: any }) => {
   const goTo = () => navigation.navigate("Login");
@@ -12,15 +10,7 @@ const homepage = ({ navigation }: { navigation: any }) => {
   return (
     <View style={tw`items-center justify-center flex-1 px-6 bg-gray-200`}>
 
-      <View style={tw`mb-12 w-60 h-60`}>
-        <LottieView
-          source={require('./assets/animation_logo.json')} // Format JSON
-          autoPlay
-          loop
-          style={tw`flex-1`}
-          speed={1.2}
-        />
-      </View>
+      
 
       <Text style={tw`mb-6 text-2xl font-bold tracking-wide text-center text-black font-cursive`}>
         Bienvenue sur BonPlan
