@@ -6,8 +6,11 @@ import tw from "tailwind-react-native-classnames";
 
 
 
-export default function Password() {
-   
+
+
+  export default function Password() {
+    
+  
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -9,7 +9,7 @@ export default function Login({ navigation }: { navigation: any }) {
   const goTo = () => navigation.navigate("creation");
   const [checked, setChecked] = React.useState(true);
   const toggleCheckbox = () => setChecked(!checked);
-  const go = () => navigation.navigate("Password"); // Respecter la majuscule !
+  const go = () => navigation.navigate("Password");
 
 
 

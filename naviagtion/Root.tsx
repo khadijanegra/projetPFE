@@ -4,7 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import signup from "screens/home/signup";
 import Login from "screens/home/login";
 import homepage from "screens/home/homepage";
-
+import Password from "screens/home/password";
+import AcceuilPage from "screens/acceuilpage";
 
 
 const Stack = createStackNavigator();
@@ -15,6 +16,9 @@ export default function Root() {
       <Stack.Screen name="homepage" component={homepage} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="signup" component={signup} />
+      <Stack.Screen name="Password" component={Password} />
+      <Stack.Screen name="acceuilpage" component={AcceuilPage} />
+
       </Stack.Navigator>
   );
 }
