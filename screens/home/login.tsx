@@ -9,11 +9,12 @@ export default function Login({ navigation }: { navigation: any }) {
   const goTo = () => navigation.navigate("creation");
   const [checked, setChecked] = React.useState(true);
   const toggleCheckbox = () => setChecked(!checked);
-  
-  
+  const go = () => navigation.navigate("Password"); // Respecter la majuscule !
+
+
+
   return (
     <SafeAreaView style={tw`flex-1 p-2 bg-gray-200`}>
-      
       <View style={tw`items-center justify-center flex-1 px-6`}>
         <Text style={tw`mb-6 text-2xl font-bold`}>Se Connecter</Text>
 
@@ -42,6 +43,12 @@ export default function Login({ navigation }: { navigation: any }) {
             // setEmail doit être défini avec useState
           />
         </View>
+
+        <TouchableOpacity onPress={(go) }>
+          <Text style={tw`text-blue-500 mb-4 text-center`}>
+            Mot de passe oublié ?
+          </Text>
+        </TouchableOpacity>
 
         <View style={tw`flex-row items-center mb-3 mr-4`}>
           <CheckBox
