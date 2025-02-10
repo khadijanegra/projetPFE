@@ -3,191 +3,115 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
-import { RollInLeft } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-export default function signup() {
+
+export default function Signup({ navigation }: { navigation: any }) {
+  const goTo = () => navigation.navigate("acceuilpage");
+
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localisation, setLocalisation] = useState("");
-  const [genre, setGenre] = useState("");
-  const [role, setrole] = useState("");
-  const[erreur,seterreur] = useState("")
+  const [erreur, setErreur] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Fonction pour gérer l'inscription
   const handleSubmit = async () => {
-    // Validation des champs
-    if (
-      !email ||
-      !nom ||
-      !prenom ||
-      !password ||
-      !localisation 
-    ) {
-      seterreur("veuillez entrer les donnees !")
-      // Alert.alert("Erreur", "Tous les champs sont requis.");
-      console.error({
-        localisation,
-        email,
-        nom,
-        prenom,
-        password
-      })
-      return;
+    // Vérification des champs obligatoires
+    if (!email || !nom || !prenom || !password || !localisation) {
+      setErreur("Veuillez entrer toutes les données !");
+      return false;
     }
 
-    // Validation de l'email avec une expression régulière simple
+    // Validation de l'email
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
-      seterreur("Veuillez entrer un email valide.");
-      Alert.alert("Erreur", erreur); // Show the error alert with the message
-      return ; // Stop further processing
+      setErreur("Veuillez entrer un email valide.");
+      Alert.alert("Erreur", "Veuillez entrer un email valide.");
+      return false;
     }
 
-    // Validation du mot de passe (par exemple, au moins 6 caractères)
-    else if (password.length < 6) {
-      seterreur("Veuillez entrer un mot de passe valide.")
-      Alert.alert("Erreur",erreur);
-      return;
+    // Validation du mot de passe
+    if (password.length < 6) {
+      setErreur("Le mot de passe doit contenir au moins 6 caractères.");
+      Alert.alert("Erreur", "Le mot de passe doit contenir au moins 6 caractères.");
+      return false;
     }
 
     // Données à envoyer
-    const userData = {
-      nom,
-      prenom,
-      email,
-      password,
-      localisation,
-      genre,
-      role,
-    };
+    const userData = { nom, prenom, email, password, localisation };
 
     try {
-      // Envoi des données au serveur avec axios
+      setIsSubmitting(true);
       const response = await axios.post("http://localhost:3000/api/signup", userData);
 
-      // Vérifier si la réponse est réussie
       if (response.status === 201) {
         Alert.alert("Succès", "Utilisateur créé avec succès");
+        return true; // Succès
       } else {
         Alert.alert("Erreur", "Une erreur est survenue");
+        return false;
       }
     } catch (error) {
       console.error("Erreur lors de la soumission :", error);
       Alert.alert("Erreur", "Problème de connexion au serveur");
+      return false;
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // Fonction qui gère l'inscription et la navigation
+  const handleSignUpAndNavigate = async () => {
+    const success = await handleSubmit(); // Exécute handleSubmit()
+   // if (success) {
+      goTo(); // Redirection si l'inscription réussit
+    //}
+  };
+
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-200 `}>
-      
-      <View style={tw`items-center justify-center flex-1 px-6 `}>
+    <SafeAreaView style={tw`flex-1 bg-gray-200`}>
+      <View style={tw`items-center justify-center flex-1 px-6`}>
         <Text style={tw`mb-6 text-2xl font-bold`}>S'inscrire</Text>
 
         {/* Nom */}
-        <View
-          style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full `}
-        >
+        <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
           <Icon name="user" size={20} color="#888" style={tw`mr-2`} />
-          <TextInput
-            value={nom}
-            onChangeText={setNom}
-            placeholder="Nom"
-            style={tw`flex-1 h-12`}
-          />
+          <TextInput value={nom} onChangeText={setNom} placeholder="Nom" style={tw`flex-1 h-12`} />
         </View>
 
         {/* Prénom */}
-        <View
-          style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}
-        >
+        <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
           <Icon name="user" size={20} color="#888" style={tw`mr-2`} />
-          <TextInput
-            value={prenom}
-            onChangeText={setPrenom}
-            placeholder="Prenom"
-            style={tw`flex-1 h-12`}
-          />
+          <TextInput value={prenom} onChangeText={setPrenom} placeholder="Prénom" style={tw`flex-1 h-12`} />
         </View>
 
         {/* Email */}
-        <View
-          style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}
-        >
-          <Icon name="envelope" size={20} color="#888" style={tw`mr-2`} />{" "}
-          {/* Icône pour email */}
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
-            keyboardType="email-address" // Type de clavier adapté pour un email
-            style={tw`flex-1 h-12`}
-          />
+        <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
+          <Icon name="envelope" size={20} color="#888" style={tw`mr-2`} />
+          <TextInput value={email} onChangeText={setEmail} placeholder="Email" keyboardType="email-address" style={tw`flex-1 h-12`} />
         </View>
 
         {/* Password */}
-        <View
-          style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}
-        >
-          <Icon name="lock" size={20} color="#888" style={tw`mr-2`} />{" "}
-          {/* Icône pour mot de passe */}
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Mot de passe"
-            secureTextEntry={true} // Assure que le mot de passe est masqué
-            style={tw`flex-1 h-12`}
-          />
-        </View>
-        <View
-          style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}
-        >
-          <Icon name="map-marker" size={20} color="#888" style={tw`mr-2`} />{" "}
-          {/* Icône pour localisation */}
-          <TextInput
-            value={localisation}
-            onChangeText={setLocalisation}
-            placeholder="Localisation"
-            style={tw`flex-1 h-12`}
-          />
+        <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
+          <Icon name="lock" size={20} color="#888" style={tw`mr-2`} />
+          <TextInput value={password} onChangeText={setPassword} placeholder="Mot de passe" secureTextEntry={true} style={tw`flex-1 h-12`} />
         </View>
 
-        {/* Genre */}
-        <View style={tw`flex-row items-center px-4 mb-4 `}>
-          {/* <Text style={tw`mr-4`}>Genre :</Text> */}
-
-          {/* Homme Radio Button */}
-          {/* <TouchableOpacity
-            style={tw`flex-row items-center mr-4`}
-            onPress={() => setGenre("homme")}
-          >
-            <View
-              style={tw`w-5 h-5 border-2 border-gray-300 rounded-full ${
-                genre === "homme" ? "bg-blue-500" : ""
-              }`}
-            />
-            <Text style={tw`ml-2`}>Homme</Text>
-          </TouchableOpacity> */}
-
-          {/* Femme Radio Button */}
-          {/* <TouchableOpacity
-            style={tw`flex-row items-center`}
-            onPress={() => setGenre("femme")}
-          >
-            <View
-              style={tw`w-5 h-5 border-2 border-gray-300 rounded-full ${
-                genre === "femme" ? "bg-pink-500" : ""
-              }`}
-            />
-            <Text style={tw`ml-2`}>Femme</Text>
-          </TouchableOpacity> */}
+        {/* Localisation */}
+        <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
+          <Icon name="map-marker" size={20} color="#888" style={tw`mr-2`} />
+          <TextInput value={localisation} onChangeText={setLocalisation} placeholder="Localisation" style={tw`flex-1 h-12`} />
         </View>
 
-        {/* Button Create Account */}
+        {/* Message d'erreur */}
+        {erreur ? <Text style={tw`mb-4 text-red-500`}>{erreur}</Text> : null}
+
+        {/* Bouton Créer */}
         <TouchableOpacity
-          onPress={handleSubmit}
+          onPress={handleSignUpAndNavigate}
           disabled={isSubmitting}
           style={tw`items-center justify-center w-full h-12 mt-2 mb-6 bg-yellow-500 rounded-full`}
         >
