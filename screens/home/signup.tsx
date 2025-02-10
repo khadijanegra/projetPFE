@@ -7,8 +7,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 
 export default function Signup({ navigation }: { navigation: any }) {
-  const goTo = () => navigation.navigate("acceuilpage");
-
+  const goTo = () => {
+    navigation.navigate("acceuilpage");
+  };
+  
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
@@ -16,40 +18,37 @@ export default function Signup({ navigation }: { navigation: any }) {
   const [localisation, setLocalisation] = useState("");
   const [erreur, setErreur] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Fonction pour gérer l'inscription
+  
   const handleSubmit = async () => {
-    // Vérification des champs obligatoires
+    setErreur(""); // Réinitialise les erreurs
+  
     if (!email || !nom || !prenom || !password || !localisation) {
       setErreur("Veuillez entrer toutes les données !");
+      Alert.alert("Erreur", "Veuillez entrer toutes les données !");
       return false;
     }
-
-    // Validation de l'email
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(email)) {
+  
+    if (!/\S+@\S+\.\S+/.test(email)) {
       setErreur("Veuillez entrer un email valide.");
       Alert.alert("Erreur", "Veuillez entrer un email valide.");
       return false;
     }
-
-    // Validation du mot de passe
+  
     if (password.length < 6) {
       setErreur("Le mot de passe doit contenir au moins 6 caractères.");
       Alert.alert("Erreur", "Le mot de passe doit contenir au moins 6 caractères.");
       return false;
     }
-
-    // Données à envoyer
+  
     const userData = { nom, prenom, email, password, localisation };
-
+  
     try {
       setIsSubmitting(true);
       const response = await axios.post("http://localhost:3000/api/signup", userData);
-
+  
       if (response.status === 201) {
         Alert.alert("Succès", "Utilisateur créé avec succès");
-        return true; // Succès
+        return true;
       } else {
         Alert.alert("Erreur", "Une erreur est survenue");
         return false;
@@ -62,13 +61,12 @@ export default function Signup({ navigation }: { navigation: any }) {
       setIsSubmitting(false);
     }
   };
-
-  // Fonction qui gère l'inscription et la navigation
+  
   const handleSignUpAndNavigate = async () => {
-    const success = await handleSubmit(); // Exécute handleSubmit()
-   // if (success) {
-      goTo(); // Redirection si l'inscription réussit
-    //}
+    const isValid = await handleSubmit();
+    if (isValid) {
+      goTo();
+    }
   };
 
   return (
@@ -111,7 +109,7 @@ export default function Signup({ navigation }: { navigation: any }) {
 
         {/* Bouton Créer */}
         <TouchableOpacity
-          onPress={handleSignUpAndNavigate}
+          onPress={goTo}
           disabled={isSubmitting}
           style={tw`items-center justify-center w-full h-12 mt-2 mb-6 bg-yellow-500 rounded-full`}
         >
