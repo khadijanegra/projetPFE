@@ -16,10 +16,7 @@ const homepage = ({ navigation }: { navigation: any }) => {
         Bienvenue sur BonPlan
       </Text>
       
-      <Text style={tw`mb-6 font-bold text-center text-gray-500 text-md`}>
-      Envie de vivre de nouvelles 
-      {"\n"} expériences !
-      </Text>
+      
       <View>
   <Animatable.View>
     <TouchableOpacity style={tw`w-full py-2 mt-5 bg-yellow-400 rounded-full px-14`} onPress={goTo}>
