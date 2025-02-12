@@ -9,13 +9,15 @@ import AcceuilPage from "screens/acceuilpage";
 import maps from "screens/home/maps";
 import getcurrentlocation from "screens/home/getcurrentlocation"
 import Passwordkey from "screens/home/passwordkey";
-
+import userprofile from "screens/home/userprofile"
+import Firstpage from "screens/home/firstpage";
 
 const Stack = createStackNavigator();
 
 export default function Root() {
   return (
     <Stack.Navigator>
+      <Stack.Screen name="firstpage" component={Firstpage}/>
       <Stack.Screen name="homepage" component={homepage} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="signup" component={signup} />
@@ -24,6 +26,7 @@ export default function Root() {
       <Stack.Screen name="maps" component={maps} />
       <Stack.Screen name="getcurrentlocation" component={getcurrentlocation} />
       <Stack.Screen name="passwordkey" component={Passwordkey} />
+      <Stack.Screen name="userprofile" component={userprofile} />
 
       </Stack.Navigator>
   );

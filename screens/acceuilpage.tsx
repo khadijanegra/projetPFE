@@ -10,7 +10,10 @@ import { FontAwesome } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Card, IconButton, Paragraph } from "react-native-paper";
 
-const AcceuilPage = () => {
+const AcceuilPage = ({ navigation }: { navigation: any }) => {
+  const goTo = () => {
+    navigation.navigate("userprofile");
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
@@ -28,37 +31,39 @@ const AcceuilPage = () => {
             <View style={tw`w-2/3 h-full p-4 bg-white shadow-md`}>
               {/* Option Mon Profil */}
               <TouchableOpacity
+              onPress={goTo}
                 style={tw`flex-row items-center p-2 bg-yellow-500 rounded-full`}
               >
                 <Icon name="user" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg font-bold text-black`}>Mon Profil</Text>
+                
               </TouchableOpacity>
 
 
 
               <TouchableOpacity
-                style={tw`flex-row items-center p-2 bg-yellow-500 rounded-full mt-3`}
+                style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
               >
                 <Icon name="plus" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg text-black`}>Créer etablissement</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={tw`flex-row items-center p-2 bg-yellow-500 rounded-full mt-3`}
+                style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
               >
                 <Icon name="heart" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg text-black`}>Favoris</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={tw`flex-row items-center p-2 bg-yellow-500 rounded-full mt-3`}
+                style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
               >
                 <Icon name="star" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg text-black`}>Avis</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={tw`flex-row items-center p-2 bg-yellow-500 rounded-full mt-3`}
+                style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
               >
                 <Icon name="tachometer" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg text-black`}>Dashboard</Text>
