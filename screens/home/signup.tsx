@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
+import Getcurrentlocation from "./getcurrentlocation"
 
 
 export default function Signup({ navigation }: { navigation: any }) {
@@ -97,13 +98,11 @@ export default function Signup({ navigation }: { navigation: any }) {
           <Icon name="lock" size={20} color="#888" style={tw`mr-2`} />
           <TextInput value={password} onChangeText={setPassword} placeholder="Mot de passe" secureTextEntry={true} style={tw`flex-1 h-12`} />
         </View>
-
-        {/* Localisation */}
-        <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
-          <Icon name="map-marker" size={20} color="#888" style={tw`mr-2`} />
-          <TextInput value={localisation} onChangeText={setLocalisation} placeholder="Localisation" style={tw`flex-1 h-12`} />
+        
+        <View>
+          <Getcurrentlocation/>
         </View>
-
+        
         {/* Message d'erreur */}
         {erreur ? <Text style={tw`mb-4 text-red-500`}>{erreur}</Text> : null}
 
@@ -111,7 +110,7 @@ export default function Signup({ navigation }: { navigation: any }) {
         <TouchableOpacity
           onPress={goTo}
           disabled={isSubmitting}
-          style={tw`items-center justify-center w-full h-12 mt-2 mb-6 bg-yellow-500 rounded-full`}
+          style={tw`items-center justify-center w-full h-12 mt-8 mb-6 bg-yellow-500 rounded-full`}
         >
           <Text style={tw`text-lg font-bold text-white`}>
             {isSubmitting ? "Création..." : "Créer"}
