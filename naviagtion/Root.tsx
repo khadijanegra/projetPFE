@@ -6,6 +6,7 @@ import Login from "screens/home/login";
 import homepage from "screens/home/homepage";
 import Password from "screens/home/password";
 import AcceuilPage from "screens/acceuilpage";
+import maps from "screens/home/maps";
 
 
 const Stack = createStackNavigator();
@@ -18,6 +19,7 @@ export default function Root() {
       <Stack.Screen name="signup" component={signup} />
       <Stack.Screen name="Password" component={Password} />
       <Stack.Screen name="acceuilpage" component={AcceuilPage} />
+      <Stack.Screen name="maps" component={maps} />
 
       </Stack.Navigator>
   );

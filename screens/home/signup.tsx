@@ -64,9 +64,9 @@ export default function Signup({ navigation }: { navigation: any }) {
   
   const handleSignUpAndNavigate = async () => {
     const isValid = await handleSubmit();
-    if (isValid) {
+    //if (isValid) {
       goTo();
-    }
+    //}
   };
 
   return (
