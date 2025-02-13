@@ -45,7 +45,7 @@ export default function Signup({ navigation }: { navigation: any }) {
   
     try {
       setIsSubmitting(true);
-      const response = await axios.post("http://localhost:3000/api/signup", userData);
+      const response = await axios.post("http://localhost:3000/user/register", userData);
   
       if (response.status === 201) {
         Alert.alert("Succès", "Utilisateur créé avec succès");
