@@ -11,6 +11,7 @@ import getcurrentlocation from "screens/home/getcurrentlocation"
 import Passwordkey from "screens/home/passwordkey";
 import userprofile from "screens/home/userprofile"
 import Firstpage from "screens/home/firstpage";
+import formshop from "screens/home/formshop"
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default function Root() {
       <Stack.Screen name="getcurrentlocation" component={getcurrentlocation} />
       <Stack.Screen name="passwordkey" component={Passwordkey} />
       <Stack.Screen name="userprofile" component={userprofile} />
+      <Stack.Screen name="formshop" component={formshop} />
 
       </Stack.Navigator>
   );

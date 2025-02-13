@@ -14,7 +14,7 @@ export default function Login({ navigation }: { navigation: any }) {
 
 
   return (
-    <SafeAreaView style={tw`flex-1 p-2 bg-gray-200`}>
+    <SafeAreaView style={tw`flex-1 p-2 bg-yellow-100`}>
       <View style={tw`items-center justify-center flex-1 px-6`}>
         <Text style={tw`mb-6 text-2xl font-bold`}>Se Connecter</Text>
 
@@ -45,7 +45,7 @@ export default function Login({ navigation }: { navigation: any }) {
         </View>
 
         <TouchableOpacity onPress={(go) }>
-          <Text style={tw`text-blue-500 mb-4 text-center`}>
+          <Text style={tw`mb-4 text-center text-blue-500`}>
             Mot de passe oublié ?
           </Text>
         </TouchableOpacity>

@@ -71,7 +71,7 @@ export default function Signup({ navigation }: { navigation: any }) {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-200`}>
+    <SafeAreaView style={tw`flex-1 bg-yellow-100`}>
       <View style={tw`items-center justify-center flex-1 px-6`}>
         <Text style={tw`mb-6 text-2xl font-bold`}>S'inscrire</Text>
 

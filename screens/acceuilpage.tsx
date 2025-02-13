@@ -14,11 +14,14 @@ const AcceuilPage = ({ navigation }: { navigation: any }) => {
   const goTo = () => {
     navigation.navigate("userprofile");
   };
+  const goToshopcree = () => {
+    navigation.navigate("formshop");
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <View style={tw`flex-1`}>
+    <View style={tw`flex-1 bg-yellow-100`}>
       {/* Overlay et Menu */}
       {isOpen && (
         <TouchableWithoutFeedback onPress={() => setIsOpen(false)}>
@@ -43,7 +46,9 @@ const AcceuilPage = ({ navigation }: { navigation: any }) => {
 
               <TouchableOpacity
                 style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
+                onPress={goToshopcree}
               >
+                
                 <Icon name="plus" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg text-black`}>Créer etablissement</Text>
               </TouchableOpacity>
@@ -112,10 +117,10 @@ const AcceuilPage = ({ navigation }: { navigation: any }) => {
       )}
 
       {/* Bouton Menu */}
-      <View style={tw`absolute z-10 top-4 left-4`}>
+      <View style={tw`absolute z-10 top-4 left-4 `}>
         <TouchableOpacity
           onPress={() => setIsOpen(true)}
-          style={tw`flex-row items-center justify-center w-12 h-12 bg-gray-300 rounded-full`}
+          style={tw`flex-row items-center justify-center w-12 h-12 bg-yellow-500 rounded-full`}
         >
           <FontAwesome name="bars" size={20} color="white" />
         </TouchableOpacity>
@@ -123,17 +128,17 @@ const AcceuilPage = ({ navigation }: { navigation: any }) => {
 
       {/* Conteneur des cartes */}
       <View
-        style={tw`flex flex-row justify-center flex-1 p-4 m-1 top-20 right-2`}
+        style={tw`flex flex-row justify-center flex-1 p-4 m-1 bg-yellow-100 top-20 right-2`}
       >
-        <View style={tw`flex-row justify-between w-full`}>
+        <View style={tw`flex-row justify-between w-full `}>
           {/* Première carte */}
           {[1, 2].map((index) => (
-            <View key={index} style={tw`w-6/12 m-1`}>
-              <Card style={tw`shadow-lg`}>
+            <View key={index} style={tw`w-6/12 m-1 shadow-lg`}>
+              <Card style={tw`bg-gray-200 shadow-lg`}>
                 <Card.Title title="Wynwood" subtitle="September 14, 2016" />
                 <Card.Cover
                   source={require("../images/img1.jpg")}
-                  style={tw`w-full h-32`}
+                  style={tw`w-full h-32 `}
                 />
                 <Card.Content>
                   <Paragraph>
@@ -142,7 +147,7 @@ const AcceuilPage = ({ navigation }: { navigation: any }) => {
                   </Paragraph>
                 </Card.Content>
                 <Card.Actions>
-                  <IconButton icon="heart" onPress={() => {}} />
+                  <IconButton icon="heart" onPress={() => {}} style={tw`bg-yellow-400 `} />
                   <IconButton
                     icon={expanded ? "chevron-up" : "chevron-down"}
                     onPress={() => setExpanded(!expanded)}

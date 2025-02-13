@@ -5,16 +5,17 @@ import Getcurrentlocation from "./getcurrentlocation";
 
 const UserProfile = () => {
   const [name, setName] = useState("Joyce Johnson");
-  const [surname, setSurname] = useState("Manager");
-  const [employer, setEmployer] = useState("Food Couriers");
+  const [surname, setSurname] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+
   
   return (
-    <ScrollView style={tw`flex-1 bg-white`} contentContainerStyle={tw`p-4`}>  
-    <View style={tw`flex-1 p-4 bg-white`}>      
+    <ScrollView style={tw`flex-1 bg-yellow-100`} contentContainerStyle={tw`p-4`}>  
+    <View style={tw`flex-1 p-4 `}>      
       {/* Header */}
       <View style={tw`items-center mt-4`}>      
         <Image 
-          source={{ uri: "https://randomuser.me/api/portraits/women/1.jpg" }} 
+          source={require('../../images/Illustration.png')}
           style={tw`w-40 h-40 border-4 border-white rounded-full shadow-lg`}
         />
       </View>
@@ -28,6 +29,7 @@ const UserProfile = () => {
           style={tw`p-4 mt-1 bg-white border border-gray-300 rounded-lg`}
           value={name}
           onChangeText={setName}
+          editable={isEditing}
         />
         </View>
         <View style={tw`p-4 mt-2 bg-gray-100 rounded-lg shadow-lg`}>      
@@ -35,7 +37,8 @@ const UserProfile = () => {
         <TextInput 
           style={tw`p-4 mt-1 bg-white border border-gray-300 rounded-lg`}
           value={name}
-          onChangeText={setName}
+          onChangeText={setSurname}
+          editable={isEditing}
         />
         </View>
       
@@ -52,9 +55,12 @@ const UserProfile = () => {
       </View>
       
       {/* Edit Button */}
-      <TouchableOpacity style={tw`items-center py-3 mt-6 bg-yellow-500 rounded-lg`}>      
-        <Text style={tw`text-lg font-bold text-white`}>Éditer le profil</Text>
-      </TouchableOpacity>
+      <TouchableOpacity 
+          style={tw`items-center py-3 mt-6 ${isEditing ? 'bg-pink-400' : 'bg-yellow-500'} rounded-lg`} 
+          onPress={() => setIsEditing(!isEditing)}
+        >      
+          <Text style={tw`text-lg font-bold text-white`}>{isEditing ? "Enregistrer" : "Éditer le profil"}</Text>
+        </TouchableOpacity>
     </View>
     </ScrollView>
   );
