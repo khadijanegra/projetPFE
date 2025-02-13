@@ -11,7 +11,7 @@ const homepage = ({ navigation }: { navigation: any }) => {
       <View style={tw`items-center mb-12`}>
         <Image
           source={require("../../images/imageee.png")}
-          style={tw`border-4 border-white shadow-lg h-50 w-50`}
+          style={tw`shadow-lg h-50 w-50`}
         />
       </View>
 

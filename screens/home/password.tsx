@@ -15,12 +15,12 @@ export default function Password({ navigation }: { navigation: any }) {
   const [email, setEmail] = useState("");
 
   return (
-    <SafeAreaView style={tw`flex-1 p-4 bg-gray-200`}>
-      <Text style={tw`text-2xl font-bold text-center mb-6`}>
+    <SafeAreaView style={tw`flex-1 p-4 bg-yellow-100`}>
+      <Text style={tw`mb-6 text-2xl font-bold text-center`}>
         Réinitialisation du mot de passe
       </Text>
 
-      <Text style={tw`text text-center mb-4 mr-20`}>
+      <Text style={tw`mb-4 mr-20 text-center text`}>
         Saisissez votre adresse e-mail :
       </Text>
 
