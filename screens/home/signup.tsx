@@ -23,14 +23,14 @@ export default function Signup({ navigation }: { navigation: any }) {
   const handleSubmit = async () => {
     setErreur(""); // Réinitialise les erreurs
   
-    if (!email || !nom || !prenom || !password || !localisation) {
-      setErreur("Veuillez entrer toutes les données !");
-      Alert.alert("Erreur", "Veuillez entrer toutes les données !");
-      return false;
-    }
+    //if (!email || !nom || !prenom || !password || !localisation) {
+      //setErreur("Veuillez entrer toutes les données !");
+      //Alert.alert("Erreur", "Veuillez entrer toutes les données !");
+      //return false;
+  //}
   
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setErreur("Veuillez entrer un email valide.");
+    //if (!/\S+@\S+\.\S+/.test(email)) {
+      /*setErreur("Veuillez entrer un email valide.");
       Alert.alert("Erreur", "Veuillez entrer un email valide.");
       return false;
     }
@@ -39,14 +39,15 @@ export default function Signup({ navigation }: { navigation: any }) {
       setErreur("Le mot de passe doit contenir au moins 6 caractères.");
       Alert.alert("Erreur", "Le mot de passe doit contenir au moins 6 caractères.");
       return false;
-    }
+    }*/
   
     const userData = { nom, prenom, email, password, localisation };
   
     try {
       setIsSubmitting(true);
-      const response = await axios.post("http://localhost:3000/user/register", userData);
-  
+      const response = await axios.post("http://10.0.2.2:3000/user/register", userData);
+      console.log(axios);
+  console.log("***************kha****dijaaaaa**************************************",response);
       if (response.status === 201) {
         Alert.alert("Succès", "Utilisateur créé avec succès");
         return true;
@@ -108,7 +109,7 @@ export default function Signup({ navigation }: { navigation: any }) {
 
         {/* Bouton Créer */}
         <TouchableOpacity
-          onPress={goTo}
+          onPress={handleSignUpAndNavigate}
           disabled={isSubmitting}
           style={tw`items-center justify-center w-full h-12 mt-8 mb-6 bg-yellow-500 rounded-full`}
         >
