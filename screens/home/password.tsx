@@ -1,9 +1,10 @@
 import Icon from "react-native-vector-icons/FontAwesome";
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity,Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native"; // Import navigation
 import tw from "tailwind-react-native-classnames";
+import axios from "axios";
 
 export default function Password({ navigation }: { navigation: any }) {
 
@@ -13,7 +14,22 @@ export default function Password({ navigation }: { navigation: any }) {
   };
 
   const [email, setEmail] = useState("");
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("http://10.0.2.2:3000/user/forgot-password", {
+        email,
+        
+      });
 
+      if (response.data.token) {
+        Alert.alert("Succès", "Connexion réussie !");
+        navigation.navigate("passwordkey"); 
+
+      }
+    } catch (error) {
+      Alert.alert("Erreur", "verify email!");
+    }
+  };
   return (
     <SafeAreaView style={tw`flex-1 p-4 bg-yellow-100`}>
       <Text style={tw`mb-6 text-2xl font-bold text-center`}>
@@ -37,7 +53,7 @@ export default function Password({ navigation }: { navigation: any }) {
 
       <TouchableOpacity
         style={tw`items-center justify-center w-full h-12 bg-yellow-500 rounded-full`}
-        onPress={goo} // Appeler la fonction goo
+        onPress={handleLogin} // Appeler la fonction goo
       >
         <Text style={tw`text-lg font-bold text-white`}>Confirmer</Text>
       </TouchableOpacity>
