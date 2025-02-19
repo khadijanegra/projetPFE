@@ -42,5 +42,6 @@ const homepage = ({ navigation }: { navigation: any }) => {
     </View>
   );
 };
+//khadij nhebekk barchaaaaaaaaaaaaaaaaaaaaaaa
 
 export default homepage;
