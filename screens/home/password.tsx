@@ -9,25 +9,25 @@ import axios from "axios";
 export default function Password({ navigation }: { navigation: any }) {
 
 
-  const goo = () => {
-    navigation.navigate("passwordkey");
-  };
 
   const [email, setEmail] = useState("");
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://10.0.2.2:3000/user/forgot-password", {
         email,
-        
       });
-
-      if (response.data.token) {
-        Alert.alert("Succès", "Connexion réussie !");
+  
+      console.log("Réponse de l'API :", response.data); // Vérifie la structure de la réponse
+  
+      if (response.data.success) { 
+        Alert.alert("Succès", "Un email de réinitialisation a été envoyé !");
+        
+      } else {
         navigation.navigate("passwordkey"); 
-
       }
     } catch (error) {
-      Alert.alert("Erreur", "verify email!");
+      console.error("Erreur Axios :", error); 
+      Alert.alert("Erreur", "Une erreur s'est produite !");
     }
   };
   return (

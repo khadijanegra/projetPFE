@@ -12,6 +12,9 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
   const [modalVisible, setModalVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(300)).current;
 
+  const goTo = () => navigation.navigate("acceuilpage");
+
+
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://10.0.2.2:3000/user/reset-password", {
@@ -19,20 +22,29 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
         code,  
         password 
       });
-
-      if (response.data.token) {
-        console.log("Mot de passe changé avec succès !");
+  
+      console.log("Réponse API :", response.data); // Vérifie ce que l'API renvoie
+  
+      if (response.data.token) {  // Change `token` en `success` si nécessaire
         Alert.alert("Succès", "Votre mot de passe a été réinitialisé !");
-        setModalVisible(true);
+        
+        
+      } else {
+        Alert.alert("Erreur", "Le code est incorrect ou l'email est invalide.");
       }
     } catch (error) {
-      console.error(error);
-      Alert.alert("Erreur", "Le code est incorrect ou l'email est invalide.");
+      console.error("Erreur Axios :", error);
+      //Alert.alert("Erreur", "Une erreur s'est produite !");
+      // badalneha linaaa 5ater maya9ra ken fil catch w ni7na n7ebou naffichiw il model alerte w navigiw 
+      setModalVisible(false);
+        goTo();
     }
   };
-
+  
   // Animation du modal
   useEffect(() => {
+    console.log("Modal Visible:", modalVisible); // Vérifier si modalVisible change
+  
     if (modalVisible) {
       Animated.timing(slideAnim, {
         toValue: 0, 
@@ -43,7 +55,7 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
       slideAnim.setValue(300); 
     }
   }, [modalVisible]);
-
+  
   return (
     <SafeAreaView style={tw`flex-1 p-4 bg-yellow-100`}>
       <Text style={tw`mb-6 text-2xl font-bold text-center`}>
@@ -80,7 +92,9 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
 
       <TouchableOpacity
         style={tw`items-center justify-center w-full h-12 bg-yellow-500 rounded-full`}
-        onPress={handleLogin} // On appelle la fonction de réinitialisation du mot de passe
+         // On appelle la fonction de réinitialisation du mot de passe
+         onPress={() => setModalVisible(true)}
+
       >
         <Text style={tw`text-lg font-bold text-center text-white`}>Confirmer</Text>
       </TouchableOpacity>
@@ -88,10 +102,10 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
       {/* Modal de confirmation */}
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={tw`items-center justify-center flex-1 bg-black bg-opacity-50`}>
-          <View style={tw`items-center p-6 bg-white rounded-lg`}>
+          <View style={tw`items-center p-6 rounded-lg`}>
             <Animated.View
               style={[
-                tw`items-center w-full p-6 bg-white rounded-t-2xl`,
+                tw`items-center w-full p-6 bg-white rounded-2xl`,
                 { transform: [{ translateY: slideAnim }] },
               ]}
             >
@@ -104,7 +118,7 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
               </Text>
               <TouchableOpacity
                 style={tw`p-3 px-6 bg-yellow-400 rounded-xl`}
-                onPress={() => setModalVisible(false)}
+                onPress={handleLogin}
               >
                 <Text style={tw`font-bold text-center text-black-500`}>OK</Text>
               </TouchableOpacity>

@@ -15,7 +15,7 @@ import axios from "axios";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
-const PaymentForm = ( { navigation }: { navigation: any }) => {
+const formshop = ( { navigation }: { navigation: any }) => {
   const goToo = () => {
     navigation.navigate("profileshop");
     setModalVisible(false)
@@ -273,4 +273,4 @@ const PaymentForm = ( { navigation }: { navigation: any }) => {
   );
 };
 
-export default PaymentForm;
+export default formshop;
