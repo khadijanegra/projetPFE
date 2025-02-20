@@ -12,6 +12,7 @@ import Passwordkey from "screens/home/passwordkey";
 import userprofile from "screens/home/userprofile"
 import Firstpage from "screens/home/firstpage";
 import formshop from "screens/home/formshop"
+import Profileshop from "screens/home/profileshop";
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,7 @@ export default function Root() {
       <Stack.Screen name="passwordkey" component={Passwordkey} />
       <Stack.Screen name="userprofile" component={userprofile} />
       <Stack.Screen name="formshop" component={formshop} />
+      <Stack.Screen name="profileshop" component={Profileshop} />
 
       </Stack.Navigator>
   );

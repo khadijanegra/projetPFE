@@ -1,9 +1,26 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, Modal, ScrollView, Animated, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Modal,
+  ScrollView,
+  Animated,
+  Alert,
+} from "react-native";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
-const PaymentForm = () => {
+const PaymentForm = ( { navigation }: { navigation: any }) => {
+  const goToo = () => {
+    navigation.navigate("profileshop");
+    setModalVisible(false)
+  };
+  
   const [modalVisible, setModalVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(300)).current; // Position initiale en bas
 
@@ -20,18 +37,34 @@ const PaymentForm = () => {
   }, [modalVisible]);
 
   // État pour les champs du formulaire
-  const [shop_nom, setShopNom] = useState('');
-  const [shop_desc, setShopDesc] = useState('');
-  const [shop_local, setShopLocal] = useState('');
-  const [shop_date_ouv, setShopDateOuv] = useState('');
-  const [shop_date_frem, setShopDateFrem] = useState('');
-  const [user_id, setUserId] = useState(''); // Assuming user_id is provided from somewhere
-  
+  const [shop_nom, setShopNom] = useState("");
+  const [shop_desc, setShopDesc] = useState("");
+  const [shop_local, setShopLocal] = useState("");
+  const [shop_date_ouv, setShopDateOuv] = useState("");
+  const [shop_date_frem, setShopDateFrem] = useState("");
+  const [user_id, setUserId] = useState("");
+  const [phone, setPhone] = useState("");
+  const [menuImage, setMenuImage] = useState(null);
+
+  const handleImageUpload = () => {
+    // Logique pour sélectionner une image depuis la galerie
+  };
+
   // Soumettre le formulaire
   const handlesubmit = async () => {
-    const shopdata = { shop_nom, shop_desc, shop_local, shop_date_ouv, shop_date_frem, user_id };
+    const shopdata = {
+      shop_nom,
+      shop_desc,
+      shop_local,
+      shop_date_ouv,
+      shop_date_frem,
+      user_id,
+    };
     try {
-      const response = await axios.post("http://10.0.2.2:3000/shops/", shopdata);
+      const response = await axios.post(
+        "http://10.0.2.2:3000/shops/",
+        shopdata
+      );
       if (response.status === 201) {
         Alert.alert("Shop créé avec succès");
         setModalVisible(true); // Afficher le modal de confirmation
@@ -47,88 +80,195 @@ const PaymentForm = () => {
   };
 
   return (
-    <ScrollView style={tw`bg-yellow-100`} contentContainerStyle={tw`p-4`}>
-      <View style={tw`flex-1 p-6 bg-white bg-gray-100 rounded-lg`}>
-        {/* Champ Nom */}
-        <View>
-          <Text style={tw`mb-2 text-lg font-semibold text-gray-900`}>Nom de l'établissement</Text>
-          <TextInput
-            style={tw`p-3 mb-4 text-gray-500 bg-gray-200 rounded-lg`}
-            value={shop_nom}
-            onChangeText={setShopNom}
-            placeholder="Entrez le nom"
-          />
+    <ScrollView style={tw`bg-yellow-200`} contentContainerStyle={tw`p-4`}>
+      <LinearGradient
+        colors={["#F8FAFC", "#F1F5F9"]}
+        style={tw`flex-1 p-6 shadow-lg rounded-3xl`}
+      >
+        {/* En-tête */}
+        <View style={tw`items-center mb-8`}>
+          <Text style={tw`text-3xl font-bold text-black-500`}>
+            Créez votre Shop
+          </Text>
+          <Text style={tw`mt-2 text-gray-600`}>
+            Rejoignez notre communauté de professionnels
+          </Text>
         </View>
 
-        {/* Champ Description */}
-        <View>
-          <Text style={tw`mb-2 text-lg font-semibold text-gray-900`}>Description</Text>
-          <TextInput
-            style={tw`w-full h-32 p-3 text-gray-500 bg-gray-200 rounded-lg`}
-            value={shop_desc}
-            onChangeText={setShopDesc}
-            placeholder="Entrez la description"
-            multiline={true}
-            textAlignVertical="top"
-          />
-        </View>
+        {/* Section Informations de base */}
+        <View style={tw`mb-8`}>
+          <Text style={tw`mb-4 text-xl font-bold text-black-500`}>
+            Informations principales
+          </Text>
 
-        {/* Champ Localisation */}
-        <Text style={tw`mb-2 text-lg font-semibold text-gray-900`}>Localisation URL</Text>
-        <TextInput
-          style={tw`p-3 mb-4 text-gray-500 bg-gray-200 rounded-lg shadow-xxl`}
-          value={shop_local}
-          onChangeText={setShopLocal}
-          placeholder="Entrez l'URL"
-        />
-
-        {/* Dates */}
-        <View style={tw`flex-row justify-between mb-4`}>
-          <View style={tw`w-1/2 pr-2`}>
-            <Text style={tw`mb-2 text-lg font-semibold text-gray-900`}>Date d'ouverture</Text>
+          {/* Nom avec icône */}
+          <View
+            style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
+          >
+            <Ionicons
+              name="business"
+              size={20}
+              color="#212121"
+              style={tw`mr-3`}
+            />
             <TextInput
-              style={tw`p-3 text-gray-500 bg-gray-200 rounded-lg`}
-              value={shop_date_ouv}
-              onChangeText={setShopDateOuv}
-              placeholder="Ex: 10/30"
+              style={tw`flex-1 text-gray-700`}
+              placeholder="Nom de l'établissement"
+              value={shop_nom}
+              onChangeText={setShopNom}
             />
           </View>
-          <View style={tw`w-1/2 pl-2`}>
-            <Text style={tw`mb-2 text-lg font-semibold text-gray-900`}>Date de fermeture</Text>
+
+          {/* Téléphone avec icône */}
+          <View
+            style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
+          >
+            <FontAwesome
+              name="phone"
+              size={20}
+              color="#212121"
+              style={tw`mr-3`}
+            />
             <TextInput
-              style={tw`p-3 text-gray-500 bg-gray-200 rounded-lg`}
-              value={shop_date_frem}
-              onChangeText={setShopDateFrem}
-              placeholder="Ex: 12/31"
+              style={tw`flex-1 text-gray-700`}
+              placeholder="Numéro de téléphone"
+              keyboardType="phone-pad"
+              value={phone}
+              onChangeText={setPhone}
+            />
+          </View>
+
+          {/* Description */}
+          <View style={tw`p-3 bg-white shadow-sm rounded-xl`}>
+            <TextInput
+              style={tw`h-32 text-gray-700`}
+              multiline
+              placeholder="Description détaillée..."
+              value={shop_desc}
+              onChangeText={setShopDesc}
             />
           </View>
         </View>
 
-        {/* Bouton Confirmer */}
-        <TouchableOpacity style={tw`p-4 mt-4 bg-yellow-500 rounded-lg`} onPress={handlesubmit}>
-          <Text style={tw`text-lg font-bold text-center text-white`}>Confirmer</Text>
+        {/* Section Localisation */}
+        <View style={tw`mb-8`}>
+          <Text style={tw`mb-4 text-xl font-bold text-black-500`}>
+            Localisation
+          </Text>
+          <View
+            style={tw`flex-row items-center p-3 bg-white shadow-sm rounded-xl`}
+          >
+            <Ionicons
+              name="location-sharp"
+              size={20}
+              color="#212121"
+              style={tw`mr-3`}
+            />
+            <TextInput
+              style={tw`flex-1 text-gray-700`}
+              placeholder="URL de localisation Google Maps"
+              value={shop_local}
+              onChangeText={setShopLocal}
+            />
+          </View>
+        </View>
+
+        {/* Section Horaires */}
+        <View style={tw`mb-8`}>
+          <Text style={tw`mb-4 text-xl font-bold text-black-500`}>
+            Horaires d'ouverture
+          </Text>
+          <View style={tw`flex-row justify-between`}>
+            <View style={tw`w-1/2 pr-2`}>
+              <View style={tw`p-3 bg-white shadow-sm rounded-xl`}>
+                <Text style={tw`mb-1 text-xs text-gray-500`}>Ouverture</Text>
+                <TextInput
+                  style={tw`text-gray-700`}
+                  placeholder="JJ/MM"
+                  value={shop_date_ouv}
+                  onChangeText={setShopDateOuv}
+                />
+              </View>
+            </View>
+            <View style={tw`w-1/2 pl-2`}>
+              <View style={tw`p-3 bg-white shadow-sm rounded-xl`}>
+                <Text style={tw`mb-1 text-xs text-gray-500`}>Fermeture</Text>
+                <TextInput
+                  style={tw`text-gray-700`}
+                  placeholder="JJ/MM"
+                  value={shop_date_frem}
+                  onChangeText={setShopDateFrem}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Section Menu Photo */}
+        <View style={tw`mb-8`}>
+          <Text style={tw`mb-4 text-xl font-bold text-black-500`}>
+            Menu du restaurant
+          </Text>
+          <TouchableOpacity
+            style={tw`items-center justify-center h-40 bg-white border-2 border-yellow-300 border-dashed rounded-2xl`}
+            onPress={handleImageUpload}
+          >
+            {menuImage ? (
+              <Image
+                source={{ uri: menuImage }}
+                style={tw`w-full h-full rounded-2xl`}
+              />
+            ) : (
+              <>
+                <Ionicons name="cloud-upload" size={40} color="#FBC02D" />
+                <Text style={tw`mt-2 text-blue-600`}>
+                  Télécharger votre menu
+                </Text>
+                <Text style={tw`text-xs text-gray-500`}>Format JPG ou PNG</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {/* Bouton de soumission */}
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <Text
+            style={tw`p-4 text-lg font-bold text-center text-white bg-yellow-400 rounded-xl`}
+          >
+            Valider la création
+          </Text>
         </TouchableOpacity>
 
-        {/* Modal de confirmation */}
         <Modal animationType="fade" transparent={true} visible={modalVisible}>
-          <View style={tw`items-center justify-end flex-1 bg-black bg-opacity-50`}>
+          <View
+            style={tw`items-center justify-end flex-1 bg-black bg-opacity-50`}
+          >
             <Animated.View
               style={[
-                tw`items-center w-full p-6 bg-white rounded-t-2xl`,
+                tw`items-center w-full p-8 bg-white rounded-t-3xl`,
                 { transform: [{ translateY: slideAnim }] },
               ]}
             >
-              <Image source={require('../../images/Illustration.png')} style={tw`w-32 h-32 mb-4`} />
-              <Text style={tw`mb-4 text-lg font-semibold text-center text-gray-900`}>
-                Création enregistrée !{'\n'}Merci pour votre confiance
+              <Image
+                source={require("../../images/Illustration.png")} 
+                style={tw`w-40 h-40 mb-4 rounded-full`}
+              />
+              <Text style={tw`mb-2 text-2xl font-bold text-gray-900`}>
+                Félicitations !
               </Text>
-              <TouchableOpacity style={tw`p-3 px-6 bg-yellow-400 rounded-xl`} onPress={() => setModalVisible(false)}>
-                <Text style={tw`font-bold text-center text-black-500`}>OK</Text>
+              <Text style={tw`mb-6 text-center text-gray-600`}>
+                Votre établissement a été créé avec succès !
+              </Text>
+              <TouchableOpacity
+                style={tw`px-12 py-4 bg-yellow-400 rounded-full`}
+                onPress={goToo}
+              >
+                <Text style={tw`text-xl font-bold text-white`}>Continuer</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
         </Modal>
-      </View>
+      </LinearGradient>
     </ScrollView>
   );
 };
