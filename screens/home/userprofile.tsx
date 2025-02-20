@@ -10,12 +10,12 @@ const UserProfile = (props: any) => {
   const [email, setEmail] = useState("");
   
   const [isEditing, setIsEditing] = useState(false);
-
+/**
   const fetchUserData = useCallback(async () => {
     try {
       const response = await axios.get("http://10.0.2.2:3000/user/users", {
         params: {
-          email: props.route.params.email, // Assurez-vous d'utiliser la bonne propriété de route
+          id: props.route.params.id, // Assurez-vous d'utiliser la bonne propriété de route
         },
       });
 
@@ -29,7 +29,7 @@ const UserProfile = (props: any) => {
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
-  }, [props.route.params.email]); // Utiliser l'ID comme dépendance
+  }, [props.route.params.id]); // Utiliser l'ID comme dépendance
 
   // Exécuter la récupération des données quand l'écran est focalisé
   useFocusEffect(
@@ -37,6 +37,7 @@ const UserProfile = (props: any) => {
       fetchUserData(); 
     }, [fetchUserData]) 
   );
+   */
   return (
     <ScrollView style={tw`flex-1 bg-yellow-100`} contentContainerStyle={tw`p-4`}>
       <View style={tw`flex-1 p-4`}>
