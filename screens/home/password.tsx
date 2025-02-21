@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native"; // Import navigation
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 
-export default function Password({ navigation }: { navigation: any }) {
+export default function Password(props : any) {
 
 
 
@@ -18,12 +18,12 @@ export default function Password({ navigation }: { navigation: any }) {
       });
   
       console.log("Réponse de l'API :", response.data); // Vérifie la structure de la réponse
-  
-      if (response.data.success) { 
+      if (response.data.message=="Verification code sent") { 
         Alert.alert("Succès", "Un email de réinitialisation a été envoyé !");
+        props.navigation.navigate("passwordkey", { email : email}); 
         
       } else {
-        navigation.navigate("passwordkey"); 
+        console.log("erreur !");
       }
     } catch (error) {
       console.error("Erreur Axios :", error); 

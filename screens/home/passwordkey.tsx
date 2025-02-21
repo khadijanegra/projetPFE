@@ -5,27 +5,30 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 
-export default function Passwordkey({ navigation }: { navigation: any }) {
-  const [code, setCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState(""); 
+export default function Passwordkey(props : any) {
+  const [verificationCode, setCode] = useState("");
+  const [newPassword, setPassword] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(300)).current;
 
-  const goTo = () => navigation.navigate("acceuilpage");
 
-
+const goto = () =>{
+  setModalVisible(false);
+  props.navigation.navigate("Login");
+}
+console.log(props.route.params.email);
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://10.0.2.2:3000/user/reset-password", {
-        email, 
-        code,  
-        password 
+        email : props.route.params.email, 
+        verificationCode,  
+        newPassword 
       });
   
       console.log("Réponse API :", response.data); // Vérifie ce que l'API renvoie
-  
-      if (response.data.token) {  // Change `token` en `success` si nécessaire
+      
+      if (response.data.message == "Password reset successfully") {  // Change `token` en `success` si nécessaire
+        setModalVisible(true);
         Alert.alert("Succès", "Votre mot de passe a été réinitialisé !");
         
         
@@ -35,9 +38,7 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
     } catch (error) {
       console.error("Erreur Axios :", error);
       //Alert.alert("Erreur", "Une erreur s'est produite !");
-      // badalneha linaaa 5ater maya9ra ken fil catch w ni7na n7ebou naffichiw il model alerte w navigiw 
-      setModalVisible(false);
-        goTo();
+     
     }
   };
   
@@ -93,10 +94,10 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
       <TouchableOpacity
         style={tw`items-center justify-center w-full h-12 bg-yellow-500 rounded-full`}
          // On appelle la fonction de réinitialisation du mot de passe
-         onPress={() => setModalVisible(true)}
-
+         onPress={handleLogin}
       >
         <Text style={tw`text-lg font-bold text-center text-white`}>Confirmer</Text>
+        
       </TouchableOpacity>
 
       {/* Modal de confirmation */}
@@ -118,7 +119,7 @@ export default function Passwordkey({ navigation }: { navigation: any }) {
               </Text>
               <TouchableOpacity
                 style={tw`p-3 px-6 bg-yellow-400 rounded-xl`}
-                onPress={handleLogin}
+                onPress={goto}
               >
                 <Text style={tw`font-bold text-center text-black-500`}>OK</Text>
               </TouchableOpacity>
