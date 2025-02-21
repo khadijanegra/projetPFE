@@ -5,39 +5,38 @@ import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 
 const UserProfile = (props: any) => {
-  const [name, setName] = useState("Joyce Johnson");
+  const [name, setName] = useState("");
   const [prenom, setPrenom] = useState(""); // Correcte l'état pour prénom
   const [email, setEmail] = useState("");
   
   const [isEditing, setIsEditing] = useState(false);
-/**
+
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get("http://10.0.2.2:3000/user/users", {
-        params: {
-          id: props.route.params.id, // Assurez-vous d'utiliser la bonne propriété de route
-        },
-      });
-
+      const response = await axios.get(`http://10.0.2.2:3000/user/users/${props.route.params.id}`);
+  
       const userData = response.data;
-      
+      console.log(userData);
       // Consommer seulement le nom, prénom et email
-      setName(userData.nom);
+      setName(userData.nom); 
       setPrenom(userData.prenom);
       setEmail(userData.email);
-
+      //console.log(name, prenom, email);
+  
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   }, [props.route.params.id]); // Utiliser l'ID comme dépendance
+  // Utiliser l'ID comme dépendance
 
   // Exécuter la récupération des données quand l'écran est focalisé
   useFocusEffect(
     React.useCallback(() => {
+      console.log("***************"+props.route.params.id+"*******************")
       fetchUserData(); 
     }, [fetchUserData]) 
   );
-   */
+   
   return (
     <ScrollView style={tw`flex-1 bg-yellow-100`} contentContainerStyle={tw`p-4`}>
       <View style={tw`flex-1 p-4`}>

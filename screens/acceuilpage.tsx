@@ -10,12 +10,13 @@ import { FontAwesome } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Card, IconButton, Paragraph } from "react-native-paper";
 
-const AcceuilPage = ({ navigation }: { navigation: any }) => {
+const AcceuilPage = ( props:any) => {
   const goTo = () => {
-    navigation.navigate("userprofile");
+    props.navigation.navigate("userprofile", {id:props.route.params.id});
   };
+  console.log(props.route.params.id);
   const goToshopcree = () => {
-    navigation.navigate("formshop");
+    props.navigation.navigate("formshop");
   };
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);

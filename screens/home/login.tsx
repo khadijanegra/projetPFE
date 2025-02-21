@@ -1,36 +1,46 @@
 import { CheckBox } from "@rneui/themed";
-import React, { useState } from "react";
+import React, { useEffect, useState }  from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
 
-export default function Login({ navigation }: { navigation: any }) {
+export default function Login(props : any) {
   const [checked, setChecked] = useState(true);
   const toggleCheckbox = () => setChecked(!checked);
-  const go = () => navigation.navigate("Password");
+  const go = () => props.navigation.navigate("Password");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [id, setId] = useState('');
 
+  useEffect(() => {
+    console.log("ID mis à jour:", id);
+  }, [id]);
+  
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://10.0.2.2:3000/user/signIn", {
         email,
         password,
       });
-      console.log("Email:", email, "Password:", password);
-
+      console.log("Email:", email, "Password:", password , "id", response.data.id);
+      //setId(response.data.id);
       if (response.data.token) {
-        Alert.alert("Succès", "Connexion réussie !");
-        navigation.navigate("acceuilpage"); 
-
+        setId(response.data.id); // Mettre à jour l'ID d'abord
+  
+        // Attendre la mise à jour de l'état avant de naviguer
+        setTimeout(() => {
+          console.log("Navigating with ID:", response.data.id);
+          props.navigation.navigate("acceuilpage", { id: response.data.id });
+        }, 100); 
       }
     } catch (error) {
       Alert.alert("Erreur", "Email ou mot de passe invalide !");
     }
   };
+  
 
   return (
     <SafeAreaView style={tw`flex-1 p-2 bg-yellow-100`}>
