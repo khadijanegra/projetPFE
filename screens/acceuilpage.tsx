@@ -14,7 +14,6 @@ const AcceuilPage = ( props:any) => {
   const goTo = () => {
     props.navigation.navigate("userprofile", {id:props.route.params.id});
   };
-  console.log(props.route.params.id);
   const goToshopcree = () => {
     props.navigation.navigate("formshop");
   };

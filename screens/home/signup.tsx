@@ -4,12 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Getcurrentlocation from "./getcurrentlocation"
 
 
-export default function Signup({ navigation }: { navigation: any }) {
+export default function Signup(props : any) {
   const goTo = () => {
-    navigation.navigate("acceuilpage");
+    props.navigation.navigate("locationdemand");
   };
   
   const [nom, setNom] = useState("");
@@ -98,10 +97,6 @@ export default function Signup({ navigation }: { navigation: any }) {
         <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
           <Icon name="lock" size={20} color="#888" style={tw`mr-2`} />
           <TextInput value={password} onChangeText={setPassword} placeholder="Mot de passe" secureTextEntry={true} style={tw`flex-1 h-12`} />
-        </View>
-        
-        <View>
-          <Getcurrentlocation/>
         </View>
         
         {/* Message d'erreur */}

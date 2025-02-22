@@ -1,83 +1,140 @@
+// LocationButton.tsx
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
-import tw from "tailwind-react-native-classnames";
+import tw from 'tailwind-react-native-classnames';
 import MapView, { Marker } from 'react-native-maps';
+import Icon from "react-native-vector-icons/FontAwesome";
+import * as Animatable from 'react-native-animatable';
 
-const LocationButton = () => {
+const LocationButton = (props: any) => {
   const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const goto = () => {
+    props.navigation.navigate("acceuilpage")
+  }
 
   const getLocationHandler = async () => {
     try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      setIsLoading(true);
+      // chnit2akdou idha il localisation activee walee 
+      // idha hiya activee ya3nii il status chitkoun granted 
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setErrorMsg("Veuillez Activez la localisation dans les paramètres.");
+        // idha michy granted famma ce message d'erreur
+        setErrorMsg("Veuillez activer la localisation dans les paramètres 🔒");
+        setIsLoading(false);
         return;
       }
-      let location = await Location.getCurrentPositionAsync({});
+// idha il location ma7loulaa donc chnistokiw il location illi l9inehaa linaa fil location variable 
+      const location = await Location.getCurrentPositionAsync({});
+      // ba3ed ma 5dhyna il location chne5dhiu l'attitude w langitude mte3haa bil coords 
       setLocation(location.coords);
       setErrorMsg(null);
+      setIsLoading(false);
+// idha tous ca passe bien chnet3adew lil page d'axcceuil snn hana rekchin 
+      setTimeout(() => {
+        props.navigation.navigate('acceuilpage');
+      }, 3000);
     } catch (error) {
-      setErrorMsg("Erreur lors de la récupération de la localisation.");
+      setErrorMsg("Oops! Une erreur est survenue 🌧️");
+      setIsLoading(false);
     }
   };
 
   return (
-    <View style={tw`items-center p-4`}>
-      {/* bouton bech talla3 il localisation */}
-      <TouchableOpacity 
-        onPress={getLocationHandler} 
-        style={tw`px-6 py-3 mt-4 bg-gray-400 rounded-full`}
+    <View style={tw`items-center flex-1 p-6 bg-yellow-100`}>
+      <Animatable.View 
+        animation="fadeInDown"
+        style={tw`items-center mb-8`}
       >
-        <Text style={tw`font-bold text-white text-md`}>Déterminer ma position</Text>
-      </TouchableOpacity>
-
-      {/*affichage d'un message d'errerur en cas d'erreur */}
-      {errorMsg ? <Text style={tw`mt-2 text-red-500`}>{errorMsg}</Text> : null}
-        {/* affiche mte3 l'attitude w longitude detectee*/}
-      {location && (
-        <Text style={tw`mt-2 text-gray-700`}>
-          Latitude: {location.latitude}, Longitude: {location.longitude}
+        <Text style={tw`mt-8 mb-4 text-2xl font-bold text-center text-black-900`}>
+          Super! On vous localise... 🌐
         </Text>
+        <Text style={tw`text-lg text-center text-gray-700`}>
+          Préparez-vous à découvrir des merveilles près de chez vous!
+        </Text>
+      </Animatable.View>
+
+      <Animatable.View 
+        animation="pulse" 
+        iterationCount="infinite"
+        style={tw`items-center w-full`}
+      >
+        <TouchableOpacity 
+          onPress={getLocationHandler} 
+          disabled={isLoading}
+          style={[
+            tw`flex-row items-center px-8 py-4 bg-yellow-400 rounded-full shadow-lg`,
+            isLoading && tw`opacity-80`
+          ]}
+        >
+          {isLoading ? (
+            <ActivityIndicator color="white" style={tw`mr-2`} />
+          ) : (
+            <Text style={tw`mr-3 text-3xl`}>📍</Text>
+          )}
+          <Text style={tw`text-lg font-bold text-black`}>
+            {isLoading ? 'Recherche en cours...' : 'Détecter ma position'}
+          </Text>
+        </TouchableOpacity>
+      </Animatable.View>
+
+      {errorMsg && (
+        <Animatable.View 
+          animation="shake"
+          style={tw`p-3 mt-4 bg-red-100 rounded-lg`}
+        >
+          <Text style={tw`text-center text-red-600`}>⚠️ {errorMsg}</Text>
+        </Animatable.View>
       )}
 
-      {/* Carte Maps */}
       {location && (
-        <View style={styles.mapContainer}>
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: 0.01, // Zoom plus précis
-              longitudeDelta: 0.01,
-            }}
-          >
-            {/* Marqueur de position */}
-            <Marker
-              coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-              title="Vous êtes ici"
-            />
-          </MapView>
-        </View>
+        <Animatable.View 
+          animation="fadeInUp"
+          style={tw`w-full mt-8`}
+        >
+          <View style={tw`mb-4 `}>
+            <Text style={tw`mb-2 text-lg font-semibold text-center text-blue-900`}>
+              🎯 Votre Position détectée!
+            </Text>
+
+          </View>
+
+          <View style={tw`w-full h-64 overflow-hidden border-2 border-black-200 rounded-2xl`}>
+            <MapView
+              style={tw`w-full h-full`}
+              initialRegion={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}
+            >
+              <Marker
+                coordinate={{ 
+                  latitude: location.latitude, 
+                  longitude: location.longitude 
+                }}
+                title="Vous êtes ici"
+                pinColor="#3b82f6"
+              />
+            </MapView>
+          </View>
+          <View>
+  <TouchableOpacity
+    style={tw`flex-row items-center self-end justify-center px-12 py-4 mt-12 bg-yellow-400 rounded-full`}
+    onPress={goto}
+  >
+    <Icon name="arrow-right" size={25} style={tw`mr-2`} />
+    <Text style={tw`text-xl text-center text-black`}>Next</Text>
+  </TouchableOpacity>
+</View>
+        </Animatable.View>
       )}
     </View>
   );
 };
-// taille mte3 il carte : 
-const styles = StyleSheet.create({
-  mapContainer: {
-    width: '100%',
-    height: 200, 
-    marginTop: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-});
 
 export default LocationButton;

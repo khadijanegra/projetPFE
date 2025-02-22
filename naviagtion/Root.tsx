@@ -13,25 +13,25 @@ import userprofile from "screens/home/userprofile"
 import Firstpage from "screens/home/firstpage";
 import formshop from "screens/home/formshop"
 import Profileshop from "screens/home/profileshop";
+import locationdemand from "screens/home/locationdemand";
 
 const Stack = createStackNavigator();
 
 export default function Root() {
-  return (
+  return ( 
     <Stack.Navigator>
       <Stack.Screen name="firstpage" component={Firstpage}/>
       <Stack.Screen name="homepage" component={homepage} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="signup" component={signup} />
+      <Stack.Screen name="locationdemand" component={locationdemand} />
+      <Stack.Screen name="getcurrentlocation" component={getcurrentlocation} />
       <Stack.Screen name="Password" component={Password} />
       <Stack.Screen name="acceuilpage" component={AcceuilPage} />
-      <Stack.Screen name="maps" component={maps} />
-      <Stack.Screen name="getcurrentlocation" component={getcurrentlocation} />
       <Stack.Screen name="passwordkey" component={Passwordkey} />
       <Stack.Screen name="userprofile" component={userprofile} />
       <Stack.Screen name="formshop" component={formshop} />
       <Stack.Screen name="profileshop" component={Profileshop} />
-
-      </Stack.Navigator>
+      </Stack.Navigator> 
   );
 }
