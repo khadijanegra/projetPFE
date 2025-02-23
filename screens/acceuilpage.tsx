@@ -13,6 +13,7 @@ import { Card, IconButton, Paragraph } from "react-native-paper";
 const AcceuilPage = ( props:any) => {
   const goTo = () => {
     props.navigation.navigate("userprofile", {id:props.route.params.id});
+    // lina il ID jibneh hakka 5ater lina : elle reçoit l'ID passé depuis "login". Cet ID est stocké dans props.route.params 5atrou jeyy min navigation m
   };
   const goToshopcree = () => {
     props.navigation.navigate("formshop");

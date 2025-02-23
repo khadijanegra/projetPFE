@@ -14,7 +14,8 @@ export default function Login(props : any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [id, setId] = useState('');
-
+  //Dans LoginPage, on utilise setId et useEffect parce que l’ID vient de l’API et on veut le stocker avant la navigation. !!! 
+// pour suivre les changement des id 
   useEffect(() => {
     console.log("ID mis à jour:", id);
   }, [id]);
@@ -26,14 +27,17 @@ export default function Login(props : any) {
         password,
       });
       console.log("Email:", email, "Password:", password , "id", response.data.id);
-      //setId(response.data.id);
+      //setId(response.data.id);  
       if (response.data.token) {
-        setId(response.data.id); // Mettre à jour l'ID d'abord
+        // setid => pour mettre a jours l'id apres une appel mte3 il API 
+        setId(response.data.id); 
   
         // Attendre la mise à jour de l'état avant de naviguer
         setTimeout(() => {
-          console.log("Navigating with ID:", response.data.id);
+          console.log("Navigating with ID:", response.data.id); 
+          // linaa il ID jey mil API bidhaa ya3nii ba3ed ma 3ammer il formulaire chyit5la9 il ID mil API bidhaa : heka 3lech sta3malnaa  response.data.id ya3nii mawjoud fi response mte3 il API bidhaa 
           props.navigation.navigate("acceuilpage", { id: response.data.id });
+          // pour passe l'ID lil page illi ba3edha 
         }, 100); 
       }
     } catch (error) {
