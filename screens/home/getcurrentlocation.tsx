@@ -6,6 +6,7 @@ import tw from 'tailwind-react-native-classnames';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as Animatable from 'react-native-animatable';
+import axios from "axios";
 
 const LocationButton = (props: any) => {
   const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
@@ -15,33 +16,50 @@ const LocationButton = (props: any) => {
     props.navigation.navigate("acceuilpage")
   }
 
+
   const getLocationHandler = async () => {
     try {
       setIsLoading(true);
-      // chnit2akdou idha il localisation activee walee 
-      // idha hiya activee ya3nii il status chitkoun granted 
+  
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        // idha michy granted famma ce message d'erreur
         setErrorMsg("Veuillez activer la localisation dans les paramètres 🔒");
         setIsLoading(false);
         return;
       }
-// idha il location ma7loulaa donc chnistokiw il location illi l9inehaa linaa fil location variable 
+  
       const location = await Location.getCurrentPositionAsync({});
-      // ba3ed ma 5dhyna il location chne5dhiu l'attitude w langitude mte3haa bil coords 
       setLocation(location.coords);
       setErrorMsg(null);
+  
+      // 🔥 Envoie la localisation au backend
+      const userId = props.route.params.id; // Remplace par l'ID réel de l'utilisateur
+      console.log("********************************************" + userId);
+      const API_URL = `http://localhost:3000/user/users/${userId}/localisation`;
+  
+      await axios.put(API_URL, {
+        localisation: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }
+      });
+  
+      console.log("Localisation mise à jour avec succès ✅");
+      
       setIsLoading(false);
-// idha tous ca passe bien chnet3adew lil page d'axcceuil snn hana rekchin 
+  
+      // 🔄 Redirection après mise à jour
       setTimeout(() => {
         props.navigation.navigate('acceuilpage');
       }, 3000);
+  
     } catch (error) {
+      console.error("Erreur API:", error);
       setErrorMsg("Oops! Une erreur est survenue 🌧️");
       setIsLoading(false);
     }
   };
+  
 
   return (
     <View style={tw`items-center flex-1 p-6 bg-yellow-100`}>
