@@ -1,16 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-
-export default function Signup(props : any) {
-  const goTo = () => {
-    props.navigation.navigate("locationdemand");
-  };
-  
+export default function Signup(props: any) {
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
@@ -18,37 +13,30 @@ export default function Signup(props : any) {
   const [localisation, setLocalisation] = useState("");
   const [erreur, setErreur] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [id, setId] = useState("");
+
+  // Pour afficher l'ID lorsque la variable `id` est mise à jour
+  useEffect(() => {
+    console.log("ID mis à jour:", id);
+  }, [id]);
+
   const handleSubmit = async () => {
-    setErreur(""); // Réinitialise les erreurs
-  
-    //if (!email || !nom || !prenom || !password || !localisation) {
-      //setErreur("Veuillez entrer toutes les données !");
-      //Alert.alert("Erreur", "Veuillez entrer toutes les données !");
-      //return false;
-  //}
-  
-    //if (!/\S+@\S+\.\S+/.test(email)) {
-      /*setErreur("Veuillez entrer un email valide.");
-      Alert.alert("Erreur", "Veuillez entrer un email valide.");
-      return false;
-    }
-  
-    if (password.length < 6) {
-      setErreur("Le mot de passe doit contenir au moins 6 caractères.");
-      Alert.alert("Erreur", "Le mot de passe doit contenir au moins 6 caractères.");
-      return false;
-    }*/
-  
     const userData = { nom, prenom, email, password, localisation };
-  
+
     try {
       setIsSubmitting(true);
       const response = await axios.post("http://10.0.2.2:3000/user/register", userData);
-      console.log(axios);
-  console.log("***************kha****dijaaaaa**************************************",response);
-      if (response.status === 201) {
+      
+      if (response.data.token) {
+        // Mise à jour de l'ID récupéré de la réponse
+        setId(response.data.id); 
+        const userId = response.data.id;
+        console.log("********************" + userId + "****");
+        console.log("User ID récupéré:", userId);
+        console.log("user created successfullyyy !! " );
+        // Envoie un message de succès à l'utilisateur
         Alert.alert("Succès", "Utilisateur créé avec succès");
+        
         return true;
       } else {
         Alert.alert("Erreur", "Une erreur est survenue");
@@ -62,12 +50,14 @@ export default function Signup(props : any) {
       setIsSubmitting(false);
     }
   };
-  
+
   const handleSignUpAndNavigate = async () => {
     const isValid = await handleSubmit();
-    //if (isValid) {
-      goTo();
-    //}
+    
+    // Si l'inscription est réussie, nous naviguons vers la page de localisation
+    if (isValid && id) {
+      props.navigation.navigate("locationdemand", {id}); // Passe l'ID à la page suivante
+    }
   };
 
   return (
@@ -93,7 +83,7 @@ export default function Signup(props : any) {
           <TextInput value={email} onChangeText={setEmail} placeholder="Email" keyboardType="email-address" style={tw`flex-1 h-12`} />
         </View>
 
-        {/* Password */}
+        {/* Mot de passe */}
         <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
           <Icon name="lock" size={20} color="#888" style={tw`mr-2`} />
           <TextInput value={password} onChangeText={setPassword} placeholder="Mot de passe" secureTextEntry={true} style={tw`flex-1 h-12`} />

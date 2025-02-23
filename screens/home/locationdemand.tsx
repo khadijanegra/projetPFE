@@ -5,6 +5,7 @@ import tw from 'tailwind-react-native-classnames';
 import * as Animatable from 'react-native-animatable';
 
 const LocationDemand = (props: any) => {
+  let id = props.route.params.id;
   return (
     <View style={tw`items-center justify-center flex-1 p-8 bg-yellow-100`}>
       <Animatable.View 
@@ -30,14 +31,15 @@ const LocationDemand = (props: any) => {
         style={tw`items-center w-full`}
       >
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('getcurrentlocation')}
+          onPress={() => props.navigation.navigate('getcurrentlocation',{id})}
           style={tw`px-8 py-4 mb-4 bg-yellow-400 rounded-full shadow-xl`}
         >
           <Text style={tw`text-xl font-bold text-black-500`}>Oui, c'est parti ! 🚀</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('acceuilpage')}
+          onPress={() => props.navigation.navigate('acceuilpage' ,{id})}
+          
           style={tw`px-8 py-4 border-2 border-yellow-400 rounded-full`}
         >
           <Text style={tw`text-lg text-black-500`}>Non merci, plus tard</Text>

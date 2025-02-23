@@ -50,7 +50,7 @@ const LocationButton = (props: any) => {
   
       // 🔄 Redirection après mise à jour
       setTimeout(() => {
-        props.navigation.navigate('acceuilpage');
+        props.navigation.navigate('acceuilpage',{id : userId});
       }, 3000);
   
     } catch (error) {
