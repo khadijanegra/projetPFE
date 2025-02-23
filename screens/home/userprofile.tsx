@@ -14,6 +14,8 @@ const UserProfile = (props: any) => {
   const fetchUserData = useCallback(async () => {
     try {
       const response = await axios.get(`http://10.0.2.2:3000/user/users/${props.route.params.id}`);
+
+      
   
       const userData = response.data;
       console.log(userData);
@@ -36,6 +38,19 @@ const UserProfile = (props: any) => {
       fetchUserData(); 
     }, [fetchUserData]) 
   );
+  const handleSave = async () => {
+    try {
+      await axios.put(`http://10.0.2.2:3000/user/users/${props.route.params.id}/nom`, { nom: name });
+      await axios.put(`http://10.0.2.2:3000/user/users/${props.route.params.id}/prenom`, { prenom: prenom });
+  
+      alert("Modifications enregistrées !");
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour :", error);
+      alert("Une erreur est survenue. Veuillez réessayer.");
+    }
+    setIsEditing(false);
+  };
+  
    
   return (
     <ScrollView style={tw`flex-1 bg-yellow-100`} contentContainerStyle={tw`p-4`}>
@@ -83,13 +98,19 @@ const UserProfile = (props: any) => {
 
         {/* Edit Button */}
         <TouchableOpacity
-          style={tw`items-center py-3 mt-6 ${isEditing ? 'bg-pink-400' : 'bg-yellow-500'} rounded-lg`}
-          onPress={() => setIsEditing(!isEditing)}
-        >
-          <Text style={tw`text-lg font-bold text-white`}>
-            {isEditing ? "Enregistrer" : "Éditer le profil"}
-          </Text>
-        </TouchableOpacity>
+  style={tw`items-center py-3 mt-6 ${isEditing ? 'bg-pink-400' : 'bg-yellow-500'} rounded-lg`}
+  onPress={() => {
+    if (isEditing) {
+      handleSave(); // Enregistrer les modifications
+    } 
+    setIsEditing(!isEditing);
+  }}
+>
+  <Text style={tw`text-lg font-bold text-white`}>
+    {isEditing ? "Enregistrer" : "Éditer le profil"}
+  </Text>
+</TouchableOpacity>
+
       </View>
     </ScrollView>
   );
