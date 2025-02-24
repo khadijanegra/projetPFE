@@ -41,7 +41,7 @@ const formshop = ( props : any) => {
   const [shop_desc, setShopDesc] = useState("");
   const [shop_local, setShopLocal] = useState("");
   const [shop_date_ouv, setShopDateOuv] = useState("");
-  const [shop_date_frem, setShopDateFrem] = useState("");
+  const [shop_date_ferm, setShopDateFrem] = useState("");
   const [user_id, setUserId] = useState("");
   const [phone, setPhone] = useState("");
   const [menuImage, setMenuImage] = useState(null);
@@ -58,7 +58,7 @@ const formshop = ( props : any) => {
       shop_desc,
       shop_local,
       shop_date_ouv,
-      shop_date_frem,
+      shop_date_ferm,
       user_id : props.route.params.id
     };
     try {
@@ -199,7 +199,7 @@ const formshop = ( props : any) => {
                 <TextInput
                   style={tw`text-gray-700`}
                   placeholder="JJ/MM"
-                  value={shop_date_frem}
+                  value={shop_date_ferm}
                   onChangeText={setShopDateFrem}
                 />
               </View>

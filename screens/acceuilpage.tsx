@@ -16,7 +16,7 @@ const AcceuilPage = ( props:any) => {
     // lina il ID jibneh hakka 5ater lina : elle reçoit l'ID passé depuis "login". Cet ID est stocké dans props.route.params 5atrou jeyy min navigation m
   };
   const goToshopcree = () => {
-    props.navigation.navigate("formshop");
+    props.navigation.navigate("formshop" , {id:props.route.params.id});
   };
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
