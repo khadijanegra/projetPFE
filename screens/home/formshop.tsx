@@ -83,7 +83,7 @@ const formshop = ( props : any) => {
   };
 
   return (
-    <ScrollView style={tw`bg-yellow-200`} contentContainerStyle={tw`p-4`}>
+    <ScrollView style={tw`bg-red-100`} contentContainerStyle={tw`p-4`}>
       <LinearGradient
         colors={["#F8FAFC", "#F1F5F9"]}
         style={tw`flex-1 p-6 shadow-lg rounded-3xl`}
@@ -236,7 +236,7 @@ const formshop = ( props : any) => {
         {/* Bouton de soumission */}
         <TouchableOpacity onPress={handlesubmit}>
           <Text
-            style={tw`p-4 text-lg font-bold text-center text-white bg-yellow-400 rounded-xl`}
+            style={tw`p-4 text-lg font-bold text-center text-white bg-red-300 rounded-xl`}
           >
             Valider la création
           </Text>

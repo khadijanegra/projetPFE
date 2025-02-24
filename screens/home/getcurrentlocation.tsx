@@ -1,6 +1,6 @@
 // LocationButton.tsx
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator,Image} from 'react-native';
 import * as Location from 'expo-location';
 import tw from 'tailwind-react-native-classnames';
 import MapView, { Marker } from 'react-native-maps';
@@ -62,7 +62,11 @@ const LocationButton = (props: any) => {
   
 
   return (
-    <View style={tw`items-center flex-1 p-6 bg-yellow-100`}>
+    <View style={tw`items-center flex-1 p-6 bg-red-100`}>
+      <Image 
+          source={require("../../images/getcurrent.png")} // Assurez-vous que le chemin de l'image est correct
+          style={tw`w-30 h-30 mb-6 ml-8 `} 
+        />
       <Animatable.View 
         animation="fadeInDown"
         style={tw`items-center mb-8`}
@@ -84,7 +88,7 @@ const LocationButton = (props: any) => {
           onPress={getLocationHandler} 
           disabled={isLoading}
           style={[
-            tw`flex-row items-center px-8 py-4 bg-yellow-400 rounded-full shadow-lg`,
+            tw`flex-row items-center px-8 py-4 bg-black rounded-full shadow-lg`,
             isLoading && tw`opacity-80`
           ]}
         >
@@ -93,7 +97,7 @@ const LocationButton = (props: any) => {
           ) : (
             <Text style={tw`mr-3 text-3xl`}>📍</Text>
           )}
-          <Text style={tw`text-lg font-bold text-black`}>
+          <Text style={tw`text-lg font-bold text-white`}>
             {isLoading ? 'Recherche en cours...' : 'Détecter ma position'}
           </Text>
         </TouchableOpacity>

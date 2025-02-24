@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert ,Image} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
@@ -53,8 +53,14 @@ export default function Signup(props: any) {
     
     
   return (
-    <SafeAreaView style={tw`flex-1 bg-yellow-100`}>
+    <SafeAreaView style={tw`flex-1 bg-white`}>
+      {/* Image avant le texte d'inscription */}
+      <Image 
+          source={require("../../images/sign.png")} // Assurez-vous que le chemin de l'image est correct
+          style={tw`w-30 h-30 mb-6 ml-8 `} 
+        />
       <View style={tw`items-center justify-center flex-1 px-6`}>
+        
         <Text style={tw`mb-6 text-2xl font-bold`}>S'inscrire</Text>
 
         {/* Nom */}
@@ -88,7 +94,7 @@ export default function Signup(props: any) {
         <TouchableOpacity
           onPress={handleSubmit}
           disabled={isSubmitting}
-          style={tw`items-center justify-center w-full h-12 mt-8 mb-6 bg-yellow-500 rounded-full`}
+          style={tw`items-center justify-center w-full h-12 mt-8 mb-6 bg-black rounded-full`}
         >
           <Text style={tw`text-lg font-bold text-white`}>
             {isSubmitting ? "Création..." : "Créer"}

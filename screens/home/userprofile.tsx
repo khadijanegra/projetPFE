@@ -59,7 +59,7 @@ const UserProfile = (props: any) => {
   
    
   return (
-    <ScrollView style={tw`flex-1 bg-yellow-100`} contentContainerStyle={tw`p-4`}>
+    <ScrollView style={tw`flex-1 bg-red-100`} contentContainerStyle={tw`p-4`}>
       <View style={tw`flex-1 p-4`}>
         {/* Header */}
         <View style={tw`items-center mt-4`}>
@@ -104,7 +104,7 @@ const UserProfile = (props: any) => {
 
         {/* Edit Button */}
         <TouchableOpacity
-  style={tw`items-center py-3 mt-6 ${isEditing ? 'bg-pink-400' : 'bg-yellow-500'} rounded-lg`}
+  style={tw`items-center py-3 mt-2 ${isEditing ? 'bg-pink-400' : 'bg-black'} rounded-lg`}
   onPress={() => {
     if (isEditing) {
       handleSave(); // Enregistrer les modifications

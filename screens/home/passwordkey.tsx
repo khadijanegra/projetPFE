@@ -58,7 +58,11 @@ console.log(props.route.params.email);
   }, [modalVisible]);
   
   return (
-    <SafeAreaView style={tw`flex-1 p-4 bg-yellow-100`}>
+    <SafeAreaView style={tw`flex-1 p-4 bg-red-100`}>
+      <Image 
+          source={require("../../images/homme.png")} // Assurez-vous que le chemin de l'image est correct
+          style={tw`w-30 h-30 mb-6 ml-8 ml-28`} 
+        />
       <Text style={tw`mb-6 text-2xl font-bold text-center`}>
         Réinitialisation du mot de passe
       </Text>
@@ -92,7 +96,7 @@ console.log(props.route.params.email);
       </View>
 
       <TouchableOpacity
-        style={tw`items-center justify-center w-full h-12 bg-yellow-500 rounded-full`}
+        style={tw`items-center justify-center w-full h-12 bg-black rounded-full`}
          // On appelle la fonction de réinitialisation du mot de passe
          onPress={handleLogin}
       >

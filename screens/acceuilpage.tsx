@@ -22,57 +22,57 @@ const AcceuilPage = ( props:any) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <View style={tw`flex-1 bg-yellow-100`}>
+    <View style={tw`flex-1 bg-white`}>
       {/* Overlay et Menu */}
       {isOpen && (
         <TouchableWithoutFeedback onPress={() => setIsOpen(false)}>
           <View
             style={[
               tw`absolute top-0 left-0 w-full h-full`,
-              { backgroundColor: "rgba(202, 194, 194, 0.5)", zIndex: 50 },
+              { backgroundColor: "rgba(187, 181, 181, 0.5)", zIndex: 50 },
             ]}
           >
             <View style={tw`w-2/3 h-full p-4 bg-white shadow-md`}>
               {/* Option Mon Profil */}
               <TouchableOpacity
               onPress={goTo}
-                style={tw`flex-row items-center p-2 bg-yellow-500 rounded-full`}
+                style={tw`flex-row items-center p-2 bg-red-300 rounded-full`}
               >
                 <Icon name="user" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg font-bold text-black`}>Mon Profil</Text>
+                <Text style={tw`text-lg font-bold text-white`}>Mon Profil</Text>
                 
               </TouchableOpacity>
 
 
 
               <TouchableOpacity
-                style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
+                style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
                 onPress={goToshopcree}
               >
                 
                 <Icon name="plus" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-black`}>Créer etablissement</Text>
+                <Text style={tw`text-lg text-white`}>Créer etablissement</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
+                style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
               >
                 <Icon name="heart" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-black`}>Favoris</Text>
+                <Text style={tw`text-lg text-white`}>Favoris</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
+                style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
               >
                 <Icon name="star" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-black`}>Avis</Text>
+                <Text style={tw`text-lg text-white`}>Avis</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={tw`flex-row items-center p-2 mt-3 bg-yellow-500 rounded-full`}
+                style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
               >
                 <Icon name="tachometer" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-black`}>Dashboard</Text>
+                <Text style={tw`text-lg text-white`}>Dashboard</Text>
               </TouchableOpacity>
 
 
@@ -121,7 +121,7 @@ const AcceuilPage = ( props:any) => {
       <View style={tw`absolute z-10 top-4 left-4 `}>
         <TouchableOpacity
           onPress={() => setIsOpen(true)}
-          style={tw`flex-row items-center justify-center w-12 h-12 bg-yellow-500 rounded-full`}
+          style={tw`flex-row items-center justify-center w-12 h-12 bg-red-300 rounded-full`}
         >
           <FontAwesome name="bars" size={20} color="white" />
         </TouchableOpacity>
@@ -129,7 +129,7 @@ const AcceuilPage = ( props:any) => {
 
       {/* Conteneur des cartes */}
       <View
-        style={tw`flex flex-row justify-center flex-1 p-4 m-1 bg-yellow-100 top-20 right-2`}
+        style={tw`flex flex-row justify-center flex-1 p-4 m-1 bg-white top-20 right-2`}
       >
         <View style={tw`flex-row justify-between w-full `}>
           {/* Première carte */}
@@ -148,7 +148,7 @@ const AcceuilPage = ( props:any) => {
                   </Paragraph>
                 </Card.Content>
                 <Card.Actions>
-                  <IconButton icon="heart" onPress={() => {}} style={tw`bg-yellow-400 `} />
+                  <IconButton icon="heart" onPress={() => {}} style={tw`bg-red-300 `} />
                   <IconButton
                     icon={expanded ? "chevron-up" : "chevron-down"}
                     onPress={() => setExpanded(!expanded)}

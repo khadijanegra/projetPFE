@@ -6,7 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/FontAwesome";
 const ProfilShop = () => {
   return (
-    <ScrollView style={tw`bg-gray-50`}>
+    <ScrollView style={tw`bg-red-100`}>
       {/* En-tête avec l'image et les détails */}
       <View style={tw`relative`}>
         <Image
@@ -115,14 +115,14 @@ const ProfilShop = () => {
           </View>
         </View>
         <TouchableOpacity
-  style={tw`ml-40 py-2 mt-3 mb-5 bg-yellow-400 rounded-full w-1/2 flex-row items-center justify-center`}
+  style={tw`ml-40 py-2 mt-3 mb-5 bg-red-300 rounded-full w-1/2 flex-row items-center justify-center`}
 >
   <Icon name="eye" size={20} color="black" style={tw`mr-2`} />
   <Text style={tw`text-lg text-center`}>Voir avis</Text>
 </TouchableOpacity>
 +
         <TouchableOpacity
-          style={tw`w-full py-2  mb-5 bg-yellow-400 rounded-full px-14 flex-row items-center justify-center`}
+          style={tw`w-full py-2  mb-5 bg-red-300 rounded-full px-14 flex-row items-center justify-center`}
         >
           <Icon name="comment" size={20} color="black" style={tw`mr-2`} />
           <Text style={tw`text-lg text-center font-bold`}>

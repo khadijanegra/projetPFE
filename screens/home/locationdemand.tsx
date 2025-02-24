@@ -8,14 +8,14 @@ const LocationDemand = (props: any) => {
   let id = props.route.params.id;
   console.log(id);
   return (
-    <View style={tw`items-center justify-center flex-1 p-8 bg-yellow-100`}>
+    <View style={tw`items-center justify-center flex-1 p-8 bg-red-100`}>
       <Animatable.View 
         animation="bounceIn" 
         duration={2000}
         style={tw`items-center mb-10`}
       >
         <Image
-          source={require("../../images/imageee.png")}
+          source={require("../../images/demandeloc.png")}
           style={tw`w-64 h-64 mb-8`}
         />
         <Text style={tw`mb-4 text-3xl font-bold text-center text-black-200`}>
@@ -33,15 +33,15 @@ const LocationDemand = (props: any) => {
       >
         <TouchableOpacity
           onPress={() => props.navigation.navigate('getcurrentlocation',{id})}
-          style={tw`px-8 py-4 mb-4 bg-yellow-400 rounded-full shadow-xl`}
+          style={tw`px-8 py-4 mb-4 bg-black rounded-full shadow-xl`}
         >
-          <Text style={tw`text-xl font-bold text-black-500`}>Oui, c'est parti ! 🚀</Text>
+          <Text style={tw`text-xl font-bold text-white`}>Oui, c'est parti ! 🚀</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => props.navigation.navigate('acceuilpage' ,{id})}
           
-          style={tw`px-8 py-4 border-2 border-yellow-400 rounded-full`}
+          style={tw`px-8 py-4 border-2 border-red-300 rounded-full`}
         >
           <Text style={tw`text-lg text-black-500`}>Non merci, plus tard</Text>
         </TouchableOpacity>

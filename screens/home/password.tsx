@@ -1,6 +1,6 @@
 import Icon from "react-native-vector-icons/FontAwesome";
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity,Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity,Alert,Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native"; // Import navigation
 import tw from "tailwind-react-native-classnames";
@@ -31,7 +31,11 @@ export default function Password(props : any) {
     }
   };
   return (
-    <SafeAreaView style={tw`flex-1 p-4 bg-yellow-100`}>
+    <SafeAreaView style={tw`flex-1 p-4 bg-red-100`}>
+      <Image 
+          source={require("../../images/femme.png")} // Assurez-vous que le chemin de l'image est correct
+          style={tw`w-30 h-30 mb-6 ml-40 `} 
+        />
       <Text style={tw`mb-6 text-2xl font-bold text-center`}>
         Réinitialisation du mot de passe
       </Text>
@@ -52,7 +56,7 @@ export default function Password(props : any) {
       </View>
 
       <TouchableOpacity
-        style={tw`items-center justify-center w-full h-12 bg-yellow-500 rounded-full`}
+        style={tw`items-center justify-center w-full h-12 bg-black rounded-full mt-6`}
         onPress={handleLogin} // Appeler la fonction goo
       >
         <Text style={tw`text-lg font-bold text-white`}>Confirmer</Text>

@@ -47,7 +47,11 @@ export default function Login(props : any) {
   
 
   return (
-    <SafeAreaView style={tw`flex-1 p-2 bg-yellow-100`}>
+    <SafeAreaView style={tw`flex-1 p-2 bg-white`}>
+      <Image 
+          source={require("../../images/signup.png")} // Assurez-vous que le chemin de l'image est correct
+          style={tw`w-30 h-30 mb-6 ml-8 `} 
+        />
       <View style={tw`items-center justify-center flex-1 px-6`}>
         <Text style={tw`mb-6 text-2xl font-bold`}>Se Connecter</Text>
 
@@ -86,7 +90,7 @@ export default function Login(props : any) {
 
         {/* Bouton Suivant */}
         <TouchableOpacity
-          style={tw`items-center justify-center w-full h-12 max-w-md mb-6 bg-yellow-500 rounded-full`}
+          style={tw`items-center justify-center w-full h-12 max-w-md mb-6 bg-black rounded-full`}
           onPress={handleLogin}
         >
           <Text style={tw`text-lg font-bold text-white`}>Se Connecter</Text>

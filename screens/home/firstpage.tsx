@@ -1,34 +1,49 @@
 import React from "react";
-import { TouchableOpacity, Text, ImageBackground, View } from "react-native";
+import { TouchableOpacity, Text, Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 // Firstpage Component
 export default function Firstpage({ navigation }: { navigation: any }) {
-
-  const gooo = () => {
+  const goToHome = () => {
     navigation.navigate("homepage");
   };
 
   return (
-    <ImageBackground
-      source={require('../../images/first.png')} // Assure-toi que ce chemin est correct
-      style={tw`flex-1 justify-center items-center`} // L'image couvre toute la page
-    >
-      <SafeAreaView style={tw`flex-1 justify-end items-center pb-10`}>
-      <Text style={tw`text-lg  text-gray-500 items-center justify-center  text-center font-bold `}>Envie de découvrir les meilleurs bons plans ? {'\n'} </Text>
-      <Text style={tw`text-lg text-gray-500 mb-12 `}>Explore , partage et donne ton avis !</Text>
+    <SafeAreaView style={tw`flex-1 bg-white`}>
+      {/* Grande image en haut */}
+      <Image
+        source={require("../../images/firsst.png")} // Vérifie le chemin
+        style={tw`w-full h-2/3`}
+        resizeMode="contain"
+      />
+
+      {/* Icon de localisation centré */}
+      <View style={tw`items-center `}>
+        <Image
+          source={require("../../images/loc.png")} // Vérifie le chemin
+          style={tw`w-12 h-12`} // Ajuste la taille de l'icône
+          resizeMode="contain"
+        />
+      </View>
+
+      {/* Texte en dessous */}
+      <View style={tw`items-center mt-2`}>
+        <Text style={tw`text-xl text-black font-bold`}>BON PLAN </Text>
+        <Text style={tw`text-gray-500 mt-1`}>Découvrez tous les lieux autour de vous</Text>
+      </View>
+
+      {/* Bouton Next */}
+      <View style={tw`flex-1 justify-end items-center pb-10`}>
         <TouchableOpacity
-          style={tw`bg-yellow-400 rounded-full px-6 h-12 flex-row items-center ml-40 `} // Flex pour aligner le texte et l'icône
-          onPress={gooo} // Appeler la fonction goo
+          style={tw`bg-black rounded-full px-6 py-3 flex-row items-center`}
+          onPress={goToHome}
         >
-          {/* Container pour l'icône et le texte */}
-          <Icon name="arrow-right" size={20} style={tw`mr-2`} />
-          <Text style={tw`text-lg  text-black`}>Next</Text>
+          <Text style={tw`text-lg text-white mr-2`}>Next</Text>
+          <Icon name="arrow-right" size={20} color="white" />
         </TouchableOpacity>
-      </SafeAreaView>
-    </ImageBackground>
+      </View>
+    </SafeAreaView>
   );
 }
-
