@@ -1,6 +1,6 @@
 // LocationButton.tsx
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator,Image} from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator,Image,ScrollView} from 'react-native';
 import * as Location from 'expo-location';
 import tw from 'tailwind-react-native-classnames';
 import MapView, { Marker } from 'react-native-maps';
@@ -62,10 +62,11 @@ const LocationButton = (props: any) => {
   
 
   return (
+    <ScrollView style={tw`bg-red-100`}>
     <View style={tw`items-center flex-1 p-6 bg-red-100`}>
       <Image 
           source={require("../../images/getcurrent.png")} // Assurez-vous que le chemin de l'image est correct
-          style={tw`w-30 h-30 mb-6 ml-8 `} 
+          style={tw`mb-6 ml-8 w-30 h-30 `} 
         />
       <Animatable.View 
         animation="fadeInDown"
@@ -156,6 +157,7 @@ const LocationButton = (props: any) => {
         </Animatable.View>
       )}
     </View>
+    </ScrollView>
   );
 };
 
