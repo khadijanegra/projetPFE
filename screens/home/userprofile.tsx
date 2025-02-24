@@ -11,6 +11,10 @@ const UserProfile = (props: any) => {
   
   const [isEditing, setIsEditing] = useState(false);
 
+
+
+  //bech nchouf se3a 9bal el fetch andy les donnes edhouma wala leeeee 
+  console.log("ID utilisateur reçu :", props.route.params.id);
   const fetchUserData = useCallback(async () => {
     try {
       const response = await axios.get(`http://10.0.2.2:3000/user/users/${props.route.params.id}`);
@@ -39,7 +43,9 @@ const UserProfile = (props: any) => {
     }, [fetchUserData]) 
   );
   const handleSave = async () => {
+
     try {
+      console.log("Données envoyées :", { nom: name }, { prenom: prenom });
       await axios.put(`http://10.0.2.2:3000/user/users/${props.route.params.id}/nom`, { nom: name });
       await axios.put(`http://10.0.2.2:3000/user/users/${props.route.params.id}/prenom`, { prenom: prenom });
   
