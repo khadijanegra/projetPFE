@@ -15,10 +15,10 @@ import axios from "axios";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
-const formshop = ( { navigation }: { navigation: any }) => {
+const formshop = ( props : any) => {
   const goToo = () => {
-    navigation.navigate("profileshop");
-    setModalVisible(false)
+    setModalVisible(false);
+    props.navigation.navigate("profileshop");
   };
   
   const [modalVisible, setModalVisible] = useState(false);
@@ -54,11 +54,12 @@ const formshop = ( { navigation }: { navigation: any }) => {
   const handlesubmit = async () => {
     const shopdata = {
       shop_nom,
+      phone,
       shop_desc,
       shop_local,
       shop_date_ouv,
       shop_date_frem,
-      user_id,
+      user_id : props.route.params.id
     };
     try {
       const response = await axios.post(
@@ -67,10 +68,12 @@ const formshop = ( { navigation }: { navigation: any }) => {
       );
       if (response.status === 201) {
         Alert.alert("Shop créé avec succès");
+        console.log("shop a etait cree avce succee "+ user_id)
         setModalVisible(true); // Afficher le modal de confirmation
         return true;
       } else {
         Alert.alert("Erreur lors de la création de votre Shop");
+        console.log("erreur dans la creation de shop ")
         return false;
       }
     } catch (error) {
@@ -231,7 +234,7 @@ const formshop = ( { navigation }: { navigation: any }) => {
         </View>
 
         {/* Bouton de soumission */}
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <TouchableOpacity onPress={handlesubmit}>
           <Text
             style={tw`p-4 text-lg font-bold text-center text-white bg-yellow-400 rounded-xl`}
           >
