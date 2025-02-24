@@ -6,6 +6,7 @@ import * as Animatable from 'react-native-animatable';
 
 const LocationDemand = (props: any) => {
   let id = props.route.params.id;
+  console.log(id);
   return (
     <View style={tw`items-center justify-center flex-1 p-8 bg-yellow-100`}>
       <Animatable.View 

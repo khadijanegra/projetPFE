@@ -29,11 +29,9 @@ export default function Signup(props: any) {
       
       if (response.data.token) {
         // Mise à jour de l'ID récupéré de la réponse
-        setId(response.data.id); 
         const userId = response.data.id;
-        console.log("********************" + userId + "****");
         console.log("User ID récupéré:", userId);
-        console.log("user created successfullyyy !! " );
+        props.navigation.navigate("locationdemand",{id :userId} ); // Passe l'ID à la page suivante
         // Envoie un message de succès à l'utilisateur
         Alert.alert("Succès", "Utilisateur créé avec succès");
         
@@ -51,15 +49,9 @@ export default function Signup(props: any) {
     }
   };
 
-  const handleSignUpAndNavigate = async () => {
-    const isValid = await handleSubmit();
-    
-    // Si l'inscription est réussie, nous naviguons vers la page de localisation
-    if (isValid && id) {
-      props.navigation.navigate("locationdemand", {id}); // Passe l'ID à la page suivante
-    }
-  };
 
+    
+    
   return (
     <SafeAreaView style={tw`flex-1 bg-yellow-100`}>
       <View style={tw`items-center justify-center flex-1 px-6`}>
@@ -94,7 +86,7 @@ export default function Signup(props: any) {
 
         {/* Bouton Créer */}
         <TouchableOpacity
-          onPress={handleSignUpAndNavigate}
+          onPress={handleSubmit}
           disabled={isSubmitting}
           style={tw`items-center justify-center w-full h-12 mt-8 mb-6 bg-yellow-500 rounded-full`}
         >
