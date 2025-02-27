@@ -17,16 +17,14 @@ const ProfilShop = (props : any) => {
   const [shop_date_ouv, setShopDateOuve] = useState("");
   const [phone, setPhone] = useState("")
   const [loading, setLoading] = useState(true);
-const [error, setError] = useState(false);
+  const [error, setError] = useState(false);
 
-  const shopId = props.route.params.shopId;
-  ;
-  console.log("ID de shop *** reçu :", shopId);
+  const shopdata = props.route.params.shopData;
+  console.log("ID de shop *** reçu :", shopdata._id);
   const fetchShopData = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://10.0.2.2:3000/shops/${shopId}`);
-      const shopdata = response.data;
+      const response = await axios.get(`http://10.0.2.2:3000/shops/${shopdata._id}`);
       setShop_nom(shopdata.shop_nom);
       setShop_desc(shopdata.shop_desc);
       setShopLocal(shopdata.shop_local);
@@ -38,12 +36,11 @@ const [error, setError] = useState(false);
       setError(true);
       console.error("Error fetching user data:", error);
     }
-  }, [shopId]);
+  }, [shopdata]);
 
   // Exécuter la récupération des données quand l'écran est focalisé
   useFocusEffect(
     React.useCallback(() => {
-      console.log("***************"+shopId+"*******************")
       fetchShopData(); 
     }, [fetchShopData]) 
   );

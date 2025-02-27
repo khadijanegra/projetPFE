@@ -44,6 +44,10 @@ const AcceuilPage = (props: any) => {
     props.navigation.navigate("formshop", { id: props.route.params.id });
   };
 
+  const goToprofileshop = (shop: any) => {
+    props.navigation.navigate("profileshop", { shopData: shop }); // il shopData howa mot clee illi najmou naccediw behaa fil page illi ba3edhaa  // shop hiya il objet illi fih il contenu lkolll mte3 il shop
+  };
+
   return (
     <View style={tw`flex-1 bg-white`}>
       {isMenuOpen && (
@@ -130,90 +134,103 @@ const AcceuilPage = (props: any) => {
         <View style={tw`flex-row flex-wrap justify-between`}>
           {shopsData.map((shop, index) => (
             <View key={shop.id} style={tw`w-1/2 px-2 mb-4`}>
-              <Card style={tw`overflow-hidden bg-white rounded-lg shadow-md`}>
-                {/* Badge d'état */}
-                <View
-                  style={tw`absolute z-10 px-2 py-1 bg-red-300 rounded-full top-2 right-2`}
-                >
-                  <Text style={tw`text-xs font-bold text-white`}>OPEN</Text>
-                </View>
-
-                {/* Image */}
-                <Card.Cover
-                  source={{
-                    uri: "https://media.istockphoto.com/id/1175851148/vector/kawaii-coffee-cup-character-in-meditate-pose.jpg?s=612x612&w=0&k=20&c=6xn41fxI3T2_TIsRzZg0b6fmc2riNLN3JpS_7802ba8=",
-                  }}
-                  style={tw`w-full h-40`}
-                />
-
-                {/* Contenu principal */}
-                <Card.Content style={tw`pt-3`}>
-                  <View style={tw`flex-row items-center justify-between mb-2`}>
-                    <Text style={tw`flex-1 text-lg font-bold text-gray-800`}>
-                      {shop.shop_nom}
-                    </Text>
-                    <Icon name="map-marker" size={16} color="#F56565" />
-                  </View>
-
-                  <View style={tw`flex-row items-center mb-2`}>
-                    <Icon
-                      name="clock-o"
-                      size={14}
-                      color="#718096"
-                      style={tw`mr-2`}
-                    />
-                    <Text style={tw`text-sm text-gray-600`}>
-                      {shop.shop_date_ouv} - {shop.shop_date_ferm}
-                    </Text>
-                  </View>
-
+              <TouchableOpacity onPress={() => goToprofileshop(shop)}>
+                <Card style={tw`overflow-hidden bg-white rounded-lg shadow-md`}>
+                  {/* Badge d'état */}
                   <View
-                    style={tw`flex-row items-center self-start px-2 py-1 rounded-full bg-red-50`}
+                    style={tw`absolute z-10 px-2 py-1 bg-red-300 rounded-full top-2 right-2`}
                   >
-                    <Text style={tw`mr-1 text-sm text-yellow-400`}>★★★★★</Text>
-                    <Text style={tw`text-sm font-bold text-red-300`}>4.9</Text>
+                    <Text style={tw`text-xs font-bold text-white`}>OPEN</Text>
                   </View>
-                </Card.Content>
 
-                {/* Actions */}
-                <Card.Actions style={tw`justify-between px-4 pb-3`}>
-                  <TouchableOpacity
-                    style={tw`p-2 bg-red-100 rounded-full`}
-                    onPress={() => {
-                      /* Gérer les favoris */
+                  {/* Image */}
+                  <Card.Cover
+                    source={{
+                      uri: "https://media.istockphoto.com/id/1175851148/vector/kawaii-coffee-cup-character-in-meditate-pose.jpg?s=612x612&w=0&k=20&c=6xn41fxI3T2_TIsRzZg0b6fmc2riNLN3JpS_7802ba8=",
                     }}
-                  >
-                    <Icon name="heart" size={20} color="#F56565" />
-                  </TouchableOpacity>
+                    style={tw`w-full h-40`}
+                  />
+                  {/* Contenu principal */}
+                  <Card.Content style={tw`pt-3`}>
+                    <View
+                      style={tw`flex-row items-center justify-between mb-2`}
+                    >
+                      <Text style={tw`flex-1 text-lg font-bold text-gray-800`}>
+                        {shop.shop_nom}
+                      </Text>
+                      <Icon name="map-marker" size={16} color="#F56565" />
+                    </View>
 
-                  <TouchableOpacity
-                    style={tw`flex-row items-center px-3 py-2 bg-red-300 rounded-full`}
-                    onPress={() => handleCardExpand(index)}
-                  >
-                    <Text style={tw`mr-2 text-sm text-white`}>
-                      {expandedIndex === index ? "Moins" : "Plus"}
-                    </Text>
-                    <Icon
-                      name={
-                        expandedIndex === index ? "chevron-up" : "chevron-down"
-                      }
-                      size={14}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </Card.Actions>
+                    <View style={tw`flex-row items-center mb-2`}>
+                      <Icon
+                        name="clock-o"
+                        size={14}
+                        color="#718096"
+                        style={tw`mr-2`}
+                      />
+                      <Text style={tw`text-sm text-gray-600`}>
+                        {shop.shop_date_ouv} - {shop.shop_date_ferm}
+                      </Text>
+                    </View>
 
-                {/* Description étendue */}
-                {expandedIndex === index && (
-                  <Card.Content
-                    style={tw`px-4 py-3 border-t border-gray-200 bg-gray-50`}
-                  >
-                    <Text style={tw`text-sm leading-5 text-gray-600`}>
-                      {shop.shop_desc}
-                    </Text>
+                    <View
+                      style={tw`flex-row items-center self-start px-1 py-1 rounded-full `}
+                    >
+                      <View style={tw`flex-row items-center`}>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                      </View>{" "}
+                      <Text style={tw`ml-1 text-lg font-bold text-red-300`}>
+                        4.9
+                      </Text>
+                    </View>
                   </Card.Content>
-                )}
-              </Card>
+
+                  {/* Actions */}
+                  <Card.Actions style={tw`justify-between px-4 pb-3`}>
+                    <TouchableOpacity
+                      style={tw`p-2 bg-red-100 rounded-full`}
+                      onPress={() => {
+                        /* Gérer les favoris */
+                      }}
+                    >
+                      <Icon name="heart" size={20} color="#F56565" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={tw`flex-row items-center px-3 py-2 bg-red-300 rounded-full`}
+                      onPress={() => handleCardExpand(index)}
+                    >
+                      <Text style={tw`mr-2 text-sm text-white`}>
+                        {expandedIndex === index ? "Moins" : "Plus"}
+                      </Text>
+                      <Icon
+                        name={
+                          expandedIndex === index
+                            ? "chevron-up"
+                            : "chevron-down"
+                        }
+                        size={14}
+                        color="white"
+                      />
+                    </TouchableOpacity>
+                  </Card.Actions>
+
+                  {/* Description étendue */}
+                  {expandedIndex === index && (
+                    <Card.Content
+                      style={tw`px-4 py-3 border-t border-gray-200 bg-gray-50`}
+                    >
+                      <Text style={tw`text-sm leading-5 text-gray-600`}>
+                        {shop.shop_desc}
+                      </Text>
+                    </Card.Content>
+                  )}
+                </Card>
+              </TouchableOpacity>
             </View>
           ))}
         </View>
