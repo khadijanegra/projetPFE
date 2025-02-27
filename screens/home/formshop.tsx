@@ -66,13 +66,11 @@ const formshop = ( props : any) => {
       );
       if (response.status === 201) {
         console.log("Réponse complète:", JSON.stringify(response, null, 2));
-        const shopId =response.data._id;
-        setShopId(shopId);  // Stocke l'ID du shop créé
+        const shopId = response.data.id;
+       setShopId(shopId);  // Stocke l'ID du shop créé
         console.log("*******"+ " => "+ shopId);
-        console.log("Données:", response.data); // Voir si data est bien présent
-        console.log("Shop ID:", response.data?._id); // Vérifier si _id existe
         Alert.alert("Shop créé avec succès");
-        console.log("shop a etait cree avce succee "+ user_id)
+        console.log("shop a etait cree avce succee dont l'utilisateur est "+ shopdata.user_id)
         setModalVisible(true); // Afficher le modal de confirmation
         return true;
       } else {
@@ -88,7 +86,7 @@ const formshop = ( props : any) => {
   const goToo = () => {
     setModalVisible(false);
     if (shopId) {
-      props.navigation.navigate("profileshop", { shopId });  // Passe l'ID du shop créé à la page suivante
+      //props.navigation.navigate("profileshop", { shopId });  // Passe l'ID du shop créé à la page suivante
     }
   };
 
@@ -276,7 +274,7 @@ const formshop = ( props : any) => {
                 style={tw`px-12 py-4 bg-yellow-400 rounded-full`}
                 onPress={goToo}
               >
-                <Text style={tw`text-xl font-bold text-white`}>Continuer</Text>
+                <Text style={tw`text-xl font-bold text-white`}>Confirmer</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
