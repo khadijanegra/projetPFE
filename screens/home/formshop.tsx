@@ -86,7 +86,7 @@ const formshop = ( props : any) => {
   const goToo = () => {
     setModalVisible(false);
     if (shopId) {
-      //props.navigation.navigate("profileshop", { shopId });  // Passe l'ID du shop créé à la page suivante
+      //props.navigation.navigate("profileshop", { shopId });  
     }
   };
 
