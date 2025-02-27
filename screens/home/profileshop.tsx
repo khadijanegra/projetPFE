@@ -1,10 +1,53 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/FontAwesome";
-const ProfilShop = () => {
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+
+ 
+
+const ProfilShop = (props : any) => {
+  const [shop_nom, setShop_nom] = useState("");
+  const [shop_desc, setShop_desc] = useState("");
+  const [shop_local, setShopLocal] = useState("");
+  const [shop_date_ferm, setShopDateFrem] = useState("");
+  const [shop_date_ouv, setShopDateOuve] = useState("");
+  const [phone, setPhone] = useState("")
+  const [loading, setLoading] = useState(true);
+const [error, setError] = useState(false);
+
+  const shopId = props.route.params.shopId;
+  ;
+  console.log("ID de shop *** reçu :", shopId);
+  const fetchShopData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://10.0.2.2:3000/shops/${shopId}`);
+      const shopdata = response.data;
+      setShop_nom(shopdata.shop_nom);
+      setShop_desc(shopdata.shop_desc);
+      setShopLocal(shopdata.shop_local);
+      setShopDateFrem(shopdata.shop_date_ferm);
+      setShopDateOuve(shopdata.shop_date_ouv);
+      setPhone(shopdata.phone);
+      setLoading(false);
+    } catch (error) {
+      setError(true);
+      console.error("Error fetching user data:", error);
+    }
+  }, [shopId]);
+
+  // Exécuter la récupération des données quand l'écran est focalisé
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("***************"+shopId+"*******************")
+      fetchShopData(); 
+    }, [fetchShopData]) 
+  );
+  
   return (
     <ScrollView style={tw`bg-red-100`}>
       {/* En-tête avec l'image et les détails */}
@@ -20,7 +63,7 @@ const ProfilShop = () => {
         />
         <View style={tw`absolute bottom-0 left-0 right-0 p-6`}>
           <Text style={tw`mb-1 text-3xl font-bold text-white`}>
-            Texas Fastfood
+            {shop_nom}
           </Text>
           <View style={tw`flex-row items-center`}>
             <Ionicons name="star" size={20} color="#FBBF24" />
@@ -40,8 +83,7 @@ const ProfilShop = () => {
             Description
           </Text>
           <Text style={tw`mt-2 text-gray-700`}>
-            Découvrez le meilleur fast-food de la ville avec des plats délicieux
-            et un service rapide !
+           {shop_desc}
           </Text>
         </View>
 
@@ -49,10 +91,10 @@ const ProfilShop = () => {
         <View style={tw`p-4 mb-4 bg-gray-100 rounded-lg shadow-sm`}>
           <Text style={tw`text-lg font-semibold text-gray-900`}>Horaires</Text>
           <Text style={tw`mt-2 text-gray-700`}>
-            Lundi - vendredi :09:00AM-11:00PM
+            Lundi - vendredi : {shop_date_ferm}  {shop_date_ouv}
           </Text>
           <Text style={tw`mt-2 text-gray-700`}>
-            samedi - dimanche:09:00AM-02:00AM{" "}
+            samedi - dimanche: {shop_date_ferm}  {shop_date_ouv}
           </Text>
         </View>
 
@@ -61,14 +103,14 @@ const ProfilShop = () => {
           style={tw`flex-row items-center p-4 mb-4 bg-gray-100 rounded-lg shadow-sm`}
         >
           <MaterialIcons name="phone" size={20} color="black" />
-          <Text style={tw`ml-2 text-gray-700`}>+33 6 12 34 56 78</Text>
+          <Text style={tw`ml-2 text-gray-700`}>{phone}</Text>
         </View>
 
         {/* Adresse et carte Maps */}
-        <View style={tw`p-4 bg-gray-100 rounded-lg shadow-sm mb-6`}>
+        <View style={tw`p-4 mb-6 bg-gray-100 rounded-lg shadow-sm`}>
           <Text style={tw`text-lg font-semibold text-gray-900`}>Adresse</Text>
           <Text style={tw`mt-2 text-gray-700`}>
-            12 Rue de la République, 75001 Paris, France
+            {shop_local}
           </Text>
           <View
             style={tw`flex items-center justify-center h-32 mt-4 bg-gray-300 rounded-lg`}
@@ -77,21 +119,21 @@ const ProfilShop = () => {
           </View>
         </View>
 
-        <View style={tw`p-4  rounded-lg shadow-md bg-gray-100`}>
-          <Text style={tw`text-lg font-bold mb-2`}>Avis</Text>
+        <View style={tw`p-4 bg-gray-100 rounded-lg shadow-md`}>
+          <Text style={tw`mb-2 text-lg font-bold`}>Avis</Text>
 
-          <View style={tw`border-b border-gray-200 mb-2 `} />
+          <View style={tw`mb-2 border-b border-gray-200 `} />
           <View style={tw`flex-col items-center mb-10`}>
-            <Text style={tw`text-2xl font-bold ml-1`}>4.1</Text>
+            <Text style={tw`ml-1 text-2xl font-bold`}>4.1</Text>
 
             <Text style={tw`text-yellow-400`}>★★★★★</Text>
-            <Text style={tw`text-sm text-gray-600 ml-2`}>83 avis</Text>
+            <Text style={tw`ml-2 text-sm text-gray-600`}>83 avis</Text>
           </View>
           <View style={tw`flex-row justify-between`}>
             <View style={tw`items-center`}>
               <Image
                 source={require("../../images/service.png")}
-                style={tw`w-12 h-12 rounded-full  border-white`}
+                style={tw`w-12 h-12 border-white rounded-full`}
               />
               <Text style={tw`text-sm font-bold`}>Service</Text>
               <Text style={tw`text-sm text-gray-600`}>4.1</Text>
@@ -99,7 +141,7 @@ const ProfilShop = () => {
             <View style={tw`items-center`}>
               <Image
                 source={require("../../images/ambiance.png")}
-                style={tw`w-12 h-12 rounded-full  border-white`}
+                style={tw`w-12 h-12 border-white rounded-full`}
               />
               <Text style={tw`text-sm font-bold`}>Ambiance</Text>
               <Text style={tw`text-sm text-gray-600`}>4.1</Text>
@@ -107,7 +149,7 @@ const ProfilShop = () => {
             <View style={tw`items-center`}>
               <Image
                 source={require("../../images/cuisine.png")}
-                style={tw`w-12 h-12 rounded-full  border-white`}
+                style={tw`w-12 h-12 border-white rounded-full`}
               />
               <Text style={tw`text-sm font-bold`}>Cuisine</Text>
               <Text style={tw`text-sm text-gray-600 `}>4.1</Text>
@@ -115,17 +157,17 @@ const ProfilShop = () => {
           </View>
         </View>
         <TouchableOpacity
-  style={tw`ml-40 py-2 mt-3 mb-5 bg-red-300 rounded-full w-1/2 flex-row items-center justify-center`}
+  style={tw`flex-row items-center justify-center w-1/2 py-2 mt-3 mb-5 ml-40 bg-red-300 rounded-full`}
 >
   <Icon name="eye" size={20} color="black" style={tw`mr-2`} />
   <Text style={tw`text-lg text-center`}>Voir avis</Text>
 </TouchableOpacity>
 +
         <TouchableOpacity
-          style={tw`w-full py-2  mb-5 bg-red-300 rounded-full px-14 flex-row items-center justify-center`}
+          style={tw`flex-row items-center justify-center w-full py-2 mb-5 bg-red-300 rounded-full px-14`}
         >
           <Icon name="comment" size={20} color="black" style={tw`mr-2`} />
-          <Text style={tw`text-lg text-center font-bold`}>
+          <Text style={tw`text-lg font-bold text-center`}>
             Donner votre avis
           </Text>
         </TouchableOpacity>

@@ -16,10 +16,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
 const formshop = ( props : any) => {
-  const goToo = () => {
-    setModalVisible(false);
-    props.navigation.navigate("profileshop");
-  };
+ 
   
   const [modalVisible, setModalVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(300)).current; // Position initiale en bas
@@ -45,6 +42,7 @@ const formshop = ( props : any) => {
   const [user_id, setUserId] = useState("");
   const [phone, setPhone] = useState("");
   const [menuImage, setMenuImage] = useState(null);
+  const [shopId, setShopId] = useState(null);
 
   const handleImageUpload = () => {
     // Logique pour sélectionner une image depuis la galerie
@@ -67,6 +65,12 @@ const formshop = ( props : any) => {
         shopdata
       );
       if (response.status === 201) {
+        console.log("Réponse complète:", JSON.stringify(response, null, 2));
+        const shopId =response.data._id;
+        setShopId(shopId);  // Stocke l'ID du shop créé
+        console.log("*******"+ " => "+ shopId);
+        console.log("Données:", response.data); // Voir si data est bien présent
+        console.log("Shop ID:", response.data?._id); // Vérifier si _id existe
         Alert.alert("Shop créé avec succès");
         console.log("shop a etait cree avce succee "+ user_id)
         setModalVisible(true); // Afficher le modal de confirmation
@@ -79,6 +83,12 @@ const formshop = ( props : any) => {
     } catch (error) {
       Alert.alert("Erreur lors de la connexion");
       return false;
+    }
+  };
+  const goToo = () => {
+    setModalVisible(false);
+    if (shopId) {
+      props.navigation.navigate("profileshop", { shopId });  // Passe l'ID du shop créé à la page suivante
     }
   };
 
