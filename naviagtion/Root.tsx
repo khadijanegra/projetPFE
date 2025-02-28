@@ -14,6 +14,7 @@ import Firstpage from "screens/home/firstpage";
 import formshop from "screens/home/formshop"
 import Profileshop from "screens/home/profileshop";
 import locationdemand from "screens/home/locationdemand";
+import reviewform from "screens/home/reviewform"
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,7 @@ export default function Root() {
       <Stack.Screen name="userprofile" component={userprofile} />
       <Stack.Screen name="formshop" component={formshop} />
       <Stack.Screen name="profileshop" component={Profileshop} />
+      <Stack.Screen name="reviewform" component={reviewform} />
       </Stack.Navigator> 
   );
 }

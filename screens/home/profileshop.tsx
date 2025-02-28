@@ -44,7 +44,9 @@ const ProfilShop = (props : any) => {
       fetchShopData(); 
     }, [fetchShopData]) 
   );
-  
+  const gotoreviewform = () => {
+    props.navigation.navigate("reviewform")
+  }
   return (
     <ScrollView style={tw`bg-red-100`}>
       {/* En-tête avec l'image et les détails */}
@@ -162,6 +164,7 @@ const ProfilShop = (props : any) => {
 +
         <TouchableOpacity
           style={tw`flex-row items-center justify-center w-full py-2 mb-5 bg-red-300 rounded-full px-14`}
+          onPress={gotoreviewform}
         >
           <Icon name="comment" size={20} color="black" style={tw`mr-2`} />
           <Text style={tw`text-lg font-bold text-center`}>
