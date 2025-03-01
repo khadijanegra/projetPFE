@@ -55,7 +55,7 @@ const ProfilShop = (props : any) => {
       {/* En-tête avec l'image et les détails */}
       <View style={tw`relative`}>
         <Image
-           source={{ uri: shopImage }}  // Si l'image est une URL ou un fichier local
+           source={{ uri: shopImage }} // t3ayet lil api mte3 getshsopimage w testa3mel URL/getshopimage/ism l'image 
            style={tw`w-full h-64`}
            resizeMode="cover"
         />

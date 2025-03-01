@@ -66,7 +66,7 @@ const FormShop = (props: any) => {
       shop_local: shopLocal,
       shop_date_ouv: shopDateOuv,
       shop_date_ferm: shopDateFerm,
-      shopImage,
+      shopImage, //te5edh ism il file elli uploadineh 
       user_id: props.route.params.id,
     };
 
@@ -100,7 +100,7 @@ const FormShop = (props: any) => {
   console.log(result);
 
   if (!result.canceled && result.assets.length > 0) {
-    setShopImage(result.assets[0].uri);
+    // appel lil API mte3 il upload 
   }
 };
 
