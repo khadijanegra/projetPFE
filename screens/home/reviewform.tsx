@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image ,ScrollView} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import tw from "tailwind-react-native-classnames";
-import * as ImagePicker from "expo-image-picker";
+import * as ImagePicker from 'expo-image-picker';
 
 const Reviewform = () => {
   const [ratingservice, setRatingservice] = useState(0);
@@ -10,21 +10,17 @@ const Reviewform = () => {
   const [ratingcuisine, setRatingcuisine] = useState(0);
 
   const [review, setReview] = useState("");
-  const [image, setImage] = useState(null);
-
+  const [image, setImage] = useState<string | null>(null);
+  
   const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images', 'videos'],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-
+  }
   return (
     <ScrollView>
     <View style={tw`flex-1 p-5 bg-white`}> 

@@ -16,6 +16,7 @@ const ProfilShop = (props : any) => {
   const [shop_date_ferm, setShopDateFrem] = useState("");
   const [shop_date_ouv, setShopDateOuve] = useState("");
   const [phone, setPhone] = useState("")
+  const [shopImage , setShopImage] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -25,12 +26,14 @@ const ProfilShop = (props : any) => {
     try {
       setLoading(true);
       const response = await axios.get(`http://10.0.2.2:3000/shops/${shopdata._id}`);
+      console.log(response)
       setShop_nom(shopdata.shop_nom);
       setShop_desc(shopdata.shop_desc);
       setShopLocal(shopdata.shop_local);
       setShopDateFrem(shopdata.shop_date_ferm);
       setShopDateOuve(shopdata.shop_date_ouv);
       setPhone(shopdata.phone);
+      setShopImage(shopdata.shopImage)
       setLoading(false);
     } catch (error) {
       setError(true);
@@ -52,9 +55,9 @@ const ProfilShop = (props : any) => {
       {/* En-tête avec l'image et les détails */}
       <View style={tw`relative`}>
         <Image
-          source={require("../../images/profilshop.png")}
-          style={tw`w-full h-64`}
-          resizeMode="cover"
+           source={{ uri: shopImage }}  // Si l'image est une URL ou un fichier local
+           style={tw`w-full h-64`}
+           resizeMode="cover"
         />
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.8)"]}

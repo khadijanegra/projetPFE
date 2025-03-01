@@ -146,7 +146,7 @@ const AcceuilPage = (props: any) => {
                   {/* Image */}
                   <Card.Cover
                     source={{
-                      uri: "https://media.istockphoto.com/id/1175851148/vector/kawaii-coffee-cup-character-in-meditate-pose.jpg?s=612x612&w=0&k=20&c=6xn41fxI3T2_TIsRzZg0b6fmc2riNLN3JpS_7802ba8=",
+                      uri: shop.shopImage,
                     }}
                     style={tw`w-full h-40`}
                   />
