@@ -24,9 +24,10 @@ const ProfilShop = (props : any) => {
   console.log("ID de shop *** reçu :", shopdata._id);
   const fetchShopData = useCallback(async () => {
     try {
+      
       setLoading(true);
       const response = await axios.get(`http://10.0.2.2:3000/shops/${shopdata._id}`);
-      console.log(response)
+      console.log(JSON.stringify(response, null, 2));
       setShop_nom(shopdata.shop_nom);
       setShop_desc(shopdata.shop_desc);
       setShopLocal(shopdata.shop_local);
@@ -39,7 +40,11 @@ const ProfilShop = (props : any) => {
       setError(true);
       console.error("Error fetching user data:", error);
     }
+    
   }, [shopdata]);
+
+  
+  console.log( props.route.params.shopData._id , props.route.params.shopData.user_id._id )
 
   // Exécuter la récupération des données quand l'écran est focalisé
   useFocusEffect(
@@ -48,8 +53,11 @@ const ProfilShop = (props : any) => {
     }, [fetchShopData]) 
   );
   const gotoreviewform = () => {
-    props.navigation.navigate("reviewform")
-  }
+    props.navigation.navigate("reviewform", { 
+      shop_id: props.route.params.shopData._id,  
+      user_id: props.route.params.shopData.user_id._id 
+    });
+  };
   return (
     <ScrollView style={tw`bg-red-100`}>
       {/* En-tête avec l'image et les détails */}
