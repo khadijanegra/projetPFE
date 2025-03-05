@@ -28,9 +28,9 @@ const TaskCard = () => {
       {/* Note et avis */}
       <View style={tw`flex-row items-center justify-between mt-2`}>
         <View style={tw`flex-row items-center`}>
-          <View style={tw`px-2 py-1 bg-red-300 rounded-lg`}> 
-            <Text style={tw`text-white font-bold text-sm`}>3.4</Text>
-          </View>
+          
+            
+          
           
                     <View
                       style={tw`flex-row items-center self-start px-1 py-1 rounded-full `}
@@ -50,7 +50,8 @@ const TaskCard = () => {
         
         {/* Icône favoris */}
         <TouchableOpacity>
-          <Text style={tw`text-xl`}>🤍</Text>
+          <Text style={tw`text-xl`}>🩷
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
