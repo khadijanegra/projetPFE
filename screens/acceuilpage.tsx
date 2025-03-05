@@ -66,6 +66,11 @@ const AcceuilPage = (props: any) => {
     props.navigation.navigate("formshop", { id: props.route.params.id });
   };
 
+  const goTofavorisuser = () => {
+    props.navigation.navigate("userfavoris");
+  };
+
+
   const goToprofileshop = (shop: any) => {
     props.navigation.navigate("profileshop", { shopData: shop }); // il shopData howa mot clee illi najmou naccediw behaa fil page illi ba3edhaa  // shop hiya il objet illi fih il contenu lkolll mte3 il shop
   };
@@ -98,6 +103,7 @@ const AcceuilPage = (props: any) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
+                onPress={goTofavorisuser}
               >
                 <Icon name="heart" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg text-white`}>Favoris</Text>
