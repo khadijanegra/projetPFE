@@ -15,12 +15,13 @@ import formshop from "screens/home/formshop"
 import Profileshop from "screens/home/profileshop";
 import locationdemand from "screens/home/locationdemand";
 import reviewform from "screens/home/reviewform"
+import TaskCard from "screens/home/userfavoris"
 
 const Stack = createStackNavigator();
 
 export default function Root() {
   return ( 
-    <Stack.Navigator>
+    /** 
       <Stack.Screen name="firstpage" component={Firstpage}/>
       <Stack.Screen name="homepage" component={homepage} />
       <Stack.Screen name="Login" component={Login} />
@@ -34,6 +35,10 @@ export default function Root() {
       <Stack.Screen name="formshop" component={formshop} />
       <Stack.Screen name="profileshop" component={Profileshop} />
       <Stack.Screen name="reviewform" component={reviewform} />
+      **/
+      <Stack.Navigator>
+
+      <Stack.Screen name="userfavoris" component={TaskCard} />
       </Stack.Navigator> 
   );
 }

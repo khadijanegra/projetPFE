@@ -9,7 +9,7 @@ import {
 import tw from "tailwind-react-native-classnames";
 import { FontAwesome } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Card, Paragraph } from "react-native-paper";
+import { Card } from "react-native-paper";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -17,11 +17,13 @@ const AcceuilPage = (props: any) => {
   const [shopsData, setShopsData] = useState<any[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [favorites, setFavorites] = useState<any[]>([]); // To keep track of favorites
 
   const fetchShopsData = useCallback(async () => {
     try {
       const response = await axios.get(`http://10.0.2.2:3000/shops/`);
       setShopsData(response.data);
+      console.log(JSON.stringify(response.data, null, 2));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -32,6 +34,26 @@ const AcceuilPage = (props: any) => {
       fetchShopsData();
     }, [fetchShopsData])
   );
+
+
+  const handleAddToFavorites = async (shop_id: string) => {
+    try {
+      const response = await axios.post("http://10.0.2.2:3000/user/favoriclic", {
+         shop_id: shop_id,
+         userId: props.route.params.id,
+      });
+  
+      if (response.status === 200) {
+        setFavorites((prevFavorites) => [...prevFavorites, shop_id]);
+        console.log("Shop added to favorites:", response.data);
+      } else {
+        console.error("Error adding to favorites:", response.data.message || 'Unknown error');
+      }
+    } catch (error: any) {
+      console.error("Error during adding to favorites:", error.response?.data || error.message);
+    }
+  };
+  
 
   const handleCardExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -193,8 +215,8 @@ const AcceuilPage = (props: any) => {
                   <Card.Actions style={tw`justify-between px-4 pb-3`}>
                     <TouchableOpacity
                       style={tw`p-2 bg-red-100 rounded-full`}
-                      onPress={() => {
-                        /* Gérer les favoris */
+                      onPress={() => { handleAddToFavorites(shop._id)
+                        
                       }}
                     >
                       <Icon name="heart" size={20} color="#F56565" />
