@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import tw from "tailwind-react-native-classnames";
+import Icon from "react-native-vector-icons/FontAwesome";
+
 
 const TaskCard = () => {
   return (
@@ -29,7 +31,21 @@ const TaskCard = () => {
           <View style={tw`px-2 py-1 bg-red-300 rounded-lg`}> 
             <Text style={tw`text-white font-bold text-sm`}>3.4</Text>
           </View>
-          <Text style={tw`ml-2 text-gray-600 text-sm`}>Bien (32)</Text>
+          
+                    <View
+                      style={tw`flex-row items-center self-start px-1 py-1 rounded-full `}
+                    >
+                      <View style={tw`flex-row items-center`}>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                      </View>{" "}
+                      <Text style={tw`ml-1 text-lg font-bold text-red-300`}>
+                        4.9
+                      </Text>
+                    </View>
         </View>
         
         {/* Icône favoris */}
