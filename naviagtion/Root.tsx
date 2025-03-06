@@ -16,6 +16,7 @@ import Profileshop from "screens/home/profileshop";
 import locationdemand from "screens/home/locationdemand";
 import reviewform from "screens/home/reviewform"
 import TaskCard from "screens/home/userfavoris"
+import ReviewShop from "screens/home/reviewshop";
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,7 @@ export default function Root() {
       <Stack.Screen name="profileshop" component={Profileshop} />
       <Stack.Screen name="reviewform" component={reviewform} />
       <Stack.Screen name="userfavoris" component={TaskCard} />
+      <Stack.Screen name="reviewshop" component={ReviewShop} />
     </Stack.Navigator> 
       
 

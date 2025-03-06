@@ -58,6 +58,13 @@ const ProfilShop = (props : any) => {
       user_id: props.route.params.shopData.user_id._id 
     });
   };
+  const gotoreviewshop = () => {
+    props.navigation.navigate("reviewshop", { 
+      shop_id: props.route.params.shopData._id,  
+      user_id: props.route.params.shopData.user_id._id 
+    });
+  };
+
   return (
     <ScrollView style={tw`bg-red-100`}>
       {/* En-tête avec l'image et les détails */}
@@ -168,6 +175,7 @@ const ProfilShop = (props : any) => {
         </View>
         <TouchableOpacity
   style={tw`flex-row items-center justify-center w-1/2 py-2 mt-3 mb-5 ml-40 bg-red-300 rounded-full`}
+  onPress={ gotoreviewshop}
 >
   <Icon name="eye" size={20} color="black" style={tw`mr-2`} />
   <Text style={tw`text-lg text-center`}>Voir avis</Text>
