@@ -67,7 +67,7 @@ const AcceuilPage = (props: any) => {
   };
 
   const goTofavorisuser = () => {
-    props.navigation.navigate("userfavoris");
+    props.navigation.navigate("userfavoris" ,{ id: props.route.params.id });
   };
 
 
