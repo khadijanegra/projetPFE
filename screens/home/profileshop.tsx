@@ -21,14 +21,14 @@ const ProfilShop = (props : any) => {
   const [error, setError] = useState(false);
 
   const shopdata = props.route.params.shopData;
+  
   console.log("ID de shop *** reçu :", shopdata._id);
   const fetchShopData = useCallback(async () => {
     try {
       
       setLoading(true);
       const response = await axios.get(`http://10.0.2.2:3000/shops/${shopdata._id}`);
-      console.log(JSON.stringify(response, null, 2));
-      setShop_nom(shopdata.shop_nom);
+      console.log(JSON.stringify(response, null, 2));      setShop_nom(shopdata.shop_nom);
       setShop_desc(shopdata.shop_desc);
       setShopLocal(shopdata.shop_local);
       setShopDateFrem(shopdata.shop_date_ferm);
@@ -62,6 +62,7 @@ const ProfilShop = (props : any) => {
     props.navigation.navigate("reviewshop", { 
       shop_id: props.route.params.shopData._id,  
       user_id: props.route.params.shopData.user_id._id 
+      
     });
   };
 
