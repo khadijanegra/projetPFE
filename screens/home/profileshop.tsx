@@ -1,150 +1,188 @@
 import React, { useCallback, useState } from "react";
-import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity, Animated } from "react-native";
 import tw from "tailwind-react-native-classnames";
-import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 
- 
+const ProfilShop = (props: any) => {
+  const [showPhone, setShowPhone] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
+  const [animation] = useState(new Animated.Value(0));
+  const [showAddress, setShowAddress] = useState(false);
 
-const ProfilShop = (props : any) => {
-  const [shop_nom, setShop_nom] = useState("");
-  const [shop_desc, setShop_desc] = useState("");
-  const [shop_local, setShopLocal] = useState("");
-  const [shop_date_ferm, setShopDateFrem] = useState("");
-  const [shop_date_ouv, setShopDateOuve] = useState("");
-  const [phone, setPhone] = useState("")
-  const [shopImage , setShopImage] = useState<any>(null);
+
+  const [shopData, setShopData] = useState({
+    nom: "",
+    description: "",
+    local: "",
+    dateFermeture: "",
+    dateOuverture: "",
+    phone: "",
+    image: null
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const shopdata = props.route.params.shopData;
-  
-  console.log("ID de shop *** reçu :", shopdata._id);
+  const shopId = props.route.params.shopData._id;
+
   const fetchShopData = useCallback(async () => {
     try {
-      
       setLoading(true);
-      const response = await axios.get(`http://10.0.2.2:3000/shops/${shopdata._id}`);
-      console.log(JSON.stringify(response, null, 2));      setShop_nom(shopdata.shop_nom);
-      setShop_desc(shopdata.shop_desc);
-      setShopLocal(shopdata.shop_local);
-      setShopDateFrem(shopdata.shop_date_ferm);
-      setShopDateOuve(shopdata.shop_date_ouv);
-      setPhone(shopdata.phone);
-      setShopImage(shopdata.shopImage)
+      const response = await axios.get(`http://10.0.2.2:3000/shops/${shopId}`);
+      const { shop_nom, shop_desc, shop_local, shop_date_ferm, shop_date_ouv, phone, shopImage } = response.data;
+      setShopData({
+        nom: shop_nom,
+        description: shop_desc,
+        local: shop_local,
+        dateFermeture: shop_date_ferm,
+        dateOuverture: shop_date_ouv,
+        phone,
+        image: shopImage
+      });
       setLoading(false);
     } catch (error) {
       setError(true);
-      console.error("Error fetching user data:", error);
+      console.error("Error fetching shop data:", error);
     }
-    
-  }, [shopdata]);
+  }, [shopId]);
 
-  
-  console.log( props.route.params.shopData._id , props.route.params.shopData.user_id._id )
-
-  // Exécuter la récupération des données quand l'écran est focalisé
   useFocusEffect(
     React.useCallback(() => {
-      fetchShopData(); 
-    }, [fetchShopData]) 
+      fetchShopData();
+    }, [fetchShopData])
   );
-  const gotoreviewform = () => {
-    props.navigation.navigate("reviewform", { 
-      shop_id: props.route.params.shopData._id,  
-      user_id: props.route.params.shopData.user_id._id 
+
+  const toggleDescription = () => {
+    setShowDescription(prev => !prev);
+    Animated.timing(animation, {
+      toValue: showDescription ? 0 : 1,
+      duration: 300,
+      useNativeDriver: false
+    }).start();
+  };
+
+  const goToReviewForm = () => {
+    props.navigation.navigate("reviewform", {
+      shop_id: shopId,
+      user_id: props.route.params.shopData.user_id._id
     });
   };
-  const gotoreviewshop = () => {
-    props.navigation.navigate("reviewshop", { 
-      shop_id: props.route.params.shopData._id,  
-      user_id: props.route.params.shopData.user_id._id 
-      
+
+  const goToReviewShop = () => {
+    props.navigation.navigate("reviewshop", {
+      shop_id: shopId,
+      user_id: props.route.params.shopData.user_id._id
     });
   };
 
   return (
-    <ScrollView style={tw`bg-red-100`}>
-      {/* En-tête avec l'image et les détails */}
-      <View style={tw`relative`}>
+    <ScrollView style={tw`bg-white`}>
+      {/* Header with image and gradient */}
+      <View style={tw`relative h-80`}>
         <Image
-           source={{ uri: shopImage }} // t3ayet lil api mte3 getshsopimage w testa3mel URL/getshopimage/ism l'image 
-           style={tw`w-full h-64`}
-           resizeMode="cover"
+          source={{ }}
+          style={tw`w-full h-full`}
+          resizeMode="cover"
         />
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.8)"]}
-          style={tw`absolute bottom-0 left-0 right-0 h-1/2`}
+          style={tw`absolute bottom-0 w-full h-1/3`}
         />
-        <View style={tw`absolute bottom-0 left-0 right-0 p-6`}>
-          <Text style={tw`mb-1 text-3xl font-bold text-white`}>
-            {shop_nom}
-          </Text>
+        <View style={tw`absolute bottom-0 w-full p-6`}>
+          <Text style={tw`text-3xl font-bold text-white mb-1`}>{shopData.nom}</Text>
           <View style={tw`flex-row items-center`}>
             <Ionicons name="star" size={20} color="#FBBF24" />
-            <Text style={tw`ml-2 font-medium text-yellow-400`}>
-              5.0 (1 avis)
-            </Text>
-            <Text style={tw`ml-4 text-gray-300`}>•</Text>
+            <Text style={tw`ml-2 text-yellow-400 text-sm`}>5.0 (1 avis)</Text>
           </View>
         </View>
       </View>
 
-      {/* Contenu principal */}
-      <View style={tw`p-6 mt-6 bg-white shadow-lg rounded-t-3xl`}>
-        {/* Description */}
-        <View style={tw`p-4 mb-4 bg-gray-100 rounded-lg shadow-sm`}>
-          <Text style={tw`text-lg font-semibold text-gray-900`}>
-            Description
-          </Text>
-          <Text style={tw`mt-2 text-gray-700`}>
-           {shop_desc}
-          </Text>
-        </View>
-
-        {/* Horaires */}
-        <View style={tw`p-4 mb-4 bg-gray-100 rounded-lg shadow-sm`}>
-          <Text style={tw`text-lg font-semibold text-gray-900`}>Horaires</Text>
-          <Text style={tw`mt-2 text-gray-700`}>
-            Lundi - vendredi : {shop_date_ferm}  {shop_date_ouv}
-          </Text>
-          <Text style={tw`mt-2 text-gray-700`}>
-            samedi - dimanche: {shop_date_ferm}  {shop_date_ouv}
-          </Text>
-        </View>
-
-        {/* Numéro de téléphone */}
-        <View
-          style={tw`flex-row items-center p-4 mb-4 bg-gray-100 rounded-lg shadow-sm`}
+      {/* Main content */}
+      <View style={tw`px-4 p-5 pt-10 bg-red-50`}>
+        {/* Description Section */}
+        <TouchableOpacity 
+          activeOpacity={0.9}
+          onPress={toggleDescription}
+          style={tw`mb-4 bg-white rounded-xl p-4 shadow-sm`}
         >
-          <MaterialIcons name="phone" size={20} color="black" />
-          <Text style={tw`ml-2 text-gray-700`}>{phone}</Text>
+          <View style={tw`flex-row justify-between items-center shadow-xl`}>
+            <Text style={tw`text-lg font-semibold text-gray-900`}>Description</Text>
+            <Ionicons
+              name={showDescription ? "chevron-up" : "chevron-down"} 
+              size={25} 
+              color="#EF5350" 
+            />
+          </View>
+          {showDescription && (
+            <Text style={tw`mt-2 text-gray-600 leading-5`}>{shopData.description}</Text>
+          )}
+        </TouchableOpacity>
+
+        {/* Contact Section */}
+        <View style={tw`mb-4 bg-white rounded-xl p-4 shadow-xl`}>
+          <TouchableOpacity
+            style={tw`flex-row justify-between items-center`}
+            onPress={() => setShowPhone(!showPhone)}
+          >
+            <View style={tw`flex-row items-center`}>
+              <MaterialIcons name="phone" size={25} color="#EF5350" />
+              <Text style={tw`ml-2 text-gray-700`}>Contact</Text>
+            </View>
+            <Ionicons 
+              name={showPhone ? "eye-off-outline" : "eye-outline"} 
+              size={20} 
+              color="#6B7280" 
+            />
+          </TouchableOpacity>
+          {showPhone && (
+            <Text style={tw`mt-2 text-lg font-semibold text-gray-900`}>{shopData.phone}</Text>
+          )}
         </View>
 
-        {/* Adresse et carte Maps */}
-        <View style={tw`p-4 mb-6 bg-gray-100 rounded-lg shadow-sm`}>
-          <Text style={tw`text-lg font-semibold text-gray-900`}>Adresse</Text>
-          <Text style={tw`mt-2 text-gray-700`}>
-            {shop_local}
-          </Text>
-          <View
-            style={tw`flex items-center justify-center h-32 mt-4 bg-gray-300 rounded-lg`}
-          >
-            <Text style={tw`text-gray-500`}>Carte Maps ici</Text>
+        {/* Hours Section */}
+        <View style={tw`mb-4 bg-white rounded-xl p-4 shadow-sm shadow-xl`}>
+          <Text style={tw`text-lg font-semibold text-gray-900 mb-3`}>Horaires</Text>
+          <View style={tw`flex-row justify-between mb-2`}>
+            <Text style={tw`text-gray-600`}>Lundi - Vendredi</Text>
+            <Text style={tw`text-gray-800 font-medium`}>
+              {shopData.dateOuverture} - {shopData.dateFermeture}
+            </Text>
+          </View>
+          <View style={tw`flex-row justify-between`}>
+            <Text style={tw`text-gray-600`}>Samedi - Dimanche</Text>
+            <Text style={tw`text-gray-800 font-medium`}>
+              {shopData.dateOuverture} - {shopData.dateFermeture}
+            </Text>
           </View>
         </View>
 
-        <View style={tw`p-4 bg-gray-100 rounded-lg shadow-md`}>
-          <Text style={tw`mb-2 text-lg font-bold`}>Avis</Text>
+        {/* Address Section */}
+        <View style={tw`mb-6 bg-white rounded-xl p-4 shadow-lg border border-gray-300`}>
+          <Text style={tw`text-lg font-semibold text-gray-900 mb-3`}>Adresse</Text>
+          <View style={tw`flex-row items-center mb-4`}>
+            <Ionicons name="location-outline" size={25} color="#EF5350" style={tw`mt-1`} />
+            <TouchableOpacity onPress={() => setShowAddress(!showAddress)}>
+              <Text style={tw`ml-2 text-gray-600 underline`}>
+                {showAddress ? shopData.local : "Voir l'adresse"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={tw`h-40 rounded-lg overflow-hidden`}>
+            {/* Map integration can go here */}
+            <View style={tw`h-40 bg-gray-200 rounded-lg overflow-hidden`} />
+          </View>
+        </View>
 
-          <View style={tw`mb-2 border-b border-gray-200 `} />
+        {/* Reviews Section */}
+        <View style={tw`p-4 bg-white rounded-lg shadow-md`}>
+          <Text style={tw`mb-2 text-lg font-bold`}>Avis</Text>
+          <View style={tw`mb-2 border-b border-gray-300`} />
           <View style={tw`flex-col items-center mb-10`}>
             <Text style={tw`ml-1 text-2xl font-bold`}>4.1</Text>
-
-            <Text style={tw`text-yellow-400`}>★★★★★</Text>
+            <Text style={tw`text-yellow-400 text-2xl`}>★★★★★</Text>
             <Text style={tw`ml-2 text-sm text-gray-600`}>83 avis</Text>
           </View>
           <View style={tw`flex-row justify-between`}>
@@ -170,21 +208,22 @@ const ProfilShop = (props : any) => {
                 style={tw`w-12 h-12 border-white rounded-full`}
               />
               <Text style={tw`text-sm font-bold`}>Cuisine</Text>
-              <Text style={tw`text-sm text-gray-600 `}>4.1</Text>
+              <Text style={tw`text-sm text-gray-600`}>4.1</Text>
             </View>
           </View>
         </View>
+
         <TouchableOpacity
-  style={tw`flex-row items-center justify-center w-1/2 py-2 mt-3 mb-5 ml-40 bg-red-300 rounded-full`}
-  onPress={ gotoreviewshop}
->
-  <Icon name="eye" size={20} color="black" style={tw`mr-2`} />
-  <Text style={tw`text-lg text-center`}>Voir avis</Text>
-</TouchableOpacity>
-+
+          style={tw`flex-row items-center justify-center w-1/2 py-2 mt-3 mb-5 ml-40 bg-red-300 rounded-full`}
+          onPress={goToReviewShop}
+        >
+          <Icon name="eye" size={20} color="black" style={tw`mr-2`} />
+          <Text style={tw`text-lg text-center`}>Voir avis</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={tw`flex-row items-center justify-center w-full py-2 mb-5 bg-red-300 rounded-full px-14`}
-          onPress={gotoreviewform}
+          onPress={goToReviewForm}
         >
           <Icon name="comment" size={20} color="black" style={tw`mr-2`} />
           <Text style={tw`text-lg font-bold text-center`}>
