@@ -72,15 +72,13 @@ const ReviewShop = (props: any) => {
                     name="star"
                     size={20}
                     color={
-                      index < review.note_ambiance
+                      index < (review.note_ambiance + review.note_cuisine + review.note_service)/3
                         ? "#FBBF24"
                         : "#D1D5DB"
-                    } // Utilisation de la note d'ambiance
+                    } 
                   />
                 ))}
-              <Text style={tw`ml-1 text-lg font-bold text-red-300`}>
-                {review.note_ambiance} {/* Affiche la note d'ambiance */}
-              </Text>
+             
             </View>
           </View>
 
