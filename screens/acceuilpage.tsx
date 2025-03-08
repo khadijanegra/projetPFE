@@ -40,7 +40,7 @@ const AcceuilPage = (props: any) => {
   const handleAddToFavorites = async (shop_id: string) => {
     try {
       const response = await axios.post(
-        "http://10.0.2.2:3000/user/favoriclic",
+        `${apiUrl}/user/favoriclic`,
         {
           shop_id: shop_id,
           userId: props.route.params.id,
@@ -182,7 +182,7 @@ const AcceuilPage = (props: any) => {
                   {/* Image */}
                   <Card.Cover
                     source={{
-                      uri: `http://10.0.2.2:3000/fetchshopImages/${shop.shopImage}`,
+                      uri: `${apiUrl}/fetchshopImages/${shop.shopImage}`,
                     }}
                     style={tw`w-full h-40`}
                   />

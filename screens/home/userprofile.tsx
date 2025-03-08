@@ -48,8 +48,8 @@ const UserProfile = (props: any) => {
 
     try {
       console.log("Données envoyées :", { nom: name }, { prenom: prenom });
-      await axios.put(`http://10.0.2.2:3000/user/users/${props.route.params.id}/nom`, { nom: name });
-      await axios.put(`http://10.0.2.2:3000/user/users/${props.route.params.id}/prenom`, { prenom: prenom });
+      await axios.put(`${apiUrl}/user/users/${props.route.params.id}/nom`, { nom: name });
+      await axios.put(`${apiUrl}/user/users/${props.route.params.id}/prenom`, { prenom: prenom });
   
       alert("Modifications enregistrées !");
     } catch (error) {
