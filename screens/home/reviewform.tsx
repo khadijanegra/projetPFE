@@ -12,6 +12,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import tw from "tailwind-react-native-classnames";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+const apiUrl = process.env.API_URL;
+
 
 const Reviewform = (props: any) => {
   const [note_service, setRatingservice] = useState(0);
@@ -44,7 +46,7 @@ const Reviewform = (props: any) => {
     };
     try {
       const response = await axios.post(
-        "http://10.0.2.2:3000/review/postreviews",
+        `${apiUrl}/review/postreviews`,
         ReviewDtata
       );
       if (response.status === 201) {

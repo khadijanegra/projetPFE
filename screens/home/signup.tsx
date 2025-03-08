@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
+const apiUrl = process.env.API_URL;
 
 export default function Signup(props: any) {
   const [nom, setNom] = useState("");
@@ -25,7 +26,7 @@ export default function Signup(props: any) {
 
     try {
       setIsSubmitting(true);
-      const response = await axios.post("http://10.0.2.2:3000/user/register", userData);
+      const response = await axios.post(`${apiUrl}/user/register`, userData);
       
       if (response.data.token) {
         // Mise à jour de l'ID récupéré de la réponse

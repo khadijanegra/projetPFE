@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
+const apiUrl = process.env.API_URL;
+
 
 const ReviewShop = (props: any) => {
   const [reviews, setReviews] = useState([]);
@@ -18,7 +20,7 @@ const ReviewShop = (props: any) => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          `http:/10.0.2.2:3000/review/getreviews/${shop_id}`
+          `${apiUrl}/review/getreviews/${shop_id}`
         );
         setReviews(response.data); // Stocke les avis dans l'état
         setLoading(false); // Fin du chargement

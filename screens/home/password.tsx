@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native"; // Import navigation
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
+const apiUrl = process.env.API_URL;
 
 export default function Password(props : any) {
 
@@ -13,7 +14,7 @@ export default function Password(props : any) {
   const [email, setEmail] = useState("");
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://10.0.2.2:3000/user/forgot-password", {
+      const response = await axios.post(`${apiUrl}/user/forgot-password`, {
         email,
       });
   

@@ -12,6 +12,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Card } from "react-native-paper";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+const apiUrl = process.env.API_URL;
+
 
 const AcceuilPage = (props: any) => {
   const [shopsData, setShopsData] = useState<any[]>([]);
@@ -21,7 +23,7 @@ const AcceuilPage = (props: any) => {
 
   const fetchShopsData = useCallback(async () => {
     try {
-      const response = await axios.get(`http://10.0.2.2:3000/shops/`);
+      const response = await axios.get(`${apiUrl}/shops/`);
       setShopsData(response.data);
       console.log(JSON.stringify(response.data, null, 2));
     } catch (error) {
@@ -35,25 +37,32 @@ const AcceuilPage = (props: any) => {
     }, [fetchShopsData])
   );
 
-
   const handleAddToFavorites = async (shop_id: string) => {
     try {
-      const response = await axios.post("http://10.0.2.2:3000/user/favoriclic", {
-         shop_id: shop_id,
-         userId: props.route.params.id,
-      });
-  
+      const response = await axios.post(
+        "http://10.0.2.2:3000/user/favoriclic",
+        {
+          shop_id: shop_id,
+          userId: props.route.params.id,
+        }
+      );
+
       if (response.status === 200) {
         setFavorites((prevFavorites) => [...prevFavorites, shop_id]);
         console.log("Shop added to favorites:", response.data);
       } else {
-        console.error("Error adding to favorites:", response.data.message || 'Unknown error');
+        console.error(
+          "Error adding to favorites:",
+          response.data.message || "Unknown error"
+        );
       }
     } catch (error: any) {
-      console.error("Error during adding to favorites:", error.response?.data || error.message);
+      console.error(
+        "Error during adding to favorites:",
+        error.response?.data || error.message
+      );
     }
   };
-  
 
   const handleCardExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -67,9 +76,8 @@ const AcceuilPage = (props: any) => {
   };
 
   const goTofavorisuser = () => {
-    props.navigation.navigate("userfavoris" ,{ id: props.route.params.id });
+    props.navigation.navigate("userfavoris", { id: props.route.params.id });
   };
-
 
   const goToprofileshop = (shop: any) => {
     props.navigation.navigate("profileshop", { shopData: shop }); // il shopData howa mot clee illi najmou naccediw behaa fil page illi ba3edhaa  // shop hiya il objet illi fih il contenu lkolll mte3 il shop
@@ -174,10 +182,11 @@ const AcceuilPage = (props: any) => {
                   {/* Image */}
                   <Card.Cover
                     source={{
-                      uri: shop.shopImage,
+                      uri: `http://10.0.2.2:3000/fetchshopImages/${shop.shopImage}`,
                     }}
                     style={tw`w-full h-40`}
                   />
+
                   {/* Contenu principal */}
                   <Card.Content style={tw`pt-3`}>
                     <View
@@ -205,11 +214,21 @@ const AcceuilPage = (props: any) => {
                       style={tw`flex-row items-center self-start px-1 py-1 rounded-full `}
                     >
                       <View style={tw`flex-row items-center`}>
-                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
-                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
-                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
-                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
-                        <Text><Icon name="star" size={20} color="#FBBF24" /></Text>
+                        <Text>
+                          <Icon name="star" size={20} color="#FBBF24" />
+                        </Text>
+                        <Text>
+                          <Icon name="star" size={20} color="#FBBF24" />
+                        </Text>
+                        <Text>
+                          <Icon name="star" size={20} color="#FBBF24" />
+                        </Text>
+                        <Text>
+                          <Icon name="star" size={20} color="#FBBF24" />
+                        </Text>
+                        <Text>
+                          <Icon name="star" size={20} color="#FBBF24" />
+                        </Text>
                       </View>{" "}
                       <Text style={tw`ml-1 text-lg font-bold text-red-300`}>
                         4.9
@@ -221,8 +240,8 @@ const AcceuilPage = (props: any) => {
                   <Card.Actions style={tw`justify-between px-4 pb-3`}>
                     <TouchableOpacity
                       style={tw`p-2 bg-red-100 rounded-full`}
-                      onPress={() => { handleAddToFavorites(shop._id)
-                        
+                      onPress={() => {
+                        handleAddToFavorites(shop._id);
                       }}
                     >
                       <Icon name="heart" size={20} color="#F56565" />

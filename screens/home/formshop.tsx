@@ -15,6 +15,7 @@ import axios from "axios";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
+const apiUrl = process.env.API_URL;
 
 const FormShop = (props: any) => {
 
@@ -34,6 +35,7 @@ const FormShop = (props: any) => {
     }
   }, [modalVisible]);
   
+
 
   const [shopNom, setShopNom] = useState("");
   const [shopDesc, setShopDesc] = useState("");
@@ -58,7 +60,55 @@ const FormShop = (props: any) => {
     getPermissions();
   }, []);
 
+
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    if (!result.canceled && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      const filename = uri.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename || '');
+      const type = match ? `image/${match[1]}` : 'image';
+  
+      let formData = new FormData();
+      formData.append('file', {
+        uri,
+        name: filename,
+        type,
+      } as any);
+  
+      try {
+        const response = await fetch(`${apiUrl}/uploadshopImage`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        const responseText = await response.json(); // Assurez-vous que votre backend retourne un JSON avec le nom de l'image
+        if (responseText.fileName) {
+          setShopImage(responseText.fileName); // Stocke le nom du fichier
+          console.log('Nom du fichier uploadé :', responseText.fileName);
+        }
+      } catch (error) {
+        console.error('Upload failed:', error);
+      }
+    }
+  };
+
   const handleSubmit = async () => {
+    if (!shopImage) {
+      Alert.alert("Veuillez d'abord uploader une image !");
+      return;
+    }
+  
     const shopData = {
       shop_nom: shopNom,
       phone,
@@ -66,13 +116,13 @@ const FormShop = (props: any) => {
       shop_local: shopLocal,
       shop_date_ouv: shopDateOuv,
       shop_date_ferm: shopDateFerm,
-      shopImage, //te5edh ism il file elli uploadineh 
+      shopImage, // Nom du fichier uploadé
       user_id: props.route.params.id,
     };
-
+  
     try {
-      const response = await axios.post("http://10.0.2.2:3000/shops/", shopData);
-
+      const response = await axios.post(`${apiUrl}/shops/`, shopData);
+  
       if (response.status === 201) {
         const shopId = response.data.id;
         setShopId(shopId);
@@ -88,21 +138,6 @@ const FormShop = (props: any) => {
       return false;
     }
   };
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-  
-  console.log(result);
-
-  if (!result.canceled && result.assets.length > 0) {
-    // appel lil API mte3 il upload 
-  }
-};
 
 
   const goToShopProfile = () => {

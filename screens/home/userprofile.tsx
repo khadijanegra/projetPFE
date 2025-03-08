@@ -8,6 +8,8 @@ const UserProfile = (props: any) => {
   const [name, setName] = useState("");
   const [prenom, setPrenom] = useState(""); // Correcte l'état pour prénom
   const [email, setEmail] = useState("");
+  const apiUrl = process.env.API_URL;
+
   
   const [isEditing, setIsEditing] = useState(false);
 
@@ -17,7 +19,7 @@ const UserProfile = (props: any) => {
   console.log("ID utilisateur reçu :", props.route.params.id);
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get(`http://10.0.2.2:3000/user/users/${props.route.params.id}`);
+      const response = await axios.get(`${apiUrl}/user/users/${props.route.params.id}`);
 
       
   

@@ -7,6 +7,8 @@ import MapView, { Marker } from 'react-native-maps';
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as Animatable from 'react-native-animatable';
 import axios from "axios";
+const apiUrl = process.env.API_URL;
+
 
 const LocationButton = (props: any) => {
   const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
@@ -35,7 +37,7 @@ const LocationButton = (props: any) => {
       // 🔥 Envoie la localisation au backend
       const userId = props.route.params.id; // Remplace par l'ID réel de l'utilisateur
       console.log("********************************************" + userId);
-      const API_URL = `http://localhost:3000/user/users/${userId}/localisation`;
+      const API_URL = `${apiUrl}/user/users/${userId}/localisation`;
   
       await axios.put(API_URL, {
         localisation: {

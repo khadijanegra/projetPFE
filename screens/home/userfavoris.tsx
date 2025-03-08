@@ -4,6 +4,7 @@ import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+const apiUrl = process.env.API_URL;
 
 const TaskCard = (props: any) => {
   const [shopsData, setShopsData] = useState<any[]>([]);
@@ -15,7 +16,7 @@ const TaskCard = (props: any) => {
     //puisque il favorissssss fehaa ken il shop id , donc mayo5rjou ken les data mte3 les shop adhoukom khw
     try {
       const response = await axios.get(
-        `http://10.0.2.2:3000/user/favorites/${props.route.params.id}`); // il id user chne5dhou min les donnness mte3ou lkoll ken les favoriisss
+        `${apiUrl}/user/favorites/${props.route.params.id}`); // il id user chne5dhou min les donnness mte3ou lkoll ken les favoriisss
       // w puisque les favoriii fihon=m les shop id donc chnal9aw les shop dataa fihomm
       const userData = response.data;
       setShopsData(userData);

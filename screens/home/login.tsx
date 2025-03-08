@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
+const  API_URL  = process.env.API_URL;
 
 export default function Login(props : any) {
   const [checked, setChecked] = useState(true);
@@ -22,7 +23,7 @@ export default function Login(props : any) {
   
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://10.0.2.2:3000/user/signIn", {
+      const response = await axios.post(`${API_URL}/user/signIn`, {
         email,
         password,
       });

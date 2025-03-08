@@ -4,12 +4,15 @@ import { View, Text, TextInput, TouchableOpacity, Image, Modal, Animated, Alert 
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
+const apiUrl = process.env.API_URL;
+
 
 export default function Passwordkey(props : any) {
   const [verificationCode, setCode] = useState("");
   const [newPassword, setPassword] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(300)).current;
+  const apiUrl = process.env.API_URL;
 
 
 const goto = () =>{
@@ -19,7 +22,7 @@ const goto = () =>{
 console.log(props.route.params.email);
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://10.0.2.2:3000/user/reset-password", {
+      const response = await axios.post(`${apiUrl}/user/reset-password`, {
         email : props.route.params.email, 
         verificationCode,  
         newPassword 

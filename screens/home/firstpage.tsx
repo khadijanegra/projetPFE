@@ -3,13 +3,13 @@ import { TouchableOpacity, Text, Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
-
+const  API_URL  = process.env.API_URL;
 // Firstpage Component
 export default function Firstpage({ navigation }: { navigation: any }) {
   const goToHome = () => {
     navigation.navigate("homepage");
   };
-
+  console.log(API_URL);
   return (
     <SafeAreaView style={tw`flex-1 bg-white`}>
       {/* Grande image en haut */}
