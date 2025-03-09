@@ -233,7 +233,7 @@ props.navigation.navigate("acceuilpage")
               </Text>
               <TouchableOpacity
                 style={tw`px-12 py-4 bg-yellow-400 rounded-full`}
-                onPress={gotoacceuilpage}
+                onPress={() => setModalVisible(false)}
               >
                 <Text style={tw`text-xl font-bold text-white`}>Confirmer</Text>
               </TouchableOpacity>
