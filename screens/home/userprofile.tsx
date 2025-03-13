@@ -130,7 +130,7 @@ const UserProfile = (props: any) => {
       </View>
       <TouchableOpacity
   style={tw`items-center py-3  rounded-lg bg-yellow-500`}
-  onPress={goToDeleteAccount} // Appel de la fonction
+  onPress={goToDeleteAccount} // Appel de la fonctiongit 
 >
   <Text style={tw`text-lg font-bold text-white`}>Gérer mon compte</Text>
 </TouchableOpacity>
