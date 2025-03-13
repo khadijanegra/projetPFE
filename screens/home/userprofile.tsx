@@ -58,6 +58,14 @@ const UserProfile = (props: any) => {
     }
     setIsEditing(false);
   };
+  const goToDeleteAccount = () => {
+    props.navigation.navigate("deleteAccount", {
+      user_id: props.route.params.id, 
+      
+    });
+  
+  };
+  
   
    
   return (
@@ -120,6 +128,13 @@ const UserProfile = (props: any) => {
 </TouchableOpacity>
 
       </View>
+      <TouchableOpacity
+  style={tw`items-center py-3  rounded-lg bg-yellow-500`}
+  onPress={goToDeleteAccount} // Appel de la fonction
+>
+  <Text style={tw`text-lg font-bold text-white`}>Gérer mon compte</Text>
+</TouchableOpacity>
+
     </ScrollView>
   );
 };

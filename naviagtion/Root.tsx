@@ -17,7 +17,7 @@ import locationdemand from "screens/home/locationdemand";
 import reviewform from "screens/home/reviewform"
 import TaskCard from "screens/home/userfavoris"
 import ReviewShop from "screens/home/reviewshop";
-
+import DeleteAccount from "screens/home/deleteAccount";
 const Stack = createStackNavigator();
 
 export default function Root() {
@@ -38,6 +38,7 @@ export default function Root() {
       <Stack.Screen name="reviewform" component={reviewform} />
       <Stack.Screen name="userfavoris" component={TaskCard} />
       <Stack.Screen name="reviewshop" component={ReviewShop} />
+      <Stack.Screen name="deleteAccount" component={DeleteAccount} />
     </Stack.Navigator> 
       
 
