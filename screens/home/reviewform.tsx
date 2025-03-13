@@ -26,7 +26,10 @@ const Reviewform = (props: any) => {
   const [image, setImage] = useState<string | null>(null);
   const [user_id , setuser_id]= useState("")
   const [ shop_id , setshop_id] = useState("")
+  const [date, setDate] = useState("");
 
+
+  
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -38,6 +41,9 @@ const Reviewform = (props: any) => {
   };
 
   const handleSubmit = async () => {
+    const currentDate = new Date().toISOString(); // Récupère la date actuelle au format ISO
+      setDate(currentDate);
+      
     const ReviewDtata = {
       note_service: note_service,
       note_ambiance: note_ambiance,
@@ -45,6 +51,7 @@ const Reviewform = (props: any) => {
       commentaire: commentaire,
       user_id: props.route.params.user_id, 
       shop_id: props.route.params.shop_id,
+      date: currentDate,
     };
     
     try {
