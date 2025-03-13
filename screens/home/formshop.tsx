@@ -9,6 +9,7 @@ import {
   ScrollView,
   Animated,
   Alert,
+  TouchableWithoutFeedback,
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
@@ -16,6 +17,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+//import { Picker } from "@react-native-picker/picker";
 
 const apiUrl = process.env.API_URL;
 
@@ -44,6 +46,21 @@ const FormShop = (props: any) => {
   const [phone, setPhone] = useState("");
   const [shopImage, setShopImage] = useState<any>(null); // Updated for clarity
   const [shopId, setShopId] = useState<any>(null);
+
+
+  const [categorie, setcategorie] = useState("");
+const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+
+
+const categories = [
+  { label: "Sélectionnez une catégorie", value: "" },
+  { label: "Hôtel", value: "Hôtel" },
+  { label: "Café", value: "Café" },
+  { label: "Salon de thé", value: "Salon de thé" },
+  { label: "Restaurant", value: "restaurant" },
+];
+
+
 
   // Request Camera and Media Library Permissions on mount
   useEffect(() => {
@@ -137,6 +154,7 @@ const FormShop = (props: any) => {
       shop_date_ferm: shopDateFerm,
       shopImage, // Nom du fichier uploadé
       user_id: props.route.params.id,
+      categorie : categorie,
     };
 
     try {
@@ -167,243 +185,307 @@ const FormShop = (props: any) => {
 
   return (
     <ScrollView style={tw`bg-red-100`} contentContainerStyle={tw`p-4`}>
-      <LinearGradient
-        colors={["#F8FAFC", "#F1F5F9"]}
-        style={tw`flex-1 p-6 shadow-lg rounded-3xl`}
-      >
-        {/* Header */}
-        <View style={tw`items-center mb-8`}>
-          <Text style={tw`text-3xl font-bold text-black`}>
-            Créez votre Shop
-          </Text>
-          <Text style={tw`mt-2 text-gray-600`}>
-            Rejoignez notre communauté de professionnels
-          </Text>
-        </View>
-
-        {/* Basic Info Section */}
-        <View style={tw`mb-8`}>
-          <Text style={tw`mb-4 text-xl font-bold text-black`}>
-            Informations principales
-          </Text>
-
-          {/* Shop Name */}
-          <View
-            style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
-          >
-            <Ionicons
-              name="business"
-              size={20}
-              color="#212121"
-              style={tw`mr-3`}
-            />
-            <TextInput
-              style={tw`flex-1 text-gray-700`}
-              placeholder="Nom de l'établissement"
-              value={shopNom}
-              onChangeText={setShopNom}
-            />
-          </View>
-
-          {/* Phone Number */}
-          <View
-            style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
-          >
-            <FontAwesome
-              name="phone"
-              size={20}
-              color="#212121"
-              style={tw`mr-3`}
-            />
-            <TextInput
-              style={tw`flex-1 text-gray-700`}
-              placeholder="Numéro de téléphone"
-              keyboardType="phone-pad"
-              value={phone}
-              onChangeText={setPhone}
-            />
-          </View>
-
-          {/* Description */}
-          <View style={tw`p-3 bg-white shadow-sm rounded-xl`}>
-            <TextInput
-              style={tw`h-32 text-gray-700`}
-              multiline
-              placeholder="Description détaillée..."
-              value={shopDesc}
-              onChangeText={setShopDesc}
-            />
-          </View>
-        </View>
-
-        {/* Location Section */}
-        <View style={tw`mb-8`}>
-          <Text style={tw`mb-4 text-xl font-bold text-black`}>
-            Localisation
-          </Text>
-          <View
-            style={tw`flex-row items-center p-3 bg-white shadow-sm rounded-xl`}
-          >
-            <Ionicons
-              name="location-sharp"
-              size={20}
-              color="#212121"
-              style={tw`mr-3`}
-            />
-            <TextInput
-              style={tw`flex-1 text-gray-700`}
-              placeholder="URL de localisation Google Maps"
-              value={shopLocal}
-              onChangeText={setShopLocal}
-            />
-          </View>
-        </View>
-
-        {/* Opening Hours Section */}
-        <View style={tw`mb-8`}>
-  <Text style={tw`mb-4 text-xl font-bold text-black`}>
-    Horaires d'ouverture
-  </Text>
-
-  <View style={tw`flex-row justify-between`}>
-    {/* Champ Heure d'ouverture */}
-    <TouchableOpacity 
-      onPress={() => showDatePicker("ouverture")}
-      style={tw`flex-1 mr-2`}
-    >
-      <View style={tw`p-4 bg-white rounded-xl shadow-sm border border-gray-100`}>
-        <Text style={tw`text-xs text-gray-500 mb-1`}>Ouverture</Text>
-        <View style={tw`flex-row items-center justify-between`}>
-          <View style={tw`flex-row items-center`}>
-            <Ionicons 
-              name="time-outline" 
-              size={20} 
-              color="#F59E0B" 
-              style={tw`mr-2`}
-            />
-            <Text style={tw`text-gray-700 `}>
-              {shopDateOuv || "HH:MM"}
+      <TouchableWithoutFeedback onPress={() => setShowCategoryPicker(false)}>
+        <LinearGradient
+          colors={["#F8FAFC", "#F1F5F9"]}
+          style={tw`flex-1 p-6 shadow-lg rounded-3xl`}
+        >
+          {/* Header */}
+          <View style={tw`items-center mb-8`}>
+            <Text style={tw`text-3xl font-bold text-black`}>
+              Créez votre Shop
+            </Text>
+            <Text style={tw`mt-2 text-gray-600`}>
+              Rejoignez notre communauté de professionnels
             </Text>
           </View>
-          <Ionicons 
-            name="chevron-forward" 
-            size={16} 
-            color="#CBD5E1" 
-          />
-        </View>
-      </View>
-    </TouchableOpacity>
 
-    {/* Champ Heure de fermeture */}
-    <TouchableOpacity 
-      onPress={() => showDatePicker("fermeture")}
-      style={tw`flex-1 ml-2`}
-    >
-      <View style={tw`p-4 bg-white rounded-xl shadow-sm border border-gray-100`}>
-        <Text style={tw`text-xs text-gray-500 mb-1`}>Fermeture</Text>
-        <View style={tw`flex-row items-center justify-between`}>
-          <View style={tw`flex-row items-center`}>
-            <Ionicons 
-              name="time-outline" 
-              size={20} 
-              color="#F59E0B" 
-              style={tw`mr-2`}
-            />
-            <Text style={tw`text-gray-700 `}>
-              {shopDateFerm || "HH:MM"}
+          {/* Basic Info Section */}
+          <View style={tw`mb-8`}>
+            <Text style={tw`mb-4 text-xl font-bold text-black`}>
+              Informations principales
             </Text>
-          </View>
-          <Ionicons 
-            name="chevron-forward" 
-            size={16} 
-            color="#CBD5E1" 
-          />
-        </View>
-      </View>
-    </TouchableOpacity>
-  </View>
 
-  {/* DatePicker */}
-  {showPicker.type && (
-    <DateTimePicker
-      value={new Date()}
-      mode="time"
-      display="spinner"
-      onChange={onChangeTime}
-      themeVariant="light"
-      textColor="#000000"
-    />
-  )}
-</View>
-
-
-
-        {/* Image Upload Section */}
-        <View style={tw`mb-8`}>
-          <Text style={tw`mb-4 text-xl font-bold text-black`}>
-            Menu du restaurant
-          </Text>
-          <TouchableOpacity
-            style={tw`items-center justify-center h-40 bg-white border-2 border-yellow-300 border-dashed rounded-2xl`}
-            onPress={pickImage}
-          >
-            {shopImage ? (
-              <Image
-                source={{ uri: shopImage }}
-                style={tw`w-full h-full rounded-2xl`}
-              />
-            ) : (
-              <>
-                <Ionicons name="cloud-upload" size={40} color="#FBC02D" />
-                <Text style={tw`mt-2 text-blue-600`}>
-                  Télécharger votre Image
-                </Text>
-                <Text style={tw`text-xs text-gray-500`}>Format JPG ou PNG</Text>
-              </>
-            )}
-          </TouchableOpacity>
-        </View>
-
-        {/* Submit Button */}
-        <TouchableOpacity onPress={handleSubmit}>
-          <Text
-            style={tw`p-4 text-lg font-bold text-center text-white bg-red-300 rounded-xl`}
-          >
-            Valider la création
-          </Text>
-        </TouchableOpacity>
-
-        {/* Modal */}
-        <Modal animationType="fade" transparent={true} visible={modalVisible}>
-          <View
-            style={tw`items-center justify-end flex-1 bg-black bg-opacity-50`}
-          >
-            <Animated.View
-              style={[
-                tw`items-center w-full p-8 bg-white rounded-t-3xl`,
-                { transform: [{ translateY: slideAnim }] },
-              ]}
+            {/* Shop Name */}
+            <View
+              style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
             >
-              <Image
-                source={require("../../images/Illustration.png")}
-                style={tw`w-40 h-40 mb-4 rounded-full`}
+              <Ionicons
+                name="business"
+                size={20}
+                color="#EF5350"
+                style={tw`mr-3`}
               />
-              <Text style={tw`mb-2 text-2xl font-bold text-gray-900`}>
-                Félicitations !
-              </Text>
-              <Text style={tw`mb-6 text-center text-gray-600`}>
-                Votre établissement a été créé avec succès !
-              </Text>
+              <TextInput
+                style={tw`flex-1 text-gray-700`}
+                placeholder="Nom de l'établissement"
+                value={shopNom}
+                onChangeText={setShopNom}
+              />
+            </View>
+           
+            <View
+              style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
+            >
+             <FontAwesome
+                name="phone"
+                size={20}
+                color="#EF5350"
+                style={tw`mr-3`}
+              />
+              <TextInput
+                style={tw`flex-1 text-gray-700`}
+                placeholder="Numéro de téléphone"
+                keyboardType="phone-pad"
+                value={phone}
+                onChangeText={setPhone}
+              />
+            </View>
+
+            <View style={tw`mb-4`}>
+              
               <TouchableOpacity
-                style={tw`px-12 py-4 bg-yellow-400 rounded-full`}
-                onPress={goToShopProfile}
+                onPress={() => setShowCategoryPicker(true)}
+                style={tw`p-3 bg-white rounded-lg border border-gray-200`}
               >
-                <Text style={tw`text-xl font-bold text-white`}>Confirmer</Text>
+                <View style={tw`flex-row   items-center`}>
+
+                <Ionicons
+                  name="pricetag"
+                  size={18}
+                  color={categorie ? "#EF5350" : "#EF5350"}
+                  style={tw`mr-2`}
+                />
+                  <Text
+                    style={tw`${
+                      !categorie ? "text-gray-400" : "text-gray-700"
+                    }`}
+
+
+                  >
+                    {categorie || "Sélectionnez une catégorie"}
+                  </Text>
+
+                  <Ionicons name="chevron-down" size={16} color="#CBD5E1" style={tw`ml-2`} />
+                </View>
               </TouchableOpacity>
-            </Animated.View>
+
+              <Modal
+                visible={showCategoryPicker}
+                transparent={true}
+                animationType="slide"
+              >
+                <View style={tw`flex-1 justify-center bg-black bg-opacity-50`}>
+                  <View style={tw`m-4 bg-white rounded-lg p-4`}>
+                    <Text style={tw`text-lg font-bold mb-4`}>
+                      Choisir une catégorie
+                    </Text>
+                    {categories.map((cat) => (
+                      <TouchableOpacity
+                        key={cat.value}
+                        onPress={() => {
+                          setcategorie(cat.value);
+                          setShowCategoryPicker(false);
+                        }}
+                        style={tw`p-3 ${
+                          categorie === cat.value ? "bg-gray-100" : ""
+                        }`}
+                      >
+                        <Text style={tw`text-gray-700`}>{cat.label}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              </Modal>
+            </View>
+
+            {/* Description */}
+            <View style={tw`p-3 bg-white shadow-sm rounded-xl`}>
+              <TextInput
+                style={tw`h-32 text-gray-700`}
+                multiline
+                placeholder="Description détaillée..."
+                value={shopDesc}
+                onChangeText={setShopDesc}
+              />
+            </View>
           </View>
-        </Modal>
-      </LinearGradient>
+
+          {/* Location Section */}
+          <View style={tw`mb-8`}>
+            <Text style={tw`mb-4 text-xl font-bold text-black`}>
+              Localisation
+            </Text>
+            <View
+              style={tw`flex-row items-center p-3 bg-white shadow-sm rounded-xl`}
+            >
+              <Ionicons
+                name="location-sharp"
+                size={20}
+                color="#EF5350"
+                style={tw`mr-3`}
+              />
+              <TextInput
+                style={tw`flex-1 text-gray-700`}
+                placeholder="URL de localisation Google Maps"
+                value={shopLocal}
+                onChangeText={setShopLocal}
+              />
+            </View>
+          </View>
+
+          {/* Opening Hours Section */}
+          <View style={tw`mb-8`}>
+            <Text style={tw`mb-4 text-xl font-bold text-black`}>
+              Horaires d'ouverture
+            </Text>
+
+            <View style={tw`flex-row justify-between`}>
+              {/* Champ Heure d'ouverture */}
+              <TouchableOpacity
+                onPress={() => showDatePicker("ouverture")}
+                style={tw`flex-1 mr-2`}
+              >
+                <View
+                  style={tw`p-4 bg-white rounded-xl shadow-sm border border-gray-100`}
+                >
+                  <Text style={tw`text-xs text-gray-500 mb-1`}>Ouverture</Text>
+                  <View style={tw`flex-row items-center justify-between`}>
+                    <View style={tw`flex-row items-center`}>
+                      <Ionicons
+                        name="time-outline"
+                        size={20}
+                        color="#F59E0B"
+                        style={tw`mr-2`}
+                      />
+                      <Text style={tw`text-gray-700 `}>
+                        {shopDateOuv || "HH:MM"}
+                      </Text>
+                    </View>
+                    <Ionicons
+                      name="chevron-forward"
+                      size={16}
+                      color="#CBD5E1"
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              {/* Champ Heure de fermeture */}
+              <TouchableOpacity
+                onPress={() => showDatePicker("fermeture")}
+                style={tw`flex-1 ml-2`}
+              >
+                <View
+                  style={tw`p-4 bg-white rounded-xl shadow-sm border border-gray-100`}
+                >
+                  <Text style={tw`text-xs text-gray-500 mb-1`}>Fermeture</Text>
+                  <View style={tw`flex-row items-center justify-between`}>
+                    <View style={tw`flex-row items-center`}>
+                      <Ionicons
+                        name="time-outline"
+                        size={20}
+                        color="#F59E0B"
+                        style={tw`mr-2`}
+                      />
+                      <Text style={tw`text-gray-700 `}>
+                        {shopDateFerm || "HH:MM"}
+                      </Text>
+                    </View>
+                    <Ionicons
+                      name="chevron-forward"
+                      size={16}
+                      color="#CBD5E1"
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            {/* DatePicker */}
+            {showPicker.type && (
+              <DateTimePicker
+                value={new Date()}
+                mode="time"
+                display="spinner"
+                onChange={onChangeTime}
+                themeVariant="light"
+                textColor="#000000"
+              />
+            )}
+          </View>
+
+          {/* Image Upload Section */}
+          <View style={tw`mb-8`}>
+            <Text style={tw`mb-4 text-xl font-bold text-black`}>
+              Menu du restaurant
+            </Text>
+            <TouchableOpacity
+              style={tw`items-center justify-center h-40 bg-white border-2 border-yellow-300 border-dashed rounded-2xl`}
+              onPress={pickImage}
+            >
+              {shopImage ? (
+                <Image
+                  source={{ uri: shopImage }}
+                  style={tw`w-full h-full rounded-2xl`}
+                />
+              ) : (
+                <>
+                  <Ionicons name="cloud-upload" size={40} color="#FBC02D" />
+                  <Text style={tw`mt-2 text-blue-600`}>
+                    Télécharger votre Image
+                  </Text>
+                  <Text style={tw`text-xs text-gray-500`}>
+                    Format JPG ou PNG
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity onPress={handleSubmit}>
+            <Text
+              style={tw`p-4 text-lg font-bold text-center text-white bg-red-300 rounded-xl`}
+            >
+              Valider la création
+            </Text>
+          </TouchableOpacity>
+
+          {/* Modal */}
+          <Modal animationType="fade" transparent={true} visible={modalVisible}>
+            <View
+              style={tw`items-center justify-end flex-1 bg-black bg-opacity-50`}
+            >
+              <Animated.View
+                style={[
+                  tw`items-center w-full p-8 bg-white rounded-t-3xl`,
+                  { transform: [{ translateY: slideAnim }] },
+                ]}
+              >
+                <Image
+                  source={require("../../images/Illustration.png")}
+                  style={tw`w-40 h-40 mb-4 rounded-full`}
+                />
+                <Text style={tw`mb-2 text-2xl font-bold text-gray-900`}>
+                  Félicitations !
+                </Text>
+                <Text style={tw`mb-6 text-center text-gray-600`}>
+                  Votre établissement a été créé avec succès !
+                </Text>
+                <TouchableOpacity
+                  style={tw`px-12 py-4 bg-yellow-400 rounded-full`}
+                  onPress={goToShopProfile}
+                >
+                  <Text style={tw`text-xl font-bold text-white`}>
+                    Confirmer
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
+          </Modal>
+        </LinearGradient>
+      </TouchableWithoutFeedback>
     </ScrollView>
   );
 };
