@@ -91,7 +91,7 @@ const categories = [
         setShopDateFerm(formattedTime);
       }
     }
-    setShowPicker({ type: null }); // Ferme le TimePicker
+    setShowPicker({ type: null }); 
   };
 
   const showDatePicker = (type: "ouverture" | "fermeture") => {

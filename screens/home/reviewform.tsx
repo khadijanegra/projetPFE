@@ -27,17 +27,51 @@ const Reviewform = (props: any) => {
   const [user_id , setuser_id]= useState("")
   const [ shop_id , setshop_id] = useState("")
   const [date, setDate] = useState("");
+  const [reviewImages , setReviewImages] = useState<any>(null);
 
 
   
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+  const pickReviewImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images", "videos"],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
+  
+    if (!result.canceled && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      const filename = uri.split("/").pop();
+      const match = /\.(\w+)$/.exec(filename || "");
+      const type = match ? `image/${match[1]}` : "image";
+  
+      let formData = new FormData();
+      formData.append("file", {
+        uri,
+        name: filename,
+        type,
+      } as any);
+  
+      try {
+        const response = await fetch(`${apiUrl}/uploadreviewImage`, {
+
+          method: "POST",
+          body: formData,
+
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+  
+        const responseText = await response.json(); // Assurez-vous que votre backend retourne un JSON avec le nom de l'image
+        if (responseText.fileName) {
+          setReviewImages(responseText.fileName); // Stocke le nom du fichier
+          console.log("Nom du fichier uploadé :", responseText.fileName);
+        }
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -52,6 +86,7 @@ const Reviewform = (props: any) => {
       user_id: props.route.params.user_id, 
       shop_id: props.route.params.shop_id,
       date: currentDate,
+      reviewImages // ism il dossier illi chykounou fih les images 
     };
     
     try {
@@ -87,10 +122,7 @@ const Reviewform = (props: any) => {
         slideAnim.setValue(300); 
       }
     }, [modalVisible]);
-  
-const gotoacceuilpage =() =>{
-props.navigation.navigate("acceuilpage")
-}
+ 
   return (
     <ScrollView>
       <View style={tw`flex-1 p-5 bg-white`}>
@@ -194,7 +226,7 @@ props.navigation.navigate("acceuilpage")
             />
             <TouchableOpacity
               style={tw`absolute top-3 right-3`}
-              onPress={pickImage}
+              onPress={pickReviewImage}
             >
               <FontAwesome name="camera" size={24} color="gray" />
             </TouchableOpacity>
