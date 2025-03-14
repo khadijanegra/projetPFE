@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -19,7 +19,8 @@ const AcceuilPage = (props: any) => {
   const [shopsData, setShopsData] = useState<any[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [favorites, setFavorites] = useState<any[]>([]); // To keep track of favorites
+  const [favorites, setFavorites] = useState<any[]>([]); 
+
 
   const fetchShopsData = useCallback(async () => {
     try {
@@ -84,12 +85,12 @@ const AcceuilPage = (props: any) => {
 
   const goToprofileshop = (shop: any) => {
     props.navigation.navigate("profileshop",{
-      shopData: shop,
+      shopId: shop._id,
       id: props.route.params.id
      
     }); 
-    // il shopData howa mot clee illi najmou naccediw behaa fil page illi ba3edhaa  // shop hiya il objet illi fih il contenu lkolll mte3 il shop
   };
+
 
   return (
     <View style={tw`flex-1 bg-white`}>
@@ -130,7 +131,6 @@ const AcceuilPage = (props: any) => {
                 <Icon name="star" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg text-white`}>Mes Avis</Text>
               </TouchableOpacity>
-
               <View style={tw`mt-auto`}>
                 <TouchableOpacity
                   style={tw`flex-row items-center p-4 border-t border-gray-300`}

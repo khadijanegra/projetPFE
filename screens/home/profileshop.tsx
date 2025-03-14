@@ -20,7 +20,7 @@ const ProfilShop = (props: any) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const shopId = props.route.params.shopData._id;
+  const shopId = props.route.params.shopId;
 
   const fetchShopData = useCallback(async () => {
     try {
