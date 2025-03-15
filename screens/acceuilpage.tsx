@@ -91,6 +91,15 @@ const AcceuilPage = (props: any) => {
     }); 
   };
 
+  const goToReclam = () => {
+    if (props.route.params?.id) {  // Check if 'id' exists
+      setIsMenuOpen(false);
+      props.navigation.navigate("reclam", { id: props.route.params.id });
+    } else {
+      console.error("ID is not available!");
+    }
+  };
+  
 
   return (
     <View style={tw`flex-1 bg-white`}>
@@ -134,7 +143,7 @@ const AcceuilPage = (props: any) => {
               <View style={tw`mt-auto`}>
                 <TouchableOpacity
                   style={tw`flex-row items-center p-4 border-t border-gray-300`}
-                  onPress={() => setIsMenuOpen(false)}
+                  onPress={goToReclam}
                 >
                   <Icon
                     name="refresh"
