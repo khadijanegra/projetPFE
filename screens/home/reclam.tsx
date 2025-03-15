@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { FontAwesome } from "@expo/vector-icons";
-
+import axios from "axios";
+const  API_URL  = process.env.API_URL;
 const Reclam = () => {
   const [rating, setRating] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -38,11 +39,30 @@ const toggleOption = (choice: string) => {
   
   
   
-  const handleSend = () => {
-    console.log("Note :", rating);
-    console.log("Améliorations :", selectedOptions);
-    console.log("Commentaire :", comment);
-  };
+const API_URL = process.env.API_URL;
+
+const handleSend = async () => {
+  try {
+    // Construire les données à envoyer
+    const data = {
+      rating, // La note (de 1 à 5)
+      selectedOptions, // Les options sélectionnées
+      comment, // Le commentaire
+    };
+
+    // Envoi des données à l'API du backend
+    const response = await axios.post(`${API_URL}/user/send-reclamation`,data);
+
+    // Afficher la réponse de l'API (facultatif, pour débogage)
+    console.log(response.data);
+
+    // Tu peux ajouter ici un message de confirmation, ou une redirection, etc.
+    alert('Réclamation envoyée avec succès !');
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de la réclamation :', error);
+    alert('Une erreur est survenue. Veuillez réessayer.');
+  }
+};
 
   return (
     <ScrollView>
@@ -100,6 +120,7 @@ const toggleOption = (choice: string) => {
           ))}
         </View>
       </View>
+
 
       {/* Champ de texte */}
       <View style={tw`bg-pink-100 p-6 rounded-lg mb-4`}>
