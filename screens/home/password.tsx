@@ -38,11 +38,11 @@ export default function Password(props : any) {
           style={tw`w-30 h-30 mb-6 ml-40 `} 
         />
       <Text style={tw`mb-6 text-2xl font-bold text-center`}>
-        Réinitialisation du mot de passe
+      𝑹𝒆́𝒊𝒏𝒊𝒕𝒊𝒂𝒍𝒊𝒔𝒂𝒕𝒊𝒐𝒏 𝒅𝒖 𝒎𝒐𝒕 𝒅𝒆 𝒑𝒂𝒔𝒔𝒆
       </Text>
 
       <Text style={tw`mb-4 mr-20 text-center text`}>
-        Saisissez votre adresse e-mail :
+      𝐒𝐚𝐢𝐬𝐢𝐬𝐬𝐞𝐳 𝐯𝐨𝐭𝐫𝐞 𝐚𝐝𝐫𝐞𝐬𝐬𝐞 𝐞-𝐦𝐚𝐢𝐥 :
       </Text>
 
       <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
@@ -60,7 +60,7 @@ export default function Password(props : any) {
         style={tw`items-center justify-center w-full h-12 bg-black rounded-full mt-6`}
         onPress={handleLogin} // Appeler la fonction goo
       >
-        <Text style={tw`text-lg font-bold text-white`}>Confirmer</Text>
+        <Text style={tw`text-lg font-bold text-white`}>𝐂𝐨𝐧𝐟𝐢𝐫𝐦𝐞𝐫</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

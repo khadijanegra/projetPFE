@@ -67,11 +67,11 @@ console.log(props.route.params.email);
           style={tw`w-30 h-30 mb-6 ml-8 ml-28`} 
         />
       <Text style={tw`mb-6 text-2xl font-bold text-center`}>
-        Réinitialisation du mot de passe
+      𝑹𝒆́𝒊𝒏𝒊𝒕𝒊𝒂𝒍𝒊𝒔𝒂𝒕𝒊𝒐𝒏 𝒅𝒖 𝒎𝒐𝒕 𝒅𝒆 𝒑𝒂𝒔𝒔𝒆
       </Text>
 
       <Text style={tw`mb-4 text-center`}>
-        Entrez le code reçu :
+      𝐄𝐧𝐭𝐫𝐞𝐳 𝐥𝐞 𝐜𝐨𝐝𝐞 𝐫𝐞𝐜̧𝐮 :
       </Text>
 
       <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
@@ -85,7 +85,8 @@ console.log(props.route.params.email);
       </View>
 
       <Text style={tw`mb-4 text-center`}>
-        Choisissez un nouveau mot de passe :
+      𝐂𝐡𝐨𝐢𝐬𝐢𝐬𝐬𝐞𝐳 𝐮𝐧 𝐧𝐨𝐮𝐯𝐞𝐚𝐮 𝐦𝐨𝐭 𝐝𝐞 𝐩𝐚𝐬𝐬𝐞 :
+
       </Text>
 
       <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
@@ -103,7 +104,7 @@ console.log(props.route.params.email);
          // On appelle la fonction de réinitialisation du mot de passe
          onPress={handleLogin}
       >
-        <Text style={tw`text-lg font-bold text-center text-white`}>Confirmer</Text>
+        <Text style={tw`text-lg font-bold text-center text-white`}>𝐂𝐨𝐧𝐟𝐢𝐫𝐦𝐞𝐫</Text>
         
       </TouchableOpacity>
 

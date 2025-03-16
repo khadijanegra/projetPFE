@@ -18,7 +18,7 @@ const homepage = ({ navigation }: { navigation: any }) => {
       <Text
         style={tw`mb-6 text-2xl font-bold tracking-wide text-center text-black font-cursive`}
       >
-        Bienvenue sur BonPlan
+        𝐁𝐢𝐞𝐧𝐯𝐞𝐧𝐮𝐞 𝐬𝐮𝐫 𝐁𝐨𝐧𝐏𝐥𝐚𝐧
       </Text>
 
       <View>
@@ -27,7 +27,7 @@ const homepage = ({ navigation }: { navigation: any }) => {
             style={tw`w-full py-2 mt-5 bg-black rounded-full px-14`}
             onPress={goTo}
           >
-            <Text style={tw`text-lg text-center text-white`}>Se Connecter</Text>
+            <Text style={tw`text-lg text-center text-white`}>𝐒𝐞 𝐂𝐨𝐧𝐧𝐞𝐜𝐭𝐞𝐫</Text>
           </TouchableOpacity>
         </Animatable.View>
         <Animatable.View>
@@ -35,7 +35,7 @@ const homepage = ({ navigation }: { navigation: any }) => {
             style={tw`w-full py-2 mt-3 mb-5 bg-black rounded-full px-14`}
             onPress={GoTO}
           >
-            <Text style={tw`text-lg text-center text-white`}>S'inscrire</Text>
+            <Text style={tw`text-lg text-center text-white`}>𝐒'𝐢𝐧𝐬𝐜𝐫𝐢𝐫𝐞</Text>
           </TouchableOpacity>
         </Animatable.View>
       </View>

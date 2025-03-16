@@ -75,7 +75,7 @@ const handleSend = async () => {
     <ScrollView>
     <ScrollView contentContainerStyle={tw`flex-1 p-6 bg-white`}>
       {/* Titre */}
-      <Text style={[tw`text-3xl text-pink-800 text-center mb-4`, 
+      <Text style={[tw`text-3xl text-pink-900 text-center mb-4`, 
   { fontFamily: 'Lobster-Regular', fontStyle: 'italic',opacity: 0.5 }]}>
   𝐃𝐢𝐭𝐞𝐬-𝐧𝐨𝐮𝐬 𝐜𝐞 𝐪𝐮𝐞 𝐯𝐨𝐮𝐬 𝐩𝐞𝐧𝐬𝐞𝐳 
 </Text>
@@ -83,7 +83,7 @@ const handleSend = async () => {
 
 
       {/* Notation */}
-      <View style={tw`bg-pink-100 p-6 rounded-lg mb-4`}>
+      <View style={tw`bg-yellow-100 p-6 rounded-lg mb-4`}>
       <Text
   style={[
     tw`text-sm font-bold text-black text-center mb-2`,
@@ -111,7 +111,7 @@ const handleSend = async () => {
       </View>
 
       {/* Options d'amélioration */}
-      <View style={tw`bg-pink-100 p-6 rounded-lg mb-4`}>
+      <View style={tw`bg-yellow-100 p-6 rounded-lg mb-4`}>
       <Text
   style={[
     tw`text-sm  text-black text-center font-serif  mb-2`,
@@ -131,15 +131,15 @@ const handleSend = async () => {
               style={[
                 tw`px-3 py-2 m-1 rounded-full border-2`,
                 selectedOptions.includes(option)
-                  ? tw`bg-pink-500 border-pink-500`
-                  : tw`border-pink-500`,
+                  ? tw`bg-pink-800 border-pink-600`
+                  : tw`border-pink-600`,
               ]}
               onPress={() => toggleOption(option)}
             >
               <Text
                 style={[
                   tw`text-sm`,
-                  selectedOptions.includes(option) ? tw`text-white` : tw`text-pink-500`,
+                  selectedOptions.includes(option) ? tw`text-white` : tw`text-pink-700`,
                 ]}
               >
                 {option}
@@ -151,7 +151,7 @@ const handleSend = async () => {
 
 
       {/* Champ de texte */}
-      <View style={tw`bg-pink-100 p-6 rounded-lg mb-4`}>
+      <View style={tw`bg-yellow-100 p-6 rounded-lg mb-4`}>
         <Text style={tw`text-lg font-semibold mb-2`}>
         𝑫𝒊𝒕𝒆𝒔-𝒏𝒐𝒖𝒔 𝒆𝒏 𝒑𝒍𝒖𝒔
         </Text>

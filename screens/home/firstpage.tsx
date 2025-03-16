@@ -38,8 +38,8 @@ export default function Firstpage({ navigation }: { navigation: any }) {
 
       {/* Texte en dessous */}
       <View style={tw`items-center mt-2`}>
-        <Text style={tw`text-xl text-black font-bold`}>BON PLAN </Text>
-        <Text style={tw`text-gray-500 mt-1`}>Découvrez tous les lieux autour de vous</Text>
+        <Text style={tw`text-xl text-black font-bold`}>𝐁𝐎𝐍 𝐏𝐋𝐀𝐍  </Text>
+        <Text style={tw`text-gray-500 mt-1`}>𝐃𝐞́𝐜𝐨𝐮𝐯𝐫𝐞𝐳 𝐭𝐨𝐮𝐬 𝐥𝐞𝐬 𝐥𝐢𝐞𝐮𝐱 𝐚𝐮𝐭𝐨𝐮𝐫 𝐝𝐞 𝐯𝐨𝐮𝐬</Text>
       </View>
 
       {/* Bouton Next */}
@@ -48,7 +48,7 @@ export default function Firstpage({ navigation }: { navigation: any }) {
           style={tw`bg-black rounded-full px-6 py-3 flex-row items-center`}
           onPress={goToHome}
         >
-          <Text style={tw`text-lg text-white mr-2`}>Next</Text>
+          <Text style={tw`text-lg text-white mr-2`}>𝐍𝐞𝐱𝐭</Text>
           <Icon name="arrow-right" size={20} color="white" />
         </TouchableOpacity>
       </View>

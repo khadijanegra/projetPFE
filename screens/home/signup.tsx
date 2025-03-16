@@ -62,7 +62,7 @@ export default function Signup(props: any) {
         />
       <View style={tw`items-center justify-center flex-1 px-6`}>
         
-        <Text style={tw`mb-6 text-2xl font-bold`}>S'inscrire</Text>
+        <Text style={tw`mb-6 text-2xl font-bold`}>𝐒'𝐢𝐧𝐬𝐜𝐫𝐢𝐫𝐞</Text>
 
         {/* Nom */}
         <View style={tw`flex-row items-center w-full px-4 mb-4 border border-gray-300 rounded-full`}>
@@ -98,7 +98,7 @@ export default function Signup(props: any) {
           style={tw`items-center justify-center w-full h-12 mt-8 mb-6 bg-black rounded-full`}
         >
           <Text style={tw`text-lg font-bold text-white`}>
-            {isSubmitting ? "Création..." : "Créer"}
+            {isSubmitting ? "Création..." : "𝐂𝐫𝐞́𝐞𝐫"}
           </Text>
         </TouchableOpacity>
       </View>

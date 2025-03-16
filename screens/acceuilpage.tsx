@@ -269,7 +269,7 @@ const AcceuilPage = (props: any) => {
                       onPress={() => handleCardExpand(index)}
                     >
                       <Text style={tw`mr-2 text-sm text-white`}>
-                        {expandedIndex === index ? "Moins" : "Plus"}
+                        {expandedIndex === index ? "𝑴𝒐𝒊𝒏𝒔" : "𝑷𝒍𝒖𝒔"}
                       </Text>
                       <Icon
                         name={
