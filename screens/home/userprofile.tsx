@@ -80,10 +80,10 @@ const UserProfile = (props: any) => {
         </View>
 
         {/* Personal Info */}
-        <Text style={tw`mt-6 text-xl font-bold`}>Vos informations personnelles</Text>
+        <Text style={tw`mt-6 text-xl font-bold`}>𝐕𝐨𝐬 𝐢𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧𝐬 𝐩𝐞𝐫𝐬𝐨𝐧𝐧𝐞𝐥𝐥𝐞𝐬</Text>
         <View>
           <View style={tw`p-4 mt-2 bg-gray-100 rounded-lg shadow-lg`}>
-            <Text style={tw`text-lg font-bold text-gray-600`}>Votre nom</Text>
+            <Text style={tw`text-lg font-bold text-gray-600`}>𝑽𝒐𝒕𝒓𝒆 𝒏𝒐𝒎</Text>
             <TextInput
               style={tw`p-4 mt-1 bg-white border border-gray-300 rounded-lg`}
               value={name}
@@ -92,7 +92,7 @@ const UserProfile = (props: any) => {
             />
           </View>
           <View style={tw`p-4 mt-2 bg-gray-100 rounded-lg shadow-lg`}>
-            <Text style={tw`text-lg font-bold text-gray-600`}>Votre prénom</Text>
+            <Text style={tw`text-lg font-bold text-gray-600`}>𝑽𝒐𝒕𝒓𝒆 𝒑𝒓𝒆́𝒏𝒐𝒎</Text>
             <TextInput
               style={tw`p-4 mt-1 bg-white border border-gray-300 rounded-lg`}
               value={prenom}
@@ -103,13 +103,13 @@ const UserProfile = (props: any) => {
         </View>
 
         {/* Contact Info */}
-        <Text style={tw`mt-6 text-xl font-bold`}>Coordonnées</Text>
+        <Text style={tw`mt-6 text-xl font-bold`}>𝐂𝐨𝐨𝐫𝐝𝐨𝐧𝐧𝐞́𝐞𝐬</Text>
         <View style={tw`p-4 mt-2 bg-gray-100 rounded-lg shadow-lg`}>
-          <Text style={tw`text-gray-600`}>Votre localisation</Text>
+          <Text style={tw`text-gray-600`}>Votre localisation : </Text>
           <View>
             {/* 3abiha bil localisation */}
           </View>
-          <Text style={tw`mt-2 text-gray-600`}>Email <Text style={tw`font-bold text-black`}>{email}</Text></Text>
+          <Text style={tw`mt-2 text-gray-600`}>Email : <Text style={tw`font-bold text-black`}>{email}</Text></Text>
         </View>
 
         {/* Edit Button */}
@@ -123,7 +123,7 @@ const UserProfile = (props: any) => {
   }}
 >
   <Text style={tw`text-lg font-bold text-white`}>
-    {isEditing ? "Enregistrer" : "Éditer le profil"}
+    {isEditing ? "Enregistrer" : "𝘌́𝘥𝘪𝘵𝘦𝘳 𝘭𝘦 𝘱𝘳𝘰𝘧𝘪𝘭"}
   </Text>
 </TouchableOpacity>
 
@@ -132,7 +132,7 @@ const UserProfile = (props: any) => {
   style={tw`items-center py-3  rounded-lg bg-yellow-500`}
   onPress={goToDeleteAccount} // Appel de la fonctiongit 
 >
-  <Text style={tw`text-lg font-bold text-white`}>Gérer mon compte</Text>
+  <Text style={tw`text-lg font-bold text-white`}>𝘎𝘦́𝘳𝘦𝘳 𝘮𝘰𝘯 𝘤𝘰𝘮𝘱𝘵𝘦</Text>
 </TouchableOpacity>
 
     </ScrollView>

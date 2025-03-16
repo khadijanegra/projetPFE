@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-nativ
 import tw from "tailwind-react-native-classnames";
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
+import { useFonts } from "expo-font";
 const  API_URL  = process.env.API_URL;
 const Reclam = () => {
   const [rating, setRating] = useState(0);
@@ -10,17 +11,23 @@ const Reclam = () => {
   const [comment, setComment] = useState("");
 
   const options = [
-    "Service général",
-    "Rapidité et efficacité",
-    "Support client",
-    "Site Web & App mobile",
-    "Sécurité",
-    "Transparence",
-    "Autre",
+    "𝚂𝚎𝚛𝚟𝚒𝚌𝚎 𝚐𝚎́𝚗𝚎𝚛𝚊𝚕?",
+    "𝑅𝑎𝑝𝑖𝑑𝑖𝑡𝑒́ 𝑒𝑡 𝑒𝑓𝑓𝑖𝑐𝑎𝑐𝑖𝑡𝑒́",
+    "𝘚𝘪𝘵𝘦 𝘞𝘦𝘣 & 𝘈𝘱𝘱 𝘮𝘰𝘣𝘪𝘭𝘦",
+    "𝘚𝘶𝘱𝘱𝘰𝘳𝘵 𝘤𝘭𝘪𝘦𝘯𝘵",
+    
+    "𝘚𝘦́𝘤𝘶𝘳𝘪𝘵𝘦́",
+    "𝘛𝘳𝘢𝘯𝘴𝘱𝘢𝘳𝘦𝘯𝘤𝘦",
+    "𝘈𝘶𝘵𝘳𝘦",
   ];
 
   
-
+  const [fontsLoaded] = useFonts({
+    'Roboto-Bold': require('../../assets/Roboto-Bold.ttf'),
+    'Lobster-Regular': require('../../assets/Lobster-Regular.otf'),
+  });
+  
+  
 const toggleOption = (choice: string) => {
   console.log("Option cliquée :", choice);
 
@@ -68,14 +75,26 @@ const handleSend = async () => {
     <ScrollView>
     <ScrollView contentContainerStyle={tw`flex-1 p-6 bg-white`}>
       {/* Titre */}
-      <Text style={tw`text-2xl font-bold text-pink-700 text-center mb-4`}>
-        Dites-nous ce que vous pensez
-      </Text>
+      <Text style={[tw`text-3xl text-pink-800 text-center mb-4`, 
+  { fontFamily: 'Lobster-Regular', fontStyle: 'italic',opacity: 0.5 }]}>
+  𝐃𝐢𝐭𝐞𝐬-𝐧𝐨𝐮𝐬 𝐜𝐞 𝐪𝐮𝐞 𝐯𝐨𝐮𝐬 𝐩𝐞𝐧𝐬𝐞𝐳 
+</Text>
+
+
 
       {/* Notation */}
       <View style={tw`bg-pink-100 p-6 rounded-lg mb-4`}>
-        <Text style={tw`text-lg font-semibold text-center mb-2`}>
-          Comment évalueriez-vous votre expérience ?
+      <Text
+  style={[
+    tw`text-sm font-bold text-black text-center mb-2`,
+    {
+      textShadowColor: "#000",  // couleur de l'ombre
+      textShadowOffset: { width: 3, height: 8},  // position de l'ombre
+      textShadowRadius: 12,  // flou de l'ombre
+    }
+  ]}
+>
+𝑐𝑜𝑚𝑚𝑒𝑛𝑡 𝐸𝑣𝑎𝑙𝑢𝑒𝑟𝑖𝑒𝑧-𝑣𝑜𝑢𝑠 𝑣𝑜𝑡𝑟𝑒 𝑒𝑥𝑝𝑒́𝑟𝑖𝑒𝑛𝑐𝑒?
         </Text>
         <View style={tw`flex-row justify-center`}>
           {[1, 2, 3, 4, 5].map((num) => (
@@ -93,8 +112,17 @@ const handleSend = async () => {
 
       {/* Options d'amélioration */}
       <View style={tw`bg-pink-100 p-6 rounded-lg mb-4`}>
-        <Text style={tw`text-lg font-semibold text-center mb-2`}>
-          Que devrions-nous améliorer ?
+      <Text
+  style={[
+    tw`text-sm  text-black text-center font-serif  mb-2`,
+    {
+      textShadowColor: "#000",  // couleur de l'ombre
+      textShadowOffset: { width: 3, height: 8},  // position de l'ombre
+      textShadowRadius: 12,  // flou de l'ombre
+    }
+  ]}
+>
+𝘘𝘶𝘦 𝘥𝘦𝘷𝘳𝘪𝘰𝘯𝘴 𝘯𝘰𝘶𝘴 𝘢𝘮𝘦́𝘭𝘪𝘰𝘳𝘦𝘳?
         </Text>
         <View style={tw`flex-row flex-wrap justify-center`}>
           {options.map((option) => (
@@ -125,7 +153,7 @@ const handleSend = async () => {
       {/* Champ de texte */}
       <View style={tw`bg-pink-100 p-6 rounded-lg mb-4`}>
         <Text style={tw`text-lg font-semibold mb-2`}>
-          Dites-nous en plus
+        𝑫𝒊𝒕𝒆𝒔-𝒏𝒐𝒖𝒔 𝒆𝒏 𝒑𝒍𝒖𝒔
         </Text>
         <TextInput
           style={tw`border-2 border-pink-400 rounded-lg p-4 text-pink-700`}

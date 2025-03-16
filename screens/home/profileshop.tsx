@@ -122,7 +122,7 @@ const ProfilShop = (props: any) => {
           >
             <View style={tw`flex-row justify-between items-center shadow-xl`}>
               <Text style={tw`text-lg font-semibold text-gray-900`}>
-                Description
+              𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻
               </Text>
               <Ionicons
                 name={showDescription ? "chevron-up" : "chevron-down"}
@@ -147,7 +147,7 @@ const ProfilShop = (props: any) => {
             >
               <View style={tw`flex-row items-center`}>
                 <MaterialIcons name="phone" size={25} color="#EF5350" />
-                <Text style={tw`ml-2 text-gray-700`}>Contact</Text>
+                <Text style={tw`ml-2 text-gray-700`}>𝗖𝗼𝗻𝘁𝗮𝗰𝘁</Text>
               </View>
               <Ionicons
                 name={showPhone ? "eye-off-outline" : "eye-outline"}
@@ -167,7 +167,7 @@ const ProfilShop = (props: any) => {
         {shopData && (
           <View style={tw`mb-4 bg-white rounded-xl p-4 shadow-sm shadow-xl`}>
             <Text style={tw`text-lg font-semibold text-gray-900 mb-3`}>
-              Horaires
+            𝗛𝗼𝗿𝗮𝗶𝗿𝗲𝘀
             </Text>
             <View style={tw`flex-row justify-between mb-2`}>
               <Text style={tw`text-gray-600`}>Lundi - Vendredi</Text>
@@ -184,7 +184,7 @@ const ProfilShop = (props: any) => {
             style={tw`mb-6 bg-white rounded-xl p-4 shadow-lg border border-gray-300`}
           >
             <Text style={tw`text-lg font-semibold text-gray-900 mb-3`}>
-              Adresse
+            𝗔𝗱𝗿𝗲𝘀𝘀𝗲
             </Text>
             <View style={tw`flex-row items-center mb-4`}>
               <Ionicons
@@ -228,7 +228,7 @@ const ProfilShop = (props: any) => {
 
         {/* Reviews Section */}
         <View style={tw`p-4 bg-white rounded-lg shadow-md`}>
-          <Text style={tw`mb-2 text-lg font-bold`}>Avis</Text>
+          <Text style={tw`mb-2 text-lg font-bold`}>𝗔𝘃𝗶𝘀</Text>
           <View style={tw`mb-2 border-b border-gray-300`} />
           <View style={tw`flex-col items-center mb-10`}>
             <Text style={tw`ml-1 text-2xl font-bold`}>4.1</Text>
@@ -268,7 +268,7 @@ const ProfilShop = (props: any) => {
           onPress={goToReviewShop}
         >
           <Icon name="eye" size={20} color="black" style={tw`mr-2`} />
-          <Text style={tw`text-lg text-center`}>Voir avis</Text>
+          <Text style={tw`text-lg text-center`}>𝑽𝒐𝒊𝒓 𝒂𝒗𝒊𝒔</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -277,7 +277,7 @@ const ProfilShop = (props: any) => {
         >
           <Icon name="comment" size={20} color="black" style={tw`mr-2`} />
           <Text style={tw`text-lg font-bold text-center`}>
-            Donner votre avis
+          𝑫𝒐𝒏𝒏𝒆𝒓 𝒗𝒐𝒕𝒓𝒆 𝒂𝒗𝒊𝒔
           </Text>
         </TouchableOpacity>
       </View>

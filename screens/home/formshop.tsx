@@ -193,17 +193,17 @@ const categories = [
           {/* Header */}
           <View style={tw`items-center mb-8`}>
             <Text style={tw`text-3xl font-bold text-black`}>
-              Créez votre Shop
+            𝗖𝗿𝗲́𝗲𝘇 𝘃𝗼𝘁𝗿𝗲 𝗦𝗵𝗼𝗽
             </Text>
             <Text style={tw`mt-2 text-gray-600`}>
-              Rejoignez notre communauté de professionnels
+            𝘙𝘦𝘫𝘰𝘪𝘨𝘯𝘦𝘻 𝘯𝘰𝘵𝘳𝘦 𝘤𝘰𝘮𝘮𝘶𝘯𝘢𝘶𝘵𝘦́ 𝘥𝘦 𝘱𝘳𝘰𝘧𝘦𝘴𝘴𝘪𝘰𝘯𝘯𝘦𝘭𝘴
             </Text>
           </View>
 
           {/* Basic Info Section */}
           <View style={tw`mb-8`}>
             <Text style={tw`mb-4 text-xl font-bold text-black`}>
-              Informations principales
+            𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻𝘀 𝗽𝗿𝗶𝗻𝗰𝗶𝗽𝗮𝗹𝗲𝘀
             </Text>
 
             {/* Shop Name */}
@@ -314,7 +314,7 @@ const categories = [
           {/* Location Section */}
           <View style={tw`mb-8`}>
             <Text style={tw`mb-4 text-xl font-bold text-black`}>
-              Localisation
+            𝗟𝗼𝗰𝗮𝗹𝗶𝘀𝗮𝘁𝗶𝗼𝗻
             </Text>
             <View
               style={tw`flex-row items-center p-3 bg-white shadow-sm rounded-xl`}
@@ -337,7 +337,7 @@ const categories = [
           {/* Opening Hours Section */}
           <View style={tw`mb-8`}>
             <Text style={tw`mb-4 text-xl font-bold text-black`}>
-              Horaires d'ouverture
+            𝗛𝗼𝗿𝗮𝗶𝗿𝗲𝘀 𝗱'𝗼𝘂𝘃𝗲𝗿𝘁𝘂𝗿𝗲
             </Text>
 
             <View style={tw`flex-row justify-between`}>
@@ -418,7 +418,7 @@ const categories = [
           {/* Image Upload Section */}
           <View style={tw`mb-8`}>
             <Text style={tw`mb-4 text-xl font-bold text-black`}>
-              Menu du restaurant
+            𝗣𝗵𝗼𝘁𝗼 𝗱𝗲 𝗽𝗿𝗼𝗳𝗶𝗹 
             </Text>
             <TouchableOpacity
               style={tw`items-center justify-center h-40 bg-white border-2 border-yellow-300 border-dashed rounded-2xl`}
@@ -448,7 +448,7 @@ const categories = [
             <Text
               style={tw`p-4 text-lg font-bold text-center text-white bg-red-300 rounded-xl`}
             >
-              Valider la création
+              𝙑𝙖𝙡𝙞𝙙𝙚𝙧 𝙡𝙖 𝙘𝙧𝙚́𝙖𝙩𝙞𝙤𝙣
             </Text>
           </TouchableOpacity>
 

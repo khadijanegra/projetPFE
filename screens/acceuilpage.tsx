@@ -117,7 +117,7 @@ const AcceuilPage = (props: any) => {
                 style={tw`flex-row items-center p-2 bg-red-300 rounded-full`}
               >
                 <Icon name="user" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg font-bold text-white`}>Mon Profil</Text>
+                <Text style={tw`text-lg font-bold text-white`}>𝙈𝙤𝙣 𝙋𝙧𝙤𝙛𝙞𝙡</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -125,20 +125,20 @@ const AcceuilPage = (props: any) => {
                 onPress={goToshopcree}
               >
                 <Icon name="plus" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-white`}>Créer établissement</Text>
+                <Text style={tw`text-lg text-white`}>𝘾𝙧𝙚́𝙚𝙧 𝙚́𝙩𝙖𝙗𝙡𝙞𝙨𝙨𝙚𝙢𝙚𝙣𝙩</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
                 onPress={goTofavorisuser}
               >
                 <Icon name="heart" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-white`}>Favoris</Text>
+                <Text style={tw`text-lg text-white`}>𝙁𝙖𝙫𝙤𝙧𝙞𝙨</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
               >
                 <Icon name="star" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-white`}>Mes Avis</Text>
+                <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝘼𝙫𝙞𝙨</Text>
               </TouchableOpacity>
               <View style={tw`mt-auto`}>
                 <TouchableOpacity
@@ -151,7 +151,7 @@ const AcceuilPage = (props: any) => {
                     color="black"
                     style={tw`mr-2`}
                   />
-                  <Text style={tw`text-lg text-black`}>Réclamation</Text>
+                  <Text style={tw`text-lg text-black`}>𝚁𝚎́𝚌𝚕𝚊𝚖𝚊𝚝𝚒𝚘𝚗</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={tw`flex-row items-center p-4 border-t border-gray-300`}
@@ -163,7 +163,7 @@ const AcceuilPage = (props: any) => {
                     color="black"
                     style={tw`mr-2`}
                   />
-                  <Text style={tw`text-lg text-black`}>Se Déconnecter</Text>
+                  <Text style={tw`text-lg text-black`}>𝚂𝚎 𝙳𝚎́𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚎𝚛</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -193,7 +193,7 @@ const AcceuilPage = (props: any) => {
                   <View
                     style={tw`absolute z-10 px-2 py-1 bg-red-300 rounded-full top-2 right-2`}
                   >
-                    <Text style={tw`text-xs font-bold text-white`}>OPEN</Text>
+                    <Text style={tw`text-xs font-bold text-white`}>𝐎𝐏𝐄𝐍</Text>
                   </View>
 
                   {/* Image */}
