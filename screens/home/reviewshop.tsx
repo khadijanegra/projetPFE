@@ -20,7 +20,8 @@ const ReviewShop = (props: any) => {
         const response = await axios.get(
           `${apiUrl}/review/getreviews/${shop_id}`
         );
-        setReviews(response.data); // Stocke les avis dans l'état
+        setReviews(response.data);
+        console.log(JSON.stringify(response.data, null, 2));
         setLoading(false); // Fin du chargement
       } catch (err) {
         console.error(err);
