@@ -22,6 +22,7 @@ const Reclam = () => {
   ];
 
   
+
   
   
   
@@ -72,8 +73,7 @@ const handleSend = async () => {
     <ScrollView>
     <ScrollView contentContainerStyle={tw`flex-1 p-6 bg-white`}>
       {/* Titre */}
-      <Text style={[tw`text-3xl text-pink-900 text-center mb-4`, 
-  { fontFamily: 'Lobster-Regular', fontStyle: 'italic',opacity: 0.5 }]}>
+      <Text style={tw`text-3xl text-pink-900 text-center mb-4` }>
   𝐃𝐢𝐭𝐞𝐬-𝐧𝐨𝐮𝐬 𝐜𝐞 𝐪𝐮𝐞 𝐯𝐨𝐮𝐬 𝐩𝐞𝐧𝐬𝐞𝐳 
 </Text>
 
