@@ -20,7 +20,7 @@ const TaskCard = (props: any) => {
       // w puisque les favoriii fihon=m les shop id donc chnal9aw les shop dataa fihomm
       const userData = response.data;
       setShopsData(userData);
-      console.log(userData);
+      console.log(JSON.stringify(userData, null, 2));
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -43,7 +43,9 @@ const TaskCard = (props: any) => {
             style={tw`p-4 m-2 bg-white border border-gray-300 shadow-lg rounded-2xl`}
           >
             <Image
-              source={require("../../images/cafe.png")} 
+               source={{
+                uri: `${apiUrl}/fetchshopImages/${shop.shopImage}`,
+              }} 
               style={tw`w-full h-40 rounded-xl mb-2`}
             />
 
@@ -76,7 +78,7 @@ const TaskCard = (props: any) => {
 
             {/* Icône favoris */}
             <TouchableOpacity>
-              <Text style={tw`text-2xl self-end `}>🩷</Text>
+              <Text style={tw`text-2xl self-end `}>🩷   </Text>
             </TouchableOpacity>
           </View>
         ))}

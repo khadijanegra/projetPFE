@@ -92,6 +92,7 @@ const Reviewform = (props: any) => {
     try {
       const response = await axios.post(`${apiUrl}/review/postreviews`,ReviewDtata);
       if (response.status === 201) {
+        console.log(note_ambiance);
         const review_id = response.data.id;
         setReview_id(review_id);
         console.log(props.route.params.user_id
