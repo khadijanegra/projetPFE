@@ -22,10 +22,7 @@ const Reclam = () => {
   ];
 
   
-  const [fontsLoaded] = useFonts({
-    'Roboto-Bold': require('../../assets/Roboto-Bold.ttf'),
-    'Lobster-Regular': require('../../assets/Lobster-Regular.otf'),
-  });
+  
   
   
 const toggleOption = (choice: string) => {
