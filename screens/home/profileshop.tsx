@@ -246,11 +246,19 @@ const ProfilShop = (props: any) => {
             >
               <MapView
                 style={tw`w-full h-full`}
+                showsUserLocation={true}
+        minZoomLevel={18}
+        followsUserLocation={true}
+                cameraZoomRange={{
+                  minCenterCoordinateDistance: 10,
+                  maxCenterCoordinateDistance: 20, 
+                  animated: false
+                }}
                 initialRegion={{
                   latitude: coordinates?.latitude || 0,
                   longitude: coordinates?.longitude || 0,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005,
+                  latitudeDelta: coordinates?.latitude || 0,
+                  longitudeDelta: coordinates?.longitude || 0,
                 }}
               >
                 {coordinates && (
@@ -258,6 +266,7 @@ const ProfilShop = (props: any) => {
                     coordinate={{
                       latitude: coordinates.latitude,
                       longitude: coordinates.longitude,
+                      
                     }}
                     title="Vous êtes ici"
                     pinColor="#3b82f6"
