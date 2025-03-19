@@ -263,7 +263,6 @@ const ProfilShop = (props: any) => {
                       longitude: coordinates.longitude,
                       
                     }}
-                    title="Vous êtes ici"
                     pinColor="#3b82f6"
                   />
                 )}
