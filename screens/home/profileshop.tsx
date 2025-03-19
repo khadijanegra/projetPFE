@@ -247,13 +247,8 @@ const ProfilShop = (props: any) => {
               <MapView
                 style={tw`w-full h-full`}
                 showsUserLocation={true}
-        minZoomLevel={18}
-        followsUserLocation={true}
-                cameraZoomRange={{
-                  minCenterCoordinateDistance: 10,
-                  maxCenterCoordinateDistance: 20, 
-                  animated: false
-                }}
+        minZoomLevel={15}
+        
                 initialRegion={{
                   latitude: coordinates?.latitude || 0,
                   longitude: coordinates?.longitude || 0,
