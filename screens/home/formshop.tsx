@@ -46,11 +46,38 @@ const FormShop = (props: any) => {
   const [phone, setPhone] = useState("");
   const [shopImage, setShopImage] = useState<any>(null); // Updated for clarity
   const [shopId, setShopId] = useState<any>(null);
+  const [region , setregion] = useState("")
 
 
   const [categorie, setcategorie] = useState("");
 const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+const [showRegionPicker, setShowRegionPicker] = useState(false);
 
+const regions = [
+  { label: "Tunis", value: "Tunis" },
+  { label: "Ariana", value: "Ariana" },
+  { label: "Ben Arous", value: "Ben Arous" },
+  { label: "Manouba", value: "Manouba" },
+  { label: "Nabeul", value: "Nabeul" },
+  { label: "Zaghouan", value: "Zaghouan" },
+  { label: "Bizerte", value: "Bizerte" },
+  { label: "Béja", value: "Béja" },
+  { label: "Jendouba", value: "Jendouba" },
+  { label: "Le Kef", value: "Le Kef" },
+  { label: "Siliana", value: "Siliana" },
+  { label: "Kairouan", value: "Kairouan" },
+  { label: "Kasserine", value: "Kasserine" },
+  { label: "Sidi Bouzid", value: "Sidi Bouzid" },
+  { label: "Sousse", value: "Sousse" },
+  { label: "Monastir", value: "Monastir" },
+  { label: "Mahdia", value: "Mahdia" },
+  { label: "Sfax", value: "Sfax" },
+  { label: "Gafsa", value: "Gafsa" },
+  { label: "Tozeur", value: "Tozeur" },
+  { label: "Kébili", value: "Kébili" },
+  { label: "Médenine", value: "Médenine" },
+  { label: "Tataouine", value: "Tataouine" }
+];
 
 const categories = [
   { label: "Sélectionnez une catégorie", value: "" },
@@ -155,6 +182,7 @@ const categories = [
       shopImage, // Nom du fichier uploadé
       user_id: props.route.params.id,
       categorie : categorie,
+      region : region,
     };
 
     try {
@@ -193,17 +221,17 @@ const categories = [
           {/* Header */}
           <View style={tw`items-center mb-8`}>
             <Text style={tw`text-3xl font-bold text-black`}>
-            𝗖𝗿𝗲́𝗲𝘇 𝘃𝗼𝘁𝗿𝗲 𝗦𝗵𝗼𝗽
+              𝗖𝗿𝗲́𝗲𝘇 𝘃𝗼𝘁𝗿𝗲 𝗦𝗵𝗼𝗽
             </Text>
             <Text style={tw`mt-2 text-gray-600`}>
-            𝘙𝘦𝘫𝘰𝘪𝘨𝘯𝘦𝘻 𝘯𝘰𝘵𝘳𝘦 𝘤𝘰𝘮𝘮𝘶𝘯𝘢𝘶𝘵𝘦́ 𝘥𝘦 𝘱𝘳𝘰𝘧𝘦𝘴𝘴𝘪𝘰𝘯𝘯𝘦𝘭𝘴
+              𝘙𝘦𝘫𝘰𝘪𝘨𝘯𝘦𝘻 𝘯𝘰𝘵𝘳𝘦 𝘤𝘰𝘮𝘮𝘶𝘯𝘢𝘶𝘵𝘦́ 𝘥𝘦 𝘱𝘳𝘰𝘧𝘦𝘴𝘴𝘪𝘰𝘯𝘯𝘦𝘭𝘴
             </Text>
           </View>
 
           {/* Basic Info Section */}
           <View style={tw`mb-8`}>
             <Text style={tw`mb-4 text-xl font-bold text-black`}>
-            𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻𝘀 𝗽𝗿𝗶𝗻𝗰𝗶𝗽𝗮𝗹𝗲𝘀
+              𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻𝘀 𝗽𝗿𝗶𝗻𝗰𝗶𝗽𝗮𝗹𝗲𝘀
             </Text>
 
             {/* Shop Name */}
@@ -223,11 +251,11 @@ const categories = [
                 onChangeText={setShopNom}
               />
             </View>
-           
+
             <View
               style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
             >
-             <FontAwesome
+              <FontAwesome
                 name="phone"
                 size={20}
                 color="#EF5350"
@@ -243,30 +271,31 @@ const categories = [
             </View>
 
             <View style={tw`mb-4`}>
-              
               <TouchableOpacity
                 onPress={() => setShowCategoryPicker(true)}
                 style={tw`p-3 bg-white rounded-lg border border-gray-200`}
               >
                 <View style={tw`flex-row   items-center`}>
-
-                <Ionicons
-                  name="pricetag"
-                  size={18}
-                  color={categorie ? "#EF5350" : "#EF5350"}
-                  style={tw`mr-2`}
-                />
+                  <Ionicons
+                    name="pricetag"
+                    size={18}
+                    color={categorie ? "#EF5350" : "#EF5350"}
+                    style={tw`mr-2`}
+                  />
                   <Text
                     style={tw`${
                       !categorie ? "text-gray-400" : "text-gray-700"
                     }`}
-
-
                   >
                     {categorie || "Sélectionnez une catégorie"}
                   </Text>
 
-                  <Ionicons name="chevron-down" size={16} color="#CBD5E1" style={tw`ml-2`} />
+                  <Ionicons
+                    name="chevron-down"
+                    size={16}
+                    color="#CBD5E1"
+                    style={tw`ml-2`}
+                  />
                 </View>
               </TouchableOpacity>
 
@@ -299,6 +328,64 @@ const categories = [
               </Modal>
             </View>
 
+            <View style={tw`mb-4`}>
+              <TouchableOpacity
+                onPress={() => setShowRegionPicker(true)}
+                style={tw`p-3 bg-white rounded-lg border border-gray-200`}
+              >
+                <View style={tw`flex-row   items-center`}>
+                  <Ionicons
+                    name="location"
+                    size={18}
+                    color={region ? "#EF5350" : "#EF5350"}
+                    style={tw`mr-2`}
+                  />
+                  <Text
+                    style={tw`${!region ? "text-gray-400" : "text-gray-700"}`}
+                  >
+                    {region || "Sélectionnez une region"}
+                  </Text>
+
+                  <Ionicons
+                    name="chevron-down"
+                    size={16}
+                    color="#CBD5E1"
+                    style={tw`ml-2`}
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <Modal
+                visible={showRegionPicker}
+                transparent={true}
+                animationType="slide"
+              >
+                <View style={tw`flex-1 justify-center bg-black bg-opacity-50`}>
+                  <View style={tw`m-4 bg-white rounded-lg p-4`}>
+                    <Text style={tw`text-lg font-bold mb-4`}>
+                      Choisir une région
+                    </Text>
+                    <ScrollView style={{ maxHeight: 300 }}>
+                      {regions.map((reg) => (
+                        <TouchableOpacity
+                          key={reg.value}
+                          onPress={() => {
+                            setregion(reg.value);
+                            setShowRegionPicker(false);
+                          }}
+                          style={tw`p-3 ${
+                            region === reg.value ? "bg-gray-100" : ""
+                          }`}
+                        >
+                          <Text style={tw`text-gray-700`}>{reg.label}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  </View>
+                </View>
+              </Modal>
+            </View>
+
             {/* Description */}
             <View style={tw`p-3 bg-white shadow-sm rounded-xl`}>
               <TextInput
@@ -314,7 +401,7 @@ const categories = [
           {/* Location Section */}
           <View style={tw`mb-8`}>
             <Text style={tw`mb-4 text-xl font-bold text-black`}>
-            𝗟𝗼𝗰𝗮𝗹𝗶𝘀𝗮𝘁𝗶𝗼𝗻
+              𝗟𝗼𝗰𝗮𝗹𝗶𝘀𝗮𝘁𝗶𝗼𝗻
             </Text>
             <View
               style={tw`flex-row items-center p-3 bg-white shadow-sm rounded-xl`}
@@ -337,7 +424,7 @@ const categories = [
           {/* Opening Hours Section */}
           <View style={tw`mb-8`}>
             <Text style={tw`mb-4 text-xl font-bold text-black`}>
-            𝗛𝗼𝗿𝗮𝗶𝗿𝗲𝘀 𝗱'𝗼𝘂𝘃𝗲𝗿𝘁𝘂𝗿𝗲
+              𝗛𝗼𝗿𝗮𝗶𝗿𝗲𝘀 𝗱'𝗼𝘂𝘃𝗲𝗿𝘁𝘂𝗿𝗲
             </Text>
 
             <View style={tw`flex-row justify-between`}>
@@ -418,7 +505,7 @@ const categories = [
           {/* Image Upload Section */}
           <View style={tw`mb-8`}>
             <Text style={tw`mb-4 text-xl font-bold text-black`}>
-            𝗣𝗵𝗼𝘁𝗼 𝗱𝗲 𝗽𝗿𝗼𝗳𝗶𝗹 
+              𝗣𝗵𝗼𝘁𝗼 𝗱𝗲 𝗽𝗿𝗼𝗳𝗶𝗹
             </Text>
             <TouchableOpacity
               style={tw`items-center justify-center h-40 bg-white border-2 border-yellow-300 border-dashed rounded-2xl`}
