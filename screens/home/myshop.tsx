@@ -4,77 +4,58 @@ import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
-
 const apiUrl = process.env.API_URL;
 
-const Myshop= (props: any) => {
+const Myshop = (props: any) => {
   const [shopsData, setShopsData] = useState<any[]>([]);
 
   const fetchUserData = useCallback(async () => {
+    if (!props.route.params?.id) {
+      console.error("User ID is missing");
+      return;
+    }
+
     try {
-      // Utilise l'URL correcte avec `/shops/shops/user/:user_id`
       const response = await axios.get(
-        `${apiUrl}/shops/shops/user/${props.route.params.id}` // URL mise à jour
+        `${apiUrl}/shops/user/${props.route.params.id}`
       );
-      
-      // Met à jour l'état avec les données des shops
-      const userShops = response.data;
-      setShopsData(userShops);
-      console.log(JSON.stringify(userShops, null, 2));
+      setShopsData(response.data);
+      console.log("Fetched shops:", response.data);
     } catch (error) {
       console.error("Error fetching user shops:", error);
     }
-  }, [props.route.params.id]);
+  }, [props.route.params?.id]);
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("User ID: " + props.route.params.id);
-      fetchUserData(); // Appelle la fonction pour récupérer les shops
+      console.log("Fetching shops for User ID:", props.route.params?.id);
+      fetchUserData();
     }, [fetchUserData])
   );
 
   return (
     <ScrollView>
-      <View>
-        {shopsData.map((shop, index) => (
-          <View
+      <View style={tw`p-4`}> 
+        {shopsData.map((shop) => (
+          <TouchableOpacity
             key={shop._id}
-            style={tw`p-4 m-2 bg-white border border-gray-300 shadow-lg rounded-2xl`}
+            style={tw`mb-4 bg-white rounded-2xl shadow-xl overflow-hidden`}
           >
             <Image
-              source={{
-                uri: `${apiUrl}/fetchshopImages/${shop.shopImage}`,
-              }}
-              style={tw`w-full h-40 rounded-xl mb-2`}
+              source={{ uri: `${apiUrl}/fetchshopImages/${shop.shopImage}` }}
+              style={tw`w-full h-48`}
             />
-            <View style={tw`flex-row items-center mb-1`}>
-              <Text
-                style={tw`px-2 py-1 text-xs font-bold text-white bg-red-300 rounded-full`}
-              >
-                {"Kairouan"}
+            <View style={tw`p-4`}> 
+              <Text style={tw`text-xl font-bold text-gray-800 mb-1`}>
+                {shop.shop_nom}
               </Text>
-            </View>
-
-            <Text style={tw`mb-1 text-lg font-bold text-gray-800`}>
-              {shop.shop_nom}
-            </Text>
-            <Text style={tw`mb-1 text-md text-gray-500`}>
-              {shop.phone}
-            </Text>
-
-            <View style={tw`flex-row items-center  mt-2`}>
-              <View style={tw`flex-row items-center`}>
-                {[...Array(5)].map((_, j) => (
-                  <Icon key={j} name="star" size={20} color="#FBBF24" />
-                ))}
+              <View style={tw`flex-row items-center mb-2`}>
+                <Icon name="map-marker" size={16} color="#f87171" />
+                <Text style={tw`ml-1 text-gray-600`}>Kairouan</Text>
               </View>
-              <Text style={tw`ml-4 text-lg font-bold text-red-300`}>4.9</Text>
+              
             </View>
-
-            <TouchableOpacity>
-              <Text style={tw`text-2xl self-end `}>🩷</Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </ScrollView>

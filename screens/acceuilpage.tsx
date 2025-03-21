@@ -114,11 +114,11 @@ const AcceuilPage = (props: any) => {
   };
   const goToMyEstablishment = (shop: any) => {
     props.navigation.navigate("myshop", {
-      shopId: shop._id,  // L'ID de l'établissement
-      shopData: shop,     // Les données de l'établissement (si tu veux envoyer l'objet complet)
-      userId: props.route.params.id,  // L'ID de l'utilisateur (si nécessaire)
+      shopId: shop._id,  
+      id: props.route.params.id
     });
   };
+  
   
 
   return (
