@@ -51,8 +51,6 @@ export default function Signup(props: any) {
   };
 
 
-    
-    
   return (
     <SafeAreaView style={tw`flex-1 bg-white`}>
       {/* Image avant le texte d'inscription */}

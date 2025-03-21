@@ -19,7 +19,7 @@ import TaskCard from "screens/home/userfavoris"
 import ReviewShop from "screens/home/reviewshop";
 import DeleteAccount from "screens/home/deleteAccount";
 import Reclam from "screens/home/reclam";
-
+import Myshop from "screens/home/myshop";
 const Stack = createStackNavigator();
 
 export default function Root() {
@@ -42,6 +42,8 @@ export default function Root() {
       <Stack.Screen name="reviewshop" component={ReviewShop} />
       <Stack.Screen name="deleteAccount" component={DeleteAccount} />
       <Stack.Screen name="reclam" component={Reclam} />
+      <Stack.Screen name="myshop" component={Myshop} />
+
     </Stack.Navigator> 
       
 

@@ -112,6 +112,13 @@ const AcceuilPage = (props: any) => {
       console.error("ID is not available!");
     }
   };
+  const goToMyEstablishment = (shop: any) => {
+    props.navigation.navigate("myshop", {
+      shopId: shop._id,  // L'ID de l'établissement
+      shopData: shop,     // Les données de l'établissement (si tu veux envoyer l'objet complet)
+      userId: props.route.params.id,  // L'ID de l'utilisateur (si nécessaire)
+    });
+  };
   
 
   return (
@@ -155,14 +162,16 @@ const AcceuilPage = (props: any) => {
               </TouchableOpacity>
 
 
-              {userRole==="manager"&&(
-              <TouchableOpacity
-                style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
-              >
-                <Icon name="star" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝙚́𝙩𝙖𝙗𝙡𝙞𝙨𝙨𝙚𝙢𝙚𝙣𝙩𝙨</Text>
-              </TouchableOpacity>)
-            }
+              {userRole === "manager" && (
+  <TouchableOpacity
+    style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
+    onPress={ goToMyEstablishment} // Appeler la fonction ici
+  >
+    <Icon name="star" size={20} color="black" style={tw`mr-2`} />
+    <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝙚́𝙩𝙖𝙗𝙡𝙞𝙨𝙨𝙚𝙢𝙚𝙣𝙩𝙨</Text>
+  </TouchableOpacity>
+)}
+
 
 
               <View style={tw`mt-auto`}>
