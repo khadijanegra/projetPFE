@@ -123,7 +123,11 @@ const Reviewform = (props: any) => {
         slideAnim.setValue(300); 
       }
     }, [modalVisible]);
- 
+    const navigateToHome = () => {
+      setModalVisible(false);
+      props.navigation.navigate("acceuilpage", { user_id: props.route.params.user_id });
+    };
+    
   return (
     <ScrollView>
       <View style={tw`flex-1 p-5 bg-white`}>
@@ -273,7 +277,7 @@ const Reviewform = (props: any) => {
               </Text>
               <TouchableOpacity
                 style={tw`px-12 py-4 bg-yellow-400 rounded-full`}
-                onPress={() => setModalVisible(false)}
+                onPress={ navigateToHome}
               >
                 <Text style={tw`text-xl font-bold text-white`}>Confirmer</Text>
               </TouchableOpacity>

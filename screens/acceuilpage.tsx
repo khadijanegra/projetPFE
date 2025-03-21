@@ -20,6 +20,7 @@ const AcceuilPage = (props: any) => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<any[]>([]); 
+  const [userRole, setUserRole] = useState<string>("");
 
 
   const fetchShopsData = useCallback(async () => {
@@ -32,12 +33,24 @@ const AcceuilPage = (props: any) => {
       console.error("Error fetching data:", error);
     }
   }, []);
-
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/user/users/${props.route.params.id}`);
+        setUserRole(response.data.role); // Supposons que l'API renvoie le rôle de l'utilisateur
+      } catch (error) {
+        console.error("Erreur lors de la récupération du rôle utilisateur :", error);
+      }
+    };
+    
+    fetchUserRole();
+  }, [props.route.params.id]);
   useFocusEffect(
     useCallback(() => {
       fetchShopsData();
     }, [fetchShopsData])
   );
+  console.log(userRole);
 //partiii favoriii 
   const handleAddToFavorites = async (shop_id: string) => {
     try {
@@ -140,6 +153,18 @@ const AcceuilPage = (props: any) => {
                 <Icon name="star" size={20} color="black" style={tw`mr-2`} />
                 <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝘼𝙫𝙞𝙨</Text>
               </TouchableOpacity>
+
+
+              {userRole==="manager"&&(
+              <TouchableOpacity
+                style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
+              >
+                <Icon name="star" size={20} color="black" style={tw`mr-2`} />
+                <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝙚́𝙩𝙖𝙗𝙡𝙞𝙨𝙨𝙚𝙢𝙚𝙣𝙩𝙨</Text>
+              </TouchableOpacity>)
+            }
+
+
               <View style={tw`mt-auto`}>
                 <TouchableOpacity
                   style={tw`flex-row items-center p-4 border-t border-gray-300`}
