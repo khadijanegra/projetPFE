@@ -42,18 +42,20 @@ const Reviewform = (props: any) => {
 
 
     const getLocationHandler = async () => {
-      setIsLoading(true);
+      setIsLoading(true); 
   
       const { status } = await Location.requestForegroundPermissionsAsync();
+      // thabet est ce que location f telll mahloula ou nn 
       if (status !== 'granted') {
         setErrorMsg("Autorisation refusée. Activez la localisation.");
         setIsLoading(false);
         return;
       }
-  
+  // nestokiw location ili l9ineha fl variable location bl method getcurrentposition 
       const location = await Location.getCurrentPositionAsync({});
-      setLocation(location.coords);
-      console.log(location.coords.altitude, location.coords.longitude);
+      //n7oto feha location ili l9ineha 
+      setLocation(location.coords); // .cord : les cordonnees attitude longitude
+      console.log(location.coords.altitude, location.coords.longitude); //jebnehom min navigation mn page profilshop 
       setErrorMsg(null);
       setIsLoading(false);
     };
@@ -98,7 +100,7 @@ const Reviewform = (props: any) => {
     
         console.log(`Distance entre client et shop : ${distance.toFixed(2)} mètres`);
     
-        if (distance <= 300) {
+        if (distance <= 100) {
           setIsNearby(true);
        } else {
         setIsNearby(false);
@@ -389,13 +391,13 @@ const Reviewform = (props: any) => {
                onPress={handleSubmit}
              >
                <Text style={tw`text-white text-center font-bold`}>
-                 Envoyer l'avis
+                 Publier 
                </Text>
              </TouchableOpacity>
            </>
          ) : (
            <Text style={tw`text-red-600 text-center font-bold text-lg`}>
-             Vous êtes trop loin , Votre avis ne sera pas être envoyer .
+             Vous êtes trop loin , Votre avis ne sera pas être publier .
            </Text>
          )}
        </View>
