@@ -6,6 +6,7 @@ import MapView, { Marker } from 'react-native-maps';
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as Animatable from 'react-native-animatable';
 import axios from "axios";
+
 const apiUrl = process.env.API_URL;
 
 const LocationButton = (props: any) => {

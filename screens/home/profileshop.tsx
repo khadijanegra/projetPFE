@@ -101,6 +101,7 @@ const ProfilShop = (props: any) => {
     props.navigation.navigate("reviewform", {
       shop_id: shopId,
       user_id: props.route.params.id,
+      coordinates
     });
   };
 

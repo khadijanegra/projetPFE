@@ -9,11 +9,14 @@ import {
   Alert,
   Modal,
   Animated,
+  ActivityIndicator
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import tw from "tailwind-react-native-classnames";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import * as Location from 'expo-location';
+import MapView, { Marker } from 'react-native-maps';
 const apiUrl = process.env.API_URL;
 
 
@@ -30,7 +33,84 @@ const Reviewform = (props: any) => {
   const [reviewImages , setReviewImages] = useState<any>(null);
 
 
+
+    const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [locationshop , setLocationshop] = useState<Location.LocationObjectCoords | null>(null);
+    const [isNearby, setIsNearby] = useState(false);
+
+
+    const getLocationHandler = async () => {
+      setIsLoading(true);
   
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg("Autorisation refusée. Activez la localisation.");
+        setIsLoading(false);
+        return;
+      }
+  
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location.coords);
+      console.log(location.coords.altitude, location.coords.longitude);
+      setErrorMsg(null);
+      setIsLoading(false);
+    };
+   
+
+
+    useEffect(() => {
+      if (props.route.params?.coordinates) {
+        setLocationshop(props.route.params.coordinates);
+        console.log(props.route.params.coordinates);
+      }
+    }, [props.route.params?.coordinates]);
+
+
+  
+    const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+      const R = 6371000; // Rayon de la Terre en mètres
+      const toRad = (angle: number) => (Math.PI * angle) / 180;
+    
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+    
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    
+      return R * c; // Distance en mètres
+    };
+    
+
+    useEffect(() => {
+      if (location && locationshop) {
+        const distance = haversineDistance(
+          location.latitude, 
+          location.longitude, 
+          locationshop.latitude, 
+          locationshop.longitude
+        );
+    
+        console.log(`Distance entre client et shop : ${distance.toFixed(2)} mètres`);
+    
+        if (distance <= 300) {
+          setIsNearby(true);
+       } else {
+        setIsNearby(false);
+        }
+      }
+    }, [location, locationshop]);
+
+
+
+
+
+
   const pickReviewImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -74,6 +154,9 @@ const Reviewform = (props: any) => {
     }
   };
 
+
+
+
   const handleSubmit = async () => {
     const currentDate = new Date().toISOString(); // Récupère la date actuelle au format ISO
       setDate(currentDate);
@@ -95,10 +178,9 @@ const Reviewform = (props: any) => {
         console.log(note_ambiance);
         const review_id = response.data.id;
         setReview_id(review_id);
-        console.log(props.route.params.user_id
-          
-        )
-        setModalVisible(true);
+        setModalVisible(false)
+        navigateToHome()
+        console.log(props.route.params.user_id)
         return true;
       } else {
         Alert.alert("Erreur lors de la création de votre Review");
@@ -109,6 +191,9 @@ const Reviewform = (props: any) => {
       return false;
     }
   };
+
+
+
   const [modalVisible, setModalVisible] = useState(false);
     const slideAnim = useRef(new Animated.Value(300)).current; // Position initiale en bas
   
@@ -123,6 +208,10 @@ const Reviewform = (props: any) => {
         slideAnim.setValue(300); 
       }
     }, [modalVisible]);
+
+
+
+
     const navigateToHome = () => {
       setModalVisible(false);
       props.navigation.navigate("acceuilpage", { user_id: props.route.params.user_id });
@@ -247,43 +336,82 @@ const Reviewform = (props: any) => {
 
           {/* Bouton d'envoi */}
 
-          <TouchableOpacity onPress={handleSubmit} >
+          <TouchableOpacity onPress={() => setModalVisible(true)} >
           <Text
             style={tw`p-4 text-lg font-bold text-center text-white bg-red-300 rounded-full mt-8`}
           >
-            Envoyer
+            Publier mon avis 🌟
           </Text>
         </TouchableOpacity>
 
-          <Modal animationType="fade" transparent={true} visible={modalVisible}>
-          <View
-            style={tw`items-center justify-end flex-1 bg-black bg-opacity-50`}
-          >
-            <Animated.View
-              style={[
-                tw`items-center w-full p-8 bg-white rounded-t-3xl`,
-                { transform: [{ translateY: slideAnim }] },
-              ]}
-            >
-              <Image
-                source={require("../../images/Illustration.png")}
-                style={tw`w-40 h-40 mb-4 rounded-full`}
-              />
-              <Text style={tw`mb-2 text-2xl font-bold text-gray-900`}>
-                Félicitations !
-              </Text>
-              <Text style={tw`mb-6 text-center text-gray-600`}>
-                Votre avis a été créé avec succès !
-              </Text>
-              <TouchableOpacity
-                style={tw`px-12 py-4 bg-yellow-400 rounded-full`}
-                onPress={ navigateToHome}
-              >
-                <Text style={tw`text-xl font-bold text-white`}>Confirmer</Text>
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
-        </Modal>
+        <Modal animationType="fade" transparent={true} visible={modalVisible}>
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+    <View style={{ width: 350, padding: 8, backgroundColor: 'white', borderRadius: 25, alignItems: 'center' }}>
+      
+     
+      <Text style={{ fontSize: 15, color: 'gray-500', textAlign: 'center', marginBottom: 15 , marginTop:15 }}>
+        Pour garantir l’authenticité des avis, votre localisation doit être verifiée près de l’établissement.
+      </Text>
+
+      <TouchableOpacity 
+        onPress={getLocationHandler} 
+        style={{ padding: 10, backgroundColor: 'black', borderRadius: 10, width: '100%', alignItems: 'center' }}
+      >
+        {isLoading ? <ActivityIndicator color="white" /> : <Text style={{ color: 'white' }}> 📍 Vérification de votre position</Text>}
+      </TouchableOpacity>
+
+      {errorMsg && <Text style={{ color: 'red', marginTop: 10 }}>{errorMsg}</Text>}
+
+      {location && (
+       <View style={tw`p-2`}>
+       <MapView
+          style={{ width: 300, height: 200, marginTop: 15, borderRadius: 40 ,  borderWidth: 2,   borderColor: "#000", overflow: "hidden",  }}
+          showsUserLocation={true}
+          minZoomLevel={15}  
+          initialRegion={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+        >
+          <Marker coordinate={{ latitude: location.latitude, longitude: location.longitude }} title="Votre position" />
+        </MapView>
+   
+       <View style={tw` mt-6 p-3 rounded-lg`}>
+         {isNearby ? (
+           <>
+             <Text style={tw`text-green-600  text-center p-3 font-bold text-lg`}>
+               Vous êtes proche de l'établissement. votre avis sera envoyer !
+             </Text>
+             <TouchableOpacity
+               style={tw`mt-3 bg-red-400 p-3 rounded-lg`}
+               onPress={handleSubmit}
+             >
+               <Text style={tw`text-white text-center font-bold`}>
+                 Envoyer l'avis
+               </Text>
+             </TouchableOpacity>
+           </>
+         ) : (
+           <Text style={tw`text-red-600 text-center font-bold text-lg`}>
+             Vous êtes trop loin , Votre avis ne sera pas être envoyer .
+           </Text>
+         )}
+       </View>
+     </View>
+      )}
+      
+      <TouchableOpacity 
+        onPress={() => setModalVisible(false)} 
+        style={tw `mt-3 bg-black p-3 rounded-lg`}
+      >
+        <Text style={tw`text-white text-center font-bold`}>Fermer</Text>
+      </TouchableOpacity>
+
+    </View>
+  </View>
+</Modal>
         </View>
       </View>
     </ScrollView>
