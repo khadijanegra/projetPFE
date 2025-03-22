@@ -32,6 +32,13 @@ const Myshop = (props: any) => {
       fetchUserData();
     }, [fetchUserData])
   );
+  const goToMyEstablishment = (shop: any) => {
+    props.navigation.navigate("consultshop", {
+      shopId: shop._id,  // ID du shop
+      id: props.route.params.id, // ID de l'utilisateur connecté
+    });
+  };
+
 
   return (
     <ScrollView>
@@ -40,6 +47,7 @@ const Myshop = (props: any) => {
           <TouchableOpacity
             key={shop._id}
             style={tw`mb-4 bg-white rounded-2xl shadow-xl overflow-hidden`}
+            onPress={() => goToMyEstablishment(shop)} // 👈 Appel de la fonction
           >
             <Image
               source={{ uri: `${apiUrl}/fetchshopImages/${shop.shopImage}` }}

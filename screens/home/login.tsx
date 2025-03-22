@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
+import { ScrollView } from "react-native-gesture-handler";
 const  API_URL  = process.env.API_URL;
 
 export default function Login(props : any) {
@@ -49,6 +50,7 @@ export default function Login(props : any) {
 
   return (
     <SafeAreaView style={tw`flex-1 p-2 bg-white`}>
+      <ScrollView>
       <Image 
           source={require("../../images/signup.png")} // Assurez-vous que le chemin de l'image est correct
           style={tw`w-30 h-30 mb-6 ml-8 `} 
@@ -97,6 +99,7 @@ export default function Login(props : any) {
           <Text style={tw`text-lg font-bold text-white`}>𝗦𝗲 𝗖𝗼𝗻𝗻𝗲𝗰𝘁𝗲𝙧</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
