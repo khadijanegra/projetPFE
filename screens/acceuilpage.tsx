@@ -219,7 +219,7 @@ const AcceuilPage = (props: any) => {
       <View style={tw`px-16 pt-4 pb-2 bg-white flex-row items-center border-b border-gray-300`}>
   <FontAwesome name="search" size={20} color="gray" style={tw`mr-3`} />
   <TextInput
-  style={tw`flex-1 text-lg py-2`}
+  style={tw`flex-1 text-lg py-1 mb-3`}
   placeholder="Rechercher..."
   placeholderTextColor="gray"
   value={searchQuery}
