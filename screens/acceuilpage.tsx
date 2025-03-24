@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ScrollView,
+  TextInput,
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { FontAwesome } from "@expo/vector-icons";
@@ -21,18 +22,21 @@ const AcceuilPage = (props: any) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<any[]>([]); 
   const [userRole, setUserRole] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
 
 
   const fetchShopsData = useCallback(async () => {
     try {
-      const response = await axios.get(`${apiUrl}/shops/`);
-      console.log("user id qui navigue *** "+props.route.params.id);     
+      const response = await axios.get(`${apiUrl}/shops/shops/search`, {
+        params: { query: searchQuery } // Send the search query as a parameter
+      });
+      console.log("Fetched shops:", response.data);
       setShopsData(response.data);
-      console.log(JSON.stringify(response.data, null, 2));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, []);
+  }, [searchQuery]);  // This will re-run fetchShopsData when the searchQuery changes
+  
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
@@ -212,7 +216,17 @@ const AcceuilPage = (props: any) => {
       >
         <FontAwesome name="bars" size={20} color="white" />
       </TouchableOpacity>
+      <View style={tw`px-16 pt-4 pb-2 bg-white flex-row items-center border-b border-gray-300`}>
+  <FontAwesome name="search" size={20} color="gray" style={tw`mr-3`} />
+  <TextInput
+  style={tw`flex-1 text-lg py-2`}
+  placeholder="Rechercher..."
+  placeholderTextColor="gray"
+  value={searchQuery}
+  onChangeText={(text) => setSearchQuery(text)} // Update search query
+/>
 
+</View>
       {/* Liste des établissements */}
       <ScrollView
         contentContainerStyle={tw`px-2 pt-20 pb-4`}
