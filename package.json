@@ -39,6 +39,7 @@
     "react-native": "0.76.6",
     "react-native-animatable": "^1.4.0",
     "react-native-classnames": "^0.1.1",
+    "react-native-dialogflow": "^3.2.2",
     "react-native-dotenv": "^3.4.11",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.20.2",
@@ -58,6 +59,7 @@
     "@babel/core": "^7.25.2",
     "@react-native-community/cli": "latest",
     "@types/react": "~18.3.12",
+    "@types/react-native-dialogflow": "^3.2.5",
     "typescript": "^5.3.3"
   },
   "private": true

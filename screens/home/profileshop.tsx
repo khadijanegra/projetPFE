@@ -48,7 +48,9 @@ const ProfilShop = (props: any) => {
       const shopData = shopResponse.data;
       const reviews = reviewResponse.data;
 
+      
       setShopData(shopData);
+      console.log("++++++++++++++++"+shopData);
       calculateAverageRatings(reviews);
       setLoading(false);
     } catch (error) {
@@ -57,6 +59,7 @@ const ProfilShop = (props: any) => {
       setLoading(false);
     }
   }, [shopId]);
+  
 
   const calculateAverageRatings = (reviews: any) => {
     if (!Array.isArray(reviews) || reviews.length === 0) return;
@@ -138,6 +141,7 @@ const ProfilShop = (props: any) => {
             style={tw`w-full h-full`}
             resizeMode="cover"
           />
+
           <LinearGradient
             colors={["transparent", "rgba(0,0,0,0.8)"]}
             style={tw`absolute bottom-0 w-full h-1/3`}

@@ -109,10 +109,6 @@ const Reviewform = (props: any) => {
     }, [location, locationshop]);
 
 
-
-
-
-
   const pickReviewImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -120,7 +116,7 @@ const Reviewform = (props: any) => {
       aspect: [4, 3],
       quality: 1,
     });
-  
+    
     if (!result.canceled && result.assets.length > 0) {
       const uri = result.assets[0].uri;
       const filename = uri.split("/").pop();

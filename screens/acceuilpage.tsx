@@ -7,12 +7,15 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
+import dialogflow from "./home/dialogflow.json";
 import tw from "tailwind-react-native-classnames";
 import { FontAwesome } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Card } from "react-native-paper";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import { Dialogflow_V2 } from "react-native-dialogflow";
+
 const apiUrl = process.env.API_URL;
 
 
@@ -118,9 +121,13 @@ const AcceuilPage = (props: any) => {
   };
   const goToMyEstablishment = (shop: any) => {
     props.navigation.navigate("myshop", {
-      shopId: shop._id,  
+      shopId: shop.id,  
       id: props.route.params.id
     });
+  };
+  const goToChatbot = () => {
+    setIsMenuOpen(false);  // Close the menu
+    props.navigation.navigate('chatbot');  // Navigate to the chatbot screen
   };
   
   
@@ -175,6 +182,13 @@ const AcceuilPage = (props: any) => {
     <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝙚́𝙩𝙖𝙗𝙡𝙞𝙨𝙨𝙚𝙢𝙚𝙣𝙩𝙨</Text>
   </TouchableOpacity>
 )}
+<TouchableOpacity
+  style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
+  onPress={goToChatbot}  // Navigate to chatbot
+>
+  <Icon name="comment" size={20} color="black" style={tw`mr-2`} />
+  <Text style={tw`text-lg text-white`}>Guide</Text>
+</TouchableOpacity>
 
 
 

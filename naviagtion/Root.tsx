@@ -21,6 +21,7 @@ import DeleteAccount from "screens/home/deleteAccount";
 import Reclam from "screens/home/reclam";
 import Myshop from "screens/home/myshop";
 import Consultshop from "screens/consultshop";
+import Chatbot from "screens/home/chatbot";
 const Stack = createStackNavigator();
 
 export default function Root() {
@@ -44,9 +45,12 @@ export default function Root() {
       <Stack.Screen name="deleteAccount" component={DeleteAccount} />
       <Stack.Screen name="reclam" component={Reclam} />
       <Stack.Screen name="myshop" component={Myshop} />
+
       
       <Stack.Screen name="consultshop" component={Consultshop} />
-
+      <Stack.Screen name="chatbot" component={Chatbot
+        
+      } />
     </Stack.Navigator> 
       
 
