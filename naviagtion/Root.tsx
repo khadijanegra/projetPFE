@@ -22,6 +22,7 @@ import Reclam from "screens/home/reclam";
 import Myshop from "screens/home/myshop";
 import Consultshop from "screens/consultshop";
 import Chatbot from "screens/home/chatbot";
+import LocationsMap from "screens/home/allshopsinmaps"
 const Stack = createStackNavigator();
 
 export default function Root() {
@@ -48,9 +49,9 @@ export default function Root() {
 
       
       <Stack.Screen name="consultshop" component={Consultshop} />
-      <Stack.Screen name="chatbot" component={Chatbot
-        
-      } />
+      <Stack.Screen name="chatbot" component={Chatbot} />
+      <Stack.Screen name="allshopsinmaps" component={LocationsMap}/>
+
     </Stack.Navigator> 
       
 
