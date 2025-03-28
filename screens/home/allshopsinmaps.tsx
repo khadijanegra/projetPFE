@@ -1,15 +1,26 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Image} from "react-native";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 import MapView, { Marker } from "react-native-maps";
+import Icon from "react-native-vector-icons/FontAwesome";
+
 
 const apiUrl = process.env.API_URL;
 
 const LocationsMap = () => {
-  const [establishments, setEstablishments] = useState([]);
-  const [establishmentsname, setEstablishmentsname] = useState([]);
+//7adharna typescript lil shop comme un type 
+  interface shop {
+    shop_nom: string;
+    shop_local: string;
+    coordinates?: { latitude: number; longitude: number } | null;
+  }
+  // w sta3malneh linaa fi type 
+  const [shops, setshops] = useState<shop[]>([]);
   const [loading, setLoading] = useState(true);
+
+
+ 
 
   // Fonction bech nkharjou il attitude w langitude 
   const extractCoordinates = (url : String) => {
@@ -26,26 +37,21 @@ const LocationsMap = () => {
   };
 
   // jibnehom les shops bil API 
-  const fetchEstablishments = useCallback(async () => {
+  const fetchshops = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${apiUrl}/shops/`);
       
       // njibou les coordinates mte3 kol shop
-      const establishmentsWithCoordinates = response.data.map(shop => { // il establishmentsWithCoordinates chna3mlou feha hedha 
+      const shopsdata = response.data.map(shop => { // il establishmentsWithCoordinates chna3mlou feha hedha 
         //chnapplikiw il fcts mte3naa 3ala il shops.local_shop lkoll illi 3anna w nistokiwhom fil coordinates
         const coordinates = extractCoordinates(shop.shop_local);
         return { ...shop, coordinates }; // bech en cas de MAJ titbaddel linaa zeda 
       });
 
-      const establishmentsnamess = response.data.map(shop => { // il establishmentsWithCoordinates chna3mlou feha hedha 
-        //chnapplikiw il fcts mte3naa 3ala il shops.local_shop lkoll illi 3anna w nistokiwhom fil coordinates
-        const establishmentname = shop.shop_nom;
-        return { ...shop }; // bech en cas de MAJ titbaddel linaa zeda 
-      });
+     
       // nistokiw  
-      setEstablishments(establishmentsWithCoordinates); // affectation  lil establishmentsWithCoordinates fi establishements
-      setEstablishmentsname(establishmentsnamess)
+      setshops(shopsdata); // affectation  lil establishmentsWithCoordinates fi establishements
       setLoading(false);
     } catch (error) {
       console.error("Error fetching establishments:", error);
@@ -54,20 +60,20 @@ const LocationsMap = () => {
   }, []);
 
   useEffect(() => {
-    fetchEstablishments();
-  }, [fetchEstablishments]);
+    fetchshops();
+  }, [fetchshops]);
 
  
   // 
   const getMapRegion = () => {
-    if (establishments.length === 0) return null;
+    if (shops.length === 0) return null;
     // tawa fil establshments illi fehaa dinya lkollll chne5dhouhaa w ne5dhou min attitude w langitude ken mochhom null
-    const latitudes = establishments
+    const latitudes = shops
       .map((i) => i.coordinates) /*khdhina min establishments il coorrdinates */
       .filter((coords) => coords !== null) /*khdhina minha ken ili michhom null */
-      .map((coords) => coords.latitude); /*khdhina min il coordinates ken il attitude  */
+      .map((coords) => coords.latitude ); /*khdhina min il coordinates ken il attitude  */
 
-    const longitudes = establishments
+    const longitudes = shops
       .map((i) => i.coordinates)
       .filter((coords) => coords !== null)
       .map((coords) => coords.longitude);
@@ -98,22 +104,28 @@ const LocationsMap = () => {
 
   const region = getMapRegion();
 
+  const tunisiaRegion = {
+    latitude: 33.8869, // Centre approximatif de la Tunisie
+    longitude: 9.5375, // Centre approximatif de la Tunisie
+    latitudeDelta: 5.0, // Largeur du zoom pour couvrir la Tunisie
+    longitudeDelta: 5.0, // Largeur du zoom pour couvrir la Tunisie
+  };
+
   return (
     <ScrollView style={tw`bg-white`}>
-      <View style={tw`h-64`}>
-        <Text>Liste des établissements sur la carte</Text>
-      </View>
-
+     
       <View style={tw`p-4`}>
         {/* Affichage de la carte avec tous les magasins */}
         {region && (
           <MapView
-            style={tw`w-full h-64`}
-            showsUserLocation={true}
-            minZoomLevel={10}
-            initialRegion={region}
+          style={tw`w-full h-64 rounded-lg shadow-lg`}
+          mapType="standard"
+          showsUserLocation
+          minZoomLevel={10}
+          initialRegion={tunisiaRegion}  
+          showsMyLocationButton={true}
           >
-            {establishments.map((i, index) => {
+            {shops.map((i, index) => {
               const coordinates = i.coordinates;
 
               // Si les coordonnées sont null, ne pas afficher le marqueur
@@ -126,9 +138,20 @@ const LocationsMap = () => {
                     latitude: coordinates.latitude,
                     longitude: coordinates.longitude,
                   }}
-                  pinColor="#3b82f6"
-                  title={establishmentsname}
-                                 />
+                >
+                  <View
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    <Icon
+                      name="map-marker" // Choisis l'icône que tu veux ici
+                      size={30}
+                      color="#3b82f6" // Couleur de l'icône
+                    />
+                    <Text style={tw`text-sm mt-2 text-center font-bold`}>
+                      {i.shop_nom}
+                    </Text>
+                  </View>
+                </Marker>
               );
             })}
           </MapView>

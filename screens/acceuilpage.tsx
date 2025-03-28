@@ -7,7 +7,7 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
-import dialogflow from "./home/dialogflow.json";
+//import dialogflow from "./home/dialogflow.json";
 import tw from "tailwind-react-native-classnames";
 import { FontAwesome } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -15,6 +15,7 @@ import { Card } from "react-native-paper";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 import { Dialogflow_V2 } from "react-native-dialogflow";
+
 
 const apiUrl = process.env.API_URL;
 
@@ -105,10 +106,13 @@ const AcceuilPage = (props: any) => {
 
   const goToprofileshop = (shop: any) => {
     props.navigation.navigate("profileshop",{
-      shopId: shop._id,
+      shopId: shop.id,
       id: props.route.params.id
      
     }); 
+  };
+  const gotoallshopsinmaps = (shop: any) => {
+    props.navigation.navigate("allshopsinmaps"); 
   };
 
   const goToReclam = () => {
@@ -167,9 +171,10 @@ const AcceuilPage = (props: any) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
+                onPress={gotoallshopsinmaps}
               >
                 <Icon name="star" size={20} color="black" style={tw`mr-2`} />
-                <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝘼𝙫𝙞𝙨</Text>
+                <Text style={tw`text-lg text-white`}>Carte shops </Text>
               </TouchableOpacity>
 
 
