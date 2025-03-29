@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { View, Text, ScrollView, Image} from "react-native";
+import { View, Text, ScrollView, Image, TouchableOpacity} from "react-native";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 import MapView, { Marker } from "react-native-maps";
@@ -8,9 +8,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 const apiUrl = process.env.API_URL;
 
-const LocationsMap = () => {
+const LocationsMap = (props : any) => {
 //7adharna typescript lil shop comme un type 
   interface shop {
+    _id: string;
     shop_nom: string;
     shop_local: string;
     coordinates?: { latitude: number; longitude: number } | null;
@@ -20,7 +21,6 @@ const LocationsMap = () => {
   const [loading, setLoading] = useState(true);
 
 
- 
 
   // Fonction bech nkharjou il attitude w langitude 
   const extractCoordinates = (url : String) => {
@@ -111,6 +111,13 @@ const LocationsMap = () => {
     longitudeDelta: 5.0, // Largeur du zoom pour couvrir la Tunisie
   };
 
+  const goToprofileshop = (shop: shop) => {
+    props.navigation.navigate("profileshop", {
+      shopId: shop._id, 
+      id: props.route.params.id
+   });
+  }
+
   return (
     <ScrollView style={tw`bg-white`}>
      
@@ -138,15 +145,10 @@ const LocationsMap = () => {
                     latitude: coordinates.latitude,
                     longitude: coordinates.longitude,
                   }}
+                  onPress={() => goToprofileshop(i)}
                 >
-                  <View
-                    style={{ alignItems: "center", justifyContent: "center" }}
-                  >
-                    <Icon
-                      name="map-marker" // Choisis l'icône que tu veux ici
-                      size={30}
-                      color="#3b82f6" // Couleur de l'icône
-                    />
+                  <View style={{ alignItems: "center", justifyContent: "center" }}>
+                    <Icon name="map-marker" size={30} color="#3b82f6" />
                     <Text style={tw`text-sm mt-2 text-center font-bold`}>
                       {i.shop_nom}
                     </Text>

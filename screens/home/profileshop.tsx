@@ -101,12 +101,17 @@ const ProfilShop = (props: any) => {
   };
 
   const goToReviewForm = () => {
+    console.log("Navigating to ReviewForm with:", {
+      shop_id: shopId,
+      user_id: props.route.params.id,
+      coordinates
+    });
     props.navigation.navigate("reviewform", {
       shop_id: shopId,
       user_id: props.route.params.id,
       coordinates
     });
-  };
+};
 
   const goToReviewShop = () => {
     props.navigation.navigate("reviewshop", {

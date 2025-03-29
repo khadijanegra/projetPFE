@@ -112,7 +112,9 @@ const AcceuilPage = (props: any) => {
     }); 
   };
   const gotoallshopsinmaps = (shop: any) => {
-    props.navigation.navigate("allshopsinmaps"); 
+    props.navigation.navigate("allshopsinmaps" , {
+      id: props.route.params.id
+    }); 
   };
 
   const goToReclam = () => {

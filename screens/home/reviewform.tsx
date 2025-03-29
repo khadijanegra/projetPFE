@@ -100,7 +100,7 @@ const Reviewform = (props: any) => {
     
         console.log(`Distance entre client et shop : ${distance.toFixed(2)} mètres`);
     
-        if (distance <= 100) {
+        if (distance <= 700) {
           setIsNearby(true);
        } else {
         setIsNearby(false);
@@ -211,10 +211,10 @@ const Reviewform = (props: any) => {
 
 
     const navigateToHome = () => {
+      console.log("Navigating to Home with user_id:", props.route.params.user_id);
       setModalVisible(false);
-      props.navigation.navigate("acceuilpage", { user_id: props.route.params.user_id });
-    };
-    
+      props.navigation.navigate("acceuilpage", { id: props.route.params.user_id });
+  };
   return (
     <ScrollView>
       <View style={tw`flex-1 p-5 bg-white`}>
