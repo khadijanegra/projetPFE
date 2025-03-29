@@ -3,9 +3,10 @@ import { TouchableOpacity, Text, Image, View, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
-
+import uuid from 'react-native-uuid';
 const API_URL = process.env.API_URL;
-
+const sessionId = uuid.v4(); // Generates a unique session ID
+console.log("Generated Session ID:", sessionId);
 // Firstpage Component
 export default function Firstpage({ navigation }: { navigation: any }) {
   const goToHome = () => {

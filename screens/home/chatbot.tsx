@@ -1,49 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button } from "react-native";
 import axios from "axios";
-
-// Replace with your Dialogflow API details
-const DIALOGFLOW_API_URL = "https://dialogflow.googleapis.com/v2/projects/chatbotguide-bpvc/agent/sessions/user12345-session1:detectIntent";
-const DIALOGFLOW_API_KEY = "6fdb9f66b4ae4533d746dbdfb4d63b52e88171b8"; // Your API key
-
+import uuid from "react-native-uuid";
+import { GoogleAuth } from "google-auth-library";
+import * as FileSystem from "expo-file-system";
+const  API_URL  = process.env.API_URL;
+const DIALOGFLOW_API_URL =
+  "https://dialogflow.googleapis.com/v2/projects/chatbotguide-bpvc/agent/sessions";
+const sessionId = uuid.v4(); // Génère un ID de session unique
 
 const Chatbot = () => {
-  const [messages, setMessages] = React.useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
+  
   const sendMessage = async (message: string) => {
+    const sessionId = "user-session-" + Math.random().toString(36).substring(7); // Générer un ID unique
+  
     try {
-      const response = await axios.post(
-        DIALOGFLOW_API_URL,
-        {
-          queryInput: {
-            text: {
-              text: message,
-              languageCode: "en",
-            },
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${DIALOGFLOW_API_KEY}`,
-          },
-        }
+      const response = await axios.post(`${API_URL}/chatbot/`, // Remplace avec l'URL Render de ton backend
+        { message, sessionId }
       );
-
-      const botResponse = response.data.queryResult.fulfillmentText;
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: botResponse, from: "bot" },
-      ]);
+  
+      const botResponse = response.data.response;
+      setMessages((prevMessages) => [...prevMessages, { text: botResponse, from: "bot" }]);
     } catch (error) {
-      console.error("Error sending message to Dialogflow", error);
+      console.error("Erreur avec le serveur Express", error);
     }
   };
-
+  
   return (
     <View style={{ flex: 1, padding: 20 }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Chatbot</Text>
       <View style={{ flex: 1 }}>
-        {/* Display messages */}
         {messages.map((msg, index) => (
           <Text key={index} style={{ marginBottom: 10, fontSize: 18 }}>
             {msg.from === "bot" ? `Bot: ${msg.text}` : `You: ${msg.text}`}
