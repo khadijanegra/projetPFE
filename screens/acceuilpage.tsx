@@ -21,7 +21,7 @@ const apiUrl = process.env.API_URL;
 
 
 const AcceuilPage = (props: any) => {
-  const [shopsData, setShopsData] = useState<any[]>([]);
+  const [shopsData, setShopsData] = useState<any | [number]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<any[]>([]); 
@@ -32,14 +32,15 @@ const AcceuilPage = (props: any) => {
   const fetchShopsData = useCallback(async () => {
     try {
       const response = await axios.get(`${apiUrl}/shops/shops/search`, {
-        params: { query: searchQuery } // Send the search query as a parameter
+        params: { query: searchQuery } 
       });
-      console.log("Fetched shops:", response.data);
+      console.log("Fetched shops:", JSON.stringify(response.data, null, 2));
       setShopsData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, [searchQuery]);  // This will re-run fetchShopsData when the searchQuery changes
+  }, [searchQuery]);
+
   
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -60,6 +61,37 @@ const AcceuilPage = (props: any) => {
   );
   console.log(userRole);
 //partiii favoriii 
+
+const [reviews, setReviews] = useState({});
+
+const fetchReviews = async (shop_id : any) => {
+  try {
+    const response = await axios.get(`${apiUrl}/review/getreviews/${shop_id}`);
+    const data = response.data;
+
+    if (data.length > 0) {
+      const totalCuisine = data.reduce((sum :any, review: any) => sum + review.note_cuisine, 0);
+      const totalAmbiance = data.reduce((sum : any, review : any) => sum + review.note_ambiance, 0);
+      const totalService = data.reduce((sum : any, review : any) => sum + review.note_service, 0);
+      const averageRating = (totalCuisine + totalAmbiance + totalService) / (3 * data.length);
+
+      setReviews((prev) => ({ ...prev, [shop_id]: averageRating }));
+    } else {
+      setReviews((prev) => ({ ...prev, [shop_id]: 0 }));
+    }
+  } catch (err) {
+    console.error(err);
+    setReviews((prev) => ({ ...prev, [shop_id]: 0 }));
+  }
+};
+
+// Charger les avis au montage du composant
+useEffect(() => {
+  shopsData.forEach((shop) => {
+    fetchReviews(shop.id);
+  });
+}, [shopsData]);
+
   const handleAddToFavorites = async (shop_id: string) => {
     try {
       const response = await axios.post(`${apiUrl}/user/favoriclic`,
@@ -179,25 +211,22 @@ const AcceuilPage = (props: any) => {
                 <Text style={tw`text-lg text-white`}>Carte shops </Text>
               </TouchableOpacity>
 
-
               {userRole === "manager" && (
-  <TouchableOpacity
-    style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
-    onPress={ goToMyEstablishment} // Appeler la fonction ici
-  >
-    <Icon name="star" size={20} color="black" style={tw`mr-2`} />
-    <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝙚́𝙩𝙖𝙗𝙡𝙞𝙨𝙨𝙚𝙢𝙚𝙣𝙩𝙨</Text>
-  </TouchableOpacity>
-)}
-<TouchableOpacity
-  style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
-  onPress={goToChatbot}  // Navigate to chatbot
->
-  <Icon name="comment" size={20} color="black" style={tw`mr-2`} />
-  <Text style={tw`text-lg text-white`}>Guide</Text>
-</TouchableOpacity>
-
-
+                <TouchableOpacity
+                  style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
+                  onPress={goToMyEstablishment} // Appeler la fonction ici
+                >
+                  <Icon name="star" size={20} color="black" style={tw`mr-2`} />
+                  <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝙚́𝙩𝙖𝙗𝙡𝙞𝙨𝙨𝙚𝙢𝙚𝙣𝙩𝙨</Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
+                onPress={goToChatbot} // Navigate to chatbot
+              >
+                <Icon name="comment" size={20} color="black" style={tw`mr-2`} />
+                <Text style={tw`text-lg text-white`}>Guide</Text>
+              </TouchableOpacity>
 
               <View style={tw`mt-auto`}>
                 <TouchableOpacity
@@ -237,17 +266,18 @@ const AcceuilPage = (props: any) => {
       >
         <FontAwesome name="bars" size={20} color="white" />
       </TouchableOpacity>
-      <View style={tw`px-16 pt-4 pb-2 bg-white flex-row items-center border-b border-gray-300`}>
-  <FontAwesome name="search" size={20} color="gray" style={tw`mr-3`} />
-  <TextInput
-  style={tw`flex-1 text-lg py-1 mb-3`}
-  placeholder="Rechercher..."
-  placeholderTextColor="gray"
-  value={searchQuery}
-  onChangeText={(text) => setSearchQuery(text)} // Update search query
-/>
-
-</View>
+      <View
+        style={tw`px-16 pt-4 pb-2 bg-white flex-row items-center border-b border-gray-300`}
+      >
+        <FontAwesome name="search" size={20} color="gray" style={tw`mr-3`} />
+        <TextInput
+          style={tw`flex-1 text-lg py-1 mb-3`}
+          placeholder="Rechercher..."
+          placeholderTextColor="gray"
+          value={searchQuery}
+          onChangeText={(text) => setSearchQuery(text)} // Update search query
+        />
+      </View>
       {/* Liste des établissements */}
       <ScrollView
         contentContainerStyle={tw`px-2 pt-20 pb-4`}
@@ -296,28 +326,21 @@ const AcceuilPage = (props: any) => {
                       </Text>
                     </View>
 
-                    <View
-                      style={tw`flex-row items-center self-start px-1 py-1 rounded-full `}
-                    >
-                      <View style={tw`flex-row items-center`}>
-                        <Text>
-                          <Icon name="star" size={20} color="#FBBF24" />
-                        </Text>
-                        <Text>
-                          <Icon name="star" size={20} color="#FBBF24" />
-                        </Text>
-                        <Text>
-                          <Icon name="star" size={20} color="#FBBF24" />
-                        </Text>
-                        <Text>
-                          <Icon name="star" size={20} color="#FBBF24" />
-                        </Text>
-                        <Text>
-                          <Icon name="star" size={20} color="#FBBF24" />
-                        </Text>
-                      </View>{" "}
+                    <View style={tw`flex-row items-center`}>
+                      {[...Array(5)].map((_, i) => (
+                        <Icon
+                          key={i}
+                          name="star"
+                          size={20}
+                          color={
+                            reviews[shop.id] && reviews[shop.id] >= i + 1
+                              ? "#FBBF24"
+                              : "#D1D5DB"
+                          }
+                        />
+                      ))}
                       <Text style={tw`ml-1 text-lg font-bold text-red-300`}>
-                        4.9
+                        {reviews[shop.id] ? reviews[shop.id].toFixed(1) : "0.0"}
                       </Text>
                     </View>
                   </Card.Content>
@@ -358,7 +381,7 @@ const AcceuilPage = (props: any) => {
                       style={tw`px-4 py-3 border-t border-gray-200 bg-gray-50`}
                     >
                       <Text style={tw`text-sm leading-5 text-gray-600`}>
-                        {shop.shop_desc}
+                        {shop.categorie}
                       </Text>
                     </Card.Content>
                   )}
