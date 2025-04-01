@@ -79,6 +79,19 @@ const regions = [
   { label: "Tataouine", value: "Tataouine" }
 ];
 
+
+const [services, setServices] = useState<string[]>([]);
+const [showServicePicker, setShowServicePicker] = useState(false);
+
+const serviceOptions = [
+  { label: "WiFi", value: "WiFi" },
+  { label: "Espace Ouvert", value: "Espace Ouvert" },
+  { label: "Espace Kids", value: "Espace Kids" },
+  { label: "Parking", value: "Parking" },
+  { label: "Musique Live", value: "Musique Live" },
+  { label: "Climatisation", value: "Climatisation" },
+];
+
 const categories = [
   { label: "Sélectionnez une catégorie", value: "" },
   { label: "Hôtel", value: "Hôtel" },
@@ -183,6 +196,7 @@ const categories = [
       user_id: props.route.params.id,
       categorie : categorie,
       region : region,
+      service:services
     };
 
     try {
@@ -327,6 +341,80 @@ const categories = [
                 </View>
               </Modal>
             </View>
+     
+            <View style={tw`mb-4`}>
+  <TouchableOpacity
+    onPress={() => setShowServicePicker(true)}
+    style={tw`p-3 bg-white rounded-lg border border-gray-200`}
+  >
+    <View style={tw`flex-row items-center`}>
+      <Ionicons name="options" size={18} color="#EF5350" style={tw`mr-2`} />
+      <Text style={tw`${services.length === 0 ? "text-gray-400" : "text-gray-700"}`}>
+        {services.length > 0 ? services.join(", ") : "Sélectionnez des services"}
+      </Text>
+      <Ionicons name="chevron-down" size={16} color="#CBD5E1" style={tw`ml-2`} />
+    </View>
+  </TouchableOpacity>
+
+  {/* Affichage des services sélectionnés */}
+  <View style={tw`flex-row flex-wrap mt-2`}>
+    {services.map((service) => (
+      <View key={service} style={tw`bg-gray-200 px-3 py-1 rounded-full m-1`}>
+        <Text style={tw`text-gray-700`}>{service}</Text>
+      </View>
+    ))}
+  </View>
+</View>
+<Modal visible={showServicePicker} transparent={true} animationType="slide">
+  <View style={tw`flex-1 justify-center bg-black bg-opacity-50`}>
+    <View style={tw`m-4 bg-white rounded-lg p-4`}>
+      <Text style={tw`text-lg font-bold mb-4`}>Choisir des services</Text>
+      <ScrollView style={{ maxHeight: 300 }}>
+        {serviceOptions.map((service) => (
+          <TouchableOpacity
+            key={service.value}
+            onPress={() => {
+              setServices((prevServices) =>
+                prevServices.includes(service.value)
+                  ? prevServices.filter((s) => s !== service.value)
+                  : [...prevServices, service.value]
+              );
+            }}
+            style={tw`p-3 flex-row items-center ${services.includes(service.value) ? "bg-gray-100" : ""}`}
+          >
+            <Ionicons
+              name={services.includes(service.value) ? "checkbox" : "square-outline"}
+              size={20}
+              color="#EF5350"
+              style={tw`mr-2`}
+            />
+            <Text style={tw`text-gray-700`}>{service.label}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <TouchableOpacity
+        onPress={() => setShowServicePicker(false)}
+        style={tw`mt-4 p-3 bg-red-500 rounded-lg`}
+      >
+        <Text style={tw`text-white text-center font-bold`}>Valider</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <View style={tw`mb-4`}>
               <TouchableOpacity

@@ -2,12 +2,23 @@ import React from "react";
 import * as Animatable from "react-native-animatable";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import tw from "tailwind-react-native-classnames";
-
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
 const homepage = ({ navigation }: { navigation: any }) => {
   const goTo = () => navigation.navigate("Login");
   const GoTO = () => navigation.navigate("signup");
   return (
     <View style={tw`items-center justify-center flex-1 px-6 bg-white`}>
+        <View style={tw` mr-52 mb-12`}>
+          <Image
+            source={require("../../images/shape.png")}
+            style={{
+              width: width * 0.5, // Ajuste la largeur de l'image
+              height: width * 0.5, // Assure la même hauteur pour une image carrée
+              aspectRatio: 1, // Garde les proportions carrées
+            }}
+          />
+        </View>
       <View style={tw`items-center mb-12`}>
         <Image
           source={require("../../images/home.png")}
