@@ -90,6 +90,10 @@ const serviceOptions = [
   { label: "Parking", value: "Parking" },
   { label: "Musique Live", value: "Musique Live" },
   { label: "Climatisation", value: "Climatisation" },
+  { label: "jeux de cartes", value: "jeux de cartes" },
+  { label: "Terrasse extérieure", value: "Terrasse extérieure" },
+  { label: "Coin lecture (livres, magazines)", value:"Coin lecture (livres, magazines)" },
+  { label: "Animaux acceptés", value:"Animaux acceptés" },
 ];
 
 const categories = [

@@ -28,7 +28,7 @@ const ProfilShop = (props: any) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [rating, setRating] = useState(0);
-
+  const [showServices, setShowServices] = useState(false);
   const [averageRatings, setAverageRatings] = useState({
     cuisine: 0,
     service: 0,
@@ -189,6 +189,33 @@ const ProfilShop = (props: any) => {
             )}
           </TouchableOpacity>
         )}
+        {/* Section Services */}
+{shopData && shopData.service && shopData.service.length > 0 && (
+  <TouchableOpacity
+    activeOpacity={0.9}
+    onPress={() => setShowServices((prev) => !prev)}
+    style={tw`mb-4 bg-white rounded-xl p-4 shadow-sm`}
+  >
+    <View style={tw`flex-row justify-between items-center`}>
+      <Text style={tw`text-lg font-semibold text-gray-900`}>𝗦𝗲𝗿𝘃𝗶𝗰𝗲𝘀</Text>
+      <Ionicons
+        name={showServices ? "chevron-up" : "chevron-down"}
+        size={25}
+        color="#EF5350"
+      />
+    </View>
+    {showServices && (
+      <View style={tw`mt-2`}>
+        {shopData.service.map((service: string, index: number) => (
+          <View key={index} style={tw`flex-row items-center my-1`}>
+            <Ionicons name="checkmark-circle-outline" size={20} color="#10B981" />
+            <Text style={tw`ml-2 text-gray-700`}>{service}</Text>
+          </View>
+        ))}
+      </View>
+    )}
+  </TouchableOpacity>
+)}
 
         {/* Contact Section */}
         {shopData && (
