@@ -15,10 +15,17 @@ const LocationsMap = (props : any) => {
     shop_nom: string;
     shop_local: string;
     coordinates?: { latitude: number; longitude: number } | null;
+    categorie?: string; 
+    service?: string[];
+    shop_desc?:String;
+
   }
   // w sta3malneh linaa fi type 
   const [shops, setshops] = useState<shop[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedShop, setSelectedShop] = useState<shop | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
+
 
 
 
@@ -40,7 +47,7 @@ const LocationsMap = (props : any) => {
   const fetchshops = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${apiUrl}/shops/`);
+      const response = await axios.get(`${apiUrl}/shops/getallshops`);
       
       // njibou les coordinates mte3 kol shop
       const shopsdata = response.data.map(shop => { // il establishmentsWithCoordinates chna3mlou feha hedha 
@@ -52,7 +59,7 @@ const LocationsMap = (props : any) => {
      
       // nistokiw  
       setshops(shopsdata); // affectation  lil establishmentsWithCoordinates fi establishements
-      setLoading(false);
+       setLoading(false);
     } catch (error) {
       console.error("Error fetching establishments:", error);
       setLoading(false);
@@ -102,6 +109,11 @@ const LocationsMap = (props : any) => {
     };
   };
 
+  const handleMarkerPress = (shopData: shop) => {
+    setSelectedShop(shopData); 
+    setShowDetails(true); // Toujours afficher les détails
+  };
+  
   const region = getMapRegion();
 
   const tunisiaRegion = {
@@ -119,8 +131,8 @@ const LocationsMap = (props : any) => {
   }
 
   return (
-    <ScrollView style={tw`bg-white`}>
-     
+    <ScrollView style={tw`bg-gray-300`}>
+     <View style={tw`flex flex-col `} >
       <View style={tw`p-4`}>
         {/* Affichage de la carte avec tous les magasins */}
         {region && (
@@ -145,7 +157,7 @@ const LocationsMap = (props : any) => {
                     latitude: coordinates.latitude,
                     longitude: coordinates.longitude,
                   }}
-                  onPress={() => goToprofileshop(i)}
+                  onPress={() => handleMarkerPress(i)}
                 >
                   <View style={{ alignItems: "center", justifyContent: "center" }}>
                     <Icon name="map-marker" size={30} color="#3b82f6" />
@@ -159,6 +171,33 @@ const LocationsMap = (props : any) => {
           </MapView>
         )}
       </View>
+      {selectedShop && showDetails && (
+  <View style={tw`p-4 bg-white shadow-lg rounded-lg mt-12 bottom-5 mx-4`}>
+    <View style={tw`flex flex-row justify-between w-full `}>
+    <Text style={tw`text-lg font-bold`}>{selectedShop.shop_nom}</Text>
+    <Text style={tw`text-sm text-gray-600 `}> {selectedShop.categorie}</Text>
+    </View>
+    <Text style={tw`text-sm text-gray-600 mb-3 `}>{selectedShop.shop_desc}</Text>
+
+    {selectedShop.service && selectedShop.service.length > 0 && (
+      <View>
+        {selectedShop.service.map((service: string, index: number) => (
+          <Text key={index} style={tw`text-sm text-gray-600`}>
+            • {service}
+          </Text>
+        ))}
+      </View>
+    )}
+
+    <TouchableOpacity 
+      style={tw`mt-2 bg-black p-2 rounded-lg`} 
+      onPress={() => goToprofileshop(selectedShop)}
+    >
+      <Text style={tw`text-white text-center`}>Voir le Shop</Text>
+    </TouchableOpacity>
+  </View>
+)}
+</View>
     </ScrollView>
   );
 };
