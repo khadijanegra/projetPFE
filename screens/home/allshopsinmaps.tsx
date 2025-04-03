@@ -20,11 +20,19 @@ const LocationsMap = (props : any) => {
     shop_desc?:String;
 
   }
+  interface Region {
+    latitude: number;
+    longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
+  }
+  
   // w sta3malneh linaa fi type 
   const [shops, setshops] = useState<shop[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedShop, setSelectedShop] = useState<shop | null>(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [currentRegion, setCurrentRegion] = useState<Region | null>(null); // Pour suivre la région actuelle
 
 
 
@@ -69,6 +77,24 @@ const LocationsMap = (props : any) => {
   useEffect(() => {
     fetchshops();
   }, [fetchshops]);
+
+  const getShopsWithinRegion = (region: Region) => {
+    // Filtrer les magasins en fonction de la région actuelle de la carte
+    return shops.filter(shop => {
+      if (!shop.coordinates) return false;
+      const { latitude, longitude } = shop.coordinates;
+      return (
+        latitude >= region.latitude - region.latitudeDelta &&
+        latitude <= region.latitude + region.latitudeDelta &&
+        longitude >= region.longitude - region.longitudeDelta &&
+        longitude <= region.longitude + region.longitudeDelta
+      );
+    });
+  };
+
+  const handleRegionChange = (region: Region) => {
+    setCurrentRegion(region); // Mettre à jour la région à chaque changement de la carte
+  };
 
  
   // 
@@ -131,7 +157,7 @@ const LocationsMap = (props : any) => {
   }
 
   return (
-    <ScrollView style={tw`bg-gray-300`}>
+    <ScrollView style={tw`bg-gray-200`}>
      <View style={tw`flex flex-col `} >
       <View style={tw`p-4`}>
         {/* Affichage de la carte avec tous les magasins */}
@@ -143,6 +169,7 @@ const LocationsMap = (props : any) => {
           minZoomLevel={10}
           initialRegion={tunisiaRegion}  
           showsMyLocationButton={true}
+          onRegionChangeComplete={handleRegionChange}
           >
             {shops.map((i, index) => {
               const coordinates = i.coordinates;
@@ -171,6 +198,16 @@ const LocationsMap = (props : any) => {
           </MapView>
         )}
       </View>
+      {currentRegion && (
+          <View style={tw`p-4`}>
+            <Text style={tw`text-lg font-bold`}>Magasins dans la zone actuelle :</Text>
+            {getShopsWithinRegion(currentRegion).map((shop) => (
+              <Text key={shop._id} style={tw`text-md text-gray-800`}>
+                • {shop.shop_nom}
+              </Text>
+            ))}
+          </View>
+        )}
       {selectedShop && showDetails && (
   <View style={tw`p-4 bg-white shadow-lg rounded-lg mt-12 bottom-5 mx-4`}>
     <View style={tw`flex flex-row justify-between w-full `}>
@@ -190,10 +227,10 @@ const LocationsMap = (props : any) => {
     )}
 
     <TouchableOpacity 
-      style={tw`mt-2 bg-black p-2 rounded-lg`} 
+      style={tw`mt-2 bg-red-300 p-2 rounded-lg`} 
       onPress={() => goToprofileshop(selectedShop)}
     >
-      <Text style={tw`text-white text-center`}>Voir le Shop</Text>
+      <Text style={tw`text-black text-center font-bold`}>Voir le Shop</Text>
     </TouchableOpacity>
   </View>
 )}
