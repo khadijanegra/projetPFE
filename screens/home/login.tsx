@@ -28,24 +28,24 @@ export default function Login(props : any) {
         email,
         password,
       });
-      console.log("Email:", email, "Password:", password , "id", response.data.id);
-      //setId(response.data.id);  
-      if (response.data.token) {
-        // setid => pour mettre a jours l'id apres une appel mte3 il API 
-        setId(response.data.id); 
   
-        // Attendre la mise à jour de l'état avant de naviguer
+      console.log("Email:", email, "Password:", password, "id", response.data.id);
+  
+      if (response.data.token) {
+        Alert.alert("Succès", "Connexion réussie !");
+        
         setTimeout(() => {
-          console.log("Navigating with ID:", response.data.id); 
-          // linaa il ID jey mil API bidhaa ya3nii ba3ed ma 3ammer il formulaire chyit5la9 il ID mil API bidhaa : heka 3lech sta3malnaa  response.data.id ya3nii mawjoud fi response mte3 il API bidhaa 
+          setId(response.data.id);
+          console.log("Navigating with ID:", response.data.id);
           props.navigation.navigate("acceuilpage", { id: response.data.id });
-          // pour passe l'ID lil page illi ba3edha 
-        }, 100); 
+        }, 1000); // Attendre 1 seconde pour être sûr que l'alerte s'affiche
       }
     } catch (error) {
+      console.log("Erreur de connexion:", error);
       Alert.alert("Erreur", "Email ou mot de passe invalide !");
     }
   };
+  
   
 
   return (
