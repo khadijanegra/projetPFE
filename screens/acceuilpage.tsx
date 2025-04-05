@@ -27,7 +27,7 @@ const AcceuilPage = (props: any) => {
   const [favorites, setFavorites] = useState<any[]>([]); 
   const [userRole, setUserRole] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
-
+const [shopsid , setshopsid] = useState();
 
   const fetchShopsData = useCallback(async () => {
     try {
@@ -93,6 +93,7 @@ useEffect(() => {
 }, [shopsData]);
 
   const handleAddToFavorites = async (shop_id: string) => {
+    console.log("userId:", props.route.params.id);
     try {
       const response = await axios.post(`${apiUrl}/user/favoriclic`,
         {
@@ -102,7 +103,6 @@ useEffect(() => {
         }
         
       );
-      
 
       if (response.status === 200) {
         setFavorites((prevFavorites) => [...prevFavorites, shop_id]);
@@ -350,7 +350,7 @@ useEffect(() => {
                     <TouchableOpacity
                       style={tw`p-2 bg-red-100 rounded-full`}
                       onPress={() => {
-                        handleAddToFavorites(shop._id);
+                        handleAddToFavorites(shop.id);
                       }}
                     >
                       <Icon name="heart" size={20} color="#F56565" />
