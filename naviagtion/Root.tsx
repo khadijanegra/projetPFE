@@ -47,8 +47,7 @@ export default function Root() {
       <Stack.Screen name="deleteAccount" component={DeleteAccount} />
       <Stack.Screen name="reclam" component={Reclam} />
       <Stack.Screen name="myshop" component={Myshop} />
-
-      
+      <Stack.Screen name="allshopsinmaps" component={LocationsMap}/>
       <Stack.Screen name="consultshop" component={Consultshop} />
       <Stack.Screen name="chatbot" component={Chatbot} />
       <Stack.Screen name="formevent" component={EventForm}/>
