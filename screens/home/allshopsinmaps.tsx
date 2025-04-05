@@ -170,6 +170,18 @@ const LocationsMap = (props : any) => {
           initialRegion={tunisiaRegion}  
           showsMyLocationButton={true}
           onRegionChangeComplete={handleRegionChange}
+          customMapStyle={[
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }],
+            },
+            {
+              featureType: "poi.business",
+              elementType: "all",
+              stylers: [{ visibility: "off" }],
+            },
+          ]}
           >
             {shops.map((i, index) => {
               const coordinates = i.coordinates;
