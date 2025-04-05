@@ -55,11 +55,12 @@ const ReviewShop = (props: any) => {
             <View style={tw`flex flex-row justify-between`}>
               {/* Nom de l'utilisateur */}
               <Text style={tw`text-lg font-bold text-gray-800 mb-1`}>
-                {review.user_id.nom}{" "}
-                {/* Remplace par un nom d'utilisateur si disponible */}
-              </Text>
+  {review.user_id?.nom ?? "Utilisateur inconnu"}
+</Text>
+
               <Text>{review?.date ? new Date(review.date).toISOString().slice(0, 10) : ""}</Text>
             </View>
+            
 
             {/* Avis de l'utilisateur */}
             <Text style={tw`text-gray-600 mb-2`}>
