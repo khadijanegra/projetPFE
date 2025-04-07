@@ -11,12 +11,16 @@ import {
   Alert,
   TouchableWithoutFeedback,
 } from "react-native";
+import { Keyboard } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import axios from "axios";
+const apiUrl = process.env.API_URL;
 
-const EventForm = () => {
+
+const EventForm = (props : any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(300)).current;
 
@@ -32,73 +36,96 @@ const EventForm = () => {
     }
   }, [modalVisible]);
 
-  const [title, setTitle] = useState("");
+  const [titre, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [price, setPrice] = useState("");
-  const [placeLimit, setPlaceLimit] = useState("non_limite");
-  const [maxPlaces, setMaxPlaces] = useState("");
-  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+  const [date_debut, setStartDate] = useState(new Date());
+  const [date_fin, setEndDate] = useState(new Date());
+  const [prix, setPrice] = useState("");
+  const [limite, setPlaceLimit] = useState(false);
+  const [nbr_place, setMaxPlaces] = useState("");
+  const [isStartDatePickerVisible, setStartDatePickerVisibility] = useState(false);
+  const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+  const [shopID , setshopID]= useState()
+   const [event_id , seteventid] = useState()
 
-  const handleSubmit = () => {
-    if (!title || !description || !price) {
-      Alert.alert("Erreur", "Veuillez remplir tous les champs obligatoires");
-      return;
-    }
+   console.log("apiUrl:", apiUrl);
+   console.log("*************");
 
-    if (placeLimit === "limite" && !maxPlaces) {
-      Alert.alert("Erreur", "Veuillez spécifier le nombre de places");
+  const handleSubmit = async () => {
+    if (!titre || !description || ! prix ||!date_fin ||!date_debut) {
+      Alert.alert("Veuillez d'abord uploader une image !");
       return;
     }
 
     const eventData = {
-      title,
+      titre,
       description,
-      startDate,
-      endDate,
-      price,
-      placeLimit,
-      maxPlaces: placeLimit === "limite" ? maxPlaces : null,
+      date_debut,
+      date_fin,
+      prix,
+      limite,
+      nbr_place: limite? nbr_place : null,
+      shop_id : props.route.params.shopId,
     };
 
-    console.log("Événement créé:", eventData);
-    setModalVisible(true);
+    try {
+      const response = await axios.post(`${apiUrl}/event/createvent`,eventData );
+      console.log("apiUrl:", apiUrl);
+
+      if (response.status === 201) {
+        const event_id = response.data.id;
+        seteventid(event_id);
+        Alert.alert("évènement créé avec succès");
+        setModalVisible(true);
+        return true;
+      } else {
+        Alert.alert("Erreur lors de la création de votre évènement");
+        return false;
+      }
+    }catch (error) {
+      console.log("Erreur lors de la requête axios :", error);
+      if (axios.isAxiosError(error)) {
+        console.log("Message d'erreur :", error.message);
+        console.log("Réponse serveur :", error.response?.data);
+        console.log("Status :", error.response?.status);
+      }
+      Alert.alert("Erreur lors de la connexion");
+    }
+    
   };
 
-  const onChangeStartDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    const currentDate = selectedDate || startDate;
-    setShowStartDatePicker(false);
-    setStartDate(currentDate);
-  };
+  const showStartDatePicker = () => setStartDatePickerVisibility(true);
+  const hideStartDatePicker = () => setStartDatePickerVisibility(false);
   
-  const onChangeEndDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    const currentDate = selectedDate || endDate;
-    setShowEndDatePicker(false);
-    setEndDate(currentDate);
-  };
+  const showEndDatePicker = () => setEndDatePickerVisibility(true);
+  const hideEndDatePicker = () => setEndDatePickerVisibility(false);
+
+
+  const handleStartDateConfirm = (date : Date) => {
+  setStartDate(date);
+  hideStartDatePicker();
+};
+
+const handleEndDateConfirm = (date : Date) => {
+  setEndDate(date);
+  hideEndDatePicker();
+};
+
+const formatDate = (date: Date) => {
+  return date.toLocaleString("fr-FR", {
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
   
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("fr-FR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-  
-
-  const goToEvent = () => {
-    setModalVisible(false);
-    // navigation.navigate("EventScreen", { eventId });
-  };
-
   return (
     <ScrollView style={tw`bg-white`} contentContainerStyle={tw`p-4`}>
-      <TouchableWithoutFeedback>
+      
       <LinearGradient
   colors={["#E0B3FF", "#F3E8FF"]}
   style={tw`flex-1 p-6 shadow-lg rounded-3xl`}
@@ -134,7 +161,7 @@ const EventForm = () => {
               <TextInput
                 style={tw`flex-1 text-gray-800`}
                 placeholder="Titre de l'événement"
-                value={title}
+                value={titre}
                 onChangeText={setTitle}
               />
             </View>
@@ -155,85 +182,40 @@ const EventForm = () => {
             𝗗𝗮𝘁𝗲𝘀 𝗲𝘁 𝗵𝗼𝗿𝗮𝗶𝗿𝗲𝘀
             </Text>
 
-            <View style={tw`flex-row justify-between mb-4`}>
-              {/* Start Date */}
-              <TouchableOpacity
-                onPress={() => setShowStartDatePicker(true)}
-                style={tw`flex-1 mr-2`}
-              >
-                <View
-                  style={tw`p-4 bg-white rounded-xl shadow-sm border border-gray-100`}
-                >
-                  <Text style={tw`text-xs text-gray-500 mb-1`}>Début</Text>
-                  <View style={tw`flex-row items-center justify-between`}>
-                    <View style={tw`flex-row items-center`}>
-                      <Ionicons
-                        name="time-outline"
-                        size={20}
-                        color="#F59E0B"
-                        style={tw`mr-2`}
-                      />
-                      <Text style={tw`text-gray-700`}>
-                        {formatDate(startDate)}
-                      </Text>
-                    </View>
-                    <Ionicons
-                      name="chevron-forward"
-                      size={16}
-                      color="#CBD5E1"
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
+            <TouchableOpacity
+  style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
+  onPress={showStartDatePicker}
+>
+  <Ionicons name="time" size={20} color="#EF5350" style={tw`mr-3`} />
+  <Text style={tw`text-gray-700`}>
+    {formatDate(date_debut)}
+  </Text>
+</TouchableOpacity>
 
-              {/* End Date */}
-              <TouchableOpacity
-                onPress={() => setShowEndDatePicker(true)}
-                style={tw`flex-1 ml-2`}
-              >
-                <View
-                  style={tw`p-4 bg-white rounded-xl shadow-sm border border-gray-100`}
-                >
-                  <Text style={tw`text-xs text-gray-500 mb-1`}>Fin</Text>
-                  <View style={tw`flex-row items-center justify-between`}>
-                    <View style={tw`flex-row items-center`}>
-                      <Ionicons
-                        name="time-outline"
-                        size={20}
-                        color="#F59E0B"
-                        style={tw`mr-2`}
-                      />
-                      <Text style={tw`text-gray-700`}>
-                        {formatDate(endDate)}
-                      </Text>
-                    </View>
-                    <Ionicons
-                      name="chevron-forward"
-                      size={16}
-                      color="#CBD5E1"
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
+{/* End Date */}
+<TouchableOpacity
+  style={tw`flex-row items-center p-3 mb-4 bg-white shadow-sm rounded-xl`}
+  onPress={showEndDatePicker}
+>
+  <Ionicons name="time" size={20} color="#EF5350" style={tw`mr-3`} />
+  <Text style={tw`text-gray-700`}>
+    {formatDate(date_fin)}
+  </Text>
+</TouchableOpacity>
+<DateTimePickerModal
+  isVisible={isStartDatePickerVisible}
+  mode="datetime"
+  onConfirm={handleStartDateConfirm}
+  onCancel={hideStartDatePicker}
+/>
 
-            {/* Date Pickers */}
-            {showStartDatePicker && (
-              <DateTimePicker
-                value={startDate}
-                mode="datetime"
-                display="spinner"
-                onChange={onChangeStartDate}
-              />
-            )}
-            {showEndDatePicker && (
-              <DateTimePicker
-                value={endDate}
-                mode="datetime"
-                display="spinner"
-                onChange={onChangeEndDate}
-              />
-            )}
+<DateTimePickerModal
+  isVisible={isEndDatePickerVisible}
+  mode="datetime"
+  onConfirm={handleEndDateConfirm}
+  onCancel={hideEndDatePicker}
+/>
+
 
             {/* Price */}
             <View
@@ -249,55 +231,55 @@ const EventForm = () => {
                 style={tw`flex-1 text-gray-700`}
                 placeholder="Prix (€)"
                 keyboardType="numeric"
-                value={price}
+                value={prix}
                 onChangeText={setPrice}
               />
             </View>
 
             {/* Places Limit */}
             <View style={tw`mb-4`}>
-              <Text style={tw`text-gray-700 mb-2`}>Nombre de places</Text>
-              <View style={tw`flex-row items-center mb-2`}>
-                <TouchableOpacity
-                  style={tw`mr-4 flex-row items-center`}
-                  onPress={() => setPlaceLimit("non_limite")}
-                >
-                  <View style={tw`w-5 h-5 rounded-full border border-gray-400 mr-2 items-center justify-center`}>
-                    {placeLimit === "non_limite" && <View style={tw`w-3 h-3 rounded-full bg-blue-500`} />}
-                  </View>
-                  <Text>Non limité</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={tw`flex-row items-center`}
-                  onPress={() => setPlaceLimit("limite")}
-                >
-                  <View style={tw`w-5 h-5 rounded-full border border-gray-400 mr-2 items-center justify-center`}>
-                    {placeLimit === "limite" && <View style={tw`w-3 h-3 rounded-full bg-blue-500`} />}
-                  </View>
-                  <Text>Limité</Text>
-                </TouchableOpacity>
-              </View>
+  <Text style={tw`text-gray-700 mb-2`}>Nombre de places</Text>
+  <View style={tw`flex-row items-center mb-2`}>
+    <TouchableOpacity
+      style={tw`mr-4 flex-row items-center`}
+      onPress={() => setPlaceLimit(false)} // false pour "Non limité"
+    >
+      <View style={tw`w-5 h-5 rounded-full border border-gray-400 mr-2 items-center justify-center`}>
+        {limite === false && <View style={tw`w-3 h-3 rounded-full bg-blue-500`} />}
+      </View>
+      <Text>Non limité</Text>
+    </TouchableOpacity>
 
-              {placeLimit === "limite" && (
-                <View
-                  style={tw`flex-row items-center p-3 bg-white shadow-sm rounded-xl`}
-                >
-                  <Ionicons
-                    name="people"
-                    size={20}
-                    color="#EF5350"
-                    style={tw`mr-3`}
-                  />
-                  <TextInput
-                    style={tw`flex-1 text-gray-700`}
-                    placeholder="Nombre maximum de places"
-                    keyboardType="numeric"
-                    value={maxPlaces}
-                    onChangeText={setMaxPlaces}
-                  />
-                </View>
-              )}
-            </View>
+    <TouchableOpacity
+      style={tw`flex-row items-center`}
+      onPress={() => setPlaceLimit(true)} // true pour "Limité"
+    >
+      <View style={tw`w-5 h-5 rounded-full border border-gray-400 mr-2 items-center justify-center`}>
+        {limite === true && <View style={tw`w-3 h-3 rounded-full bg-blue-500`} />}
+      </View>
+      <Text>Limité</Text>
+    </TouchableOpacity>
+  </View>
+
+  {limite === true && (
+    <View style={tw`flex-row items-center p-3 bg-white shadow-sm rounded-xl`}>
+      <Ionicons
+        name="people"
+        size={20}
+        color="#EF5350"
+        style={tw`mr-3`}
+      />
+      <TextInput
+        style={tw`flex-1 text-gray-700`}
+        placeholder="Nombre maximum de places"
+        keyboardType="numeric"
+        value={nbr_place}
+        onChangeText={setMaxPlaces}
+      />
+    </View>
+  )}
+</View>
+
           </View>
 
           {/* Submit Button */}
@@ -332,7 +314,8 @@ const EventForm = () => {
                 </Text>
                 <TouchableOpacity
                   style={tw`px-12 py-4 bg-yellow-400 rounded-full`}
-                  onPress={goToEvent}
+                 onPress={() => setModalVisible(false)}
+
                 >
                   <Text style={tw`text-xl font-bold text-white`}>
                     Confirmer
@@ -342,7 +325,6 @@ const EventForm = () => {
             </View>
           </Modal>
         </LinearGradient>
-      </TouchableWithoutFeedback>
     </ScrollView>
   );
 };

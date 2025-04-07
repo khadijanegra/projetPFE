@@ -29,28 +29,36 @@ const ProfilShop = (props: any) => {
   const [error, setError] = useState(false);
   const [rating, setRating] = useState(0);
   const [showServices, setShowServices] = useState(false);
+  const [showevents, setShowevents] = useState(false);
   const [averageRatings, setAverageRatings] = useState({
     cuisine: 0,
     service: 0,
     ambiance: 0,
     total: 0,
   });
+  const [event, setEvent] = useState<any[]>([]);
 
+  
   const shopId = props.route.params.shopId;
 
   const fetchShopData = useCallback(async () => {
     try {
       setLoading(true);
-      const [shopResponse, reviewResponse] = await Promise.all([
+      const [shopResponse, reviewResponse,eventsResponse] = await Promise.all([
         axios.get(`${apiUrl}/shops/${shopId}`),
         axios.get(`${apiUrl}/review/getreviews/${shopId}`),
+        axios.get(`${apiUrl}/event/getevent/${shopId}`)
       ]);
       const shopData = shopResponse.data;
       const reviews = reviewResponse.data;
+      const event = eventsResponse.data;
 
       
       setShopData(shopData);
-      console.log("++++++++++++++++"+shopData);
+      setEvent(event);
+      console.log("++++++++++++++ " + JSON.stringify(shopData, null, 2));
+console.log("********* " + JSON.stringify(event, null, 2));
+
       calculateAverageRatings(reviews);
       setLoading(false);
     } catch (error) {
@@ -167,66 +175,91 @@ const ProfilShop = (props: any) => {
       <View style={tw`px-4 p-5 pt-10 bg-red-50`}>
         {/* Description Section */}
         {shopData && (
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={toggleDescription}
-            style={tw`mb-4 bg-white rounded-xl p-4 shadow-sm`}
-          >
-            <View style={tw`flex-row justify-between items-center shadow-xl`}>
-              <Text style={tw`text-lg font-semibold text-gray-900`}>
-                𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻
-              </Text>
-              <Ionicons
-                name={showDescription ? "chevron-up" : "chevron-down"}
-                size={25}
-                color="#EF5350"
-              />
-            </View>
-            {showDescription && (
-              <Text style={tw`mt-2 text-gray-600 leading-5`}>
-                {shopData.shop_desc}
-              </Text>
-            )}
-          </TouchableOpacity>
+         <TouchableOpacity
+         activeOpacity={0.9}
+         onPress={toggleDescription}
+         style={tw`mb-4 bg-white rounded-xl p-4 shadow-md`}
+       >
+         <View style={tw`flex-row items-center justify-between`}>
+           {/* Icône de business-center */}
+           <View style={tw`flex-row items-center`}>
+           <MaterialIcons name="description" size={25} color="#EF5350" />
+           <Text style={tw`ml-3 text-xl font-bold text-gray-800`}>
+               Description
+             </Text>
+           </View>
+       
+           {/* Icône de bascule pour afficher/masquer la description */}
+           <Ionicons
+             name={showDescription ? "chevron-up" : "chevron-down"}
+             size={25}
+             color="#EF5350"
+           />
+         </View>
+       
+         {/* Affichage de la description lorsque showDescription est vrai */}
+         {showDescription && (
+           <Text style={tw`mt-2 text-gray-600 leading-5`}>
+             {shopData.shop_desc}
+           </Text>
+         )}
+       </TouchableOpacity>
+       
+        
         )}
         {/* Section Services */}
-{shopData && shopData.service && shopData.service.length > 0 && (
-  <TouchableOpacity
-    activeOpacity={0.9}
-    onPress={() => setShowServices((prev) => !prev)}
-    style={tw`mb-4 bg-white rounded-xl p-4 shadow-sm`}
-  >
-    <View style={tw`flex-row justify-between items-center`}>
-      <Text style={tw`text-lg font-semibold text-gray-900`}>𝗦𝗲𝗿𝘃𝗶𝗰𝗲𝘀</Text>
-      <Ionicons
-        name={showServices ? "chevron-up" : "chevron-down"}
-        size={25}
-        color="#EF5350"
-      />
-    </View>
-    {showServices && (
-      <View style={tw`mt-2`}>
-        {shopData.service.map((service: string, index: number) => (
-          <View key={index} style={tw`flex-row items-center my-1`}>
-            <Ionicons name="checkmark-circle-outline" size={20} color="#10B981" />
-            <Text style={tw`ml-2 text-gray-700`}>{service}</Text>
-          </View>
-        ))}
-      </View>
-    )}
-  </TouchableOpacity>
-)}
-
+        {shopData && shopData.service && shopData.service.length > 0 && (
+         <TouchableOpacity
+         activeOpacity={0.9}
+         onPress={() => setShowServices((prev) => !prev)}
+         style={tw`mb-4 bg-white rounded-xl p-4 shadow-md`}
+       >
+         <View style={tw`flex-row items-center justify-between`}>
+           {/* Icône de téléphone */}
+           <View style={tw`flex-row items-center`}>
+           <MaterialIcons name="business-center" size={25} color="#EF5350" />
+           <Text style={tw`ml-3 text-xl font-bold text-gray-800`}>
+               service
+             </Text>
+           </View>
+       
+           {/* Icône chevron pour afficher/masquer */}
+           <Ionicons
+             name={showServices ? "chevron-up" : "chevron-down"}
+             size={25}
+             color="#EF5350"
+           />
+         </View>
+       
+         {/* Liste des services */}
+         {showServices && (
+           <View style={tw`mt-4`}>
+             {shopData.service.map((service: string, index: number) => (
+               <View key={index} style={tw`flex-row items-center my-2`}>
+                 {/* Icône checkmark */}
+                 <Ionicons
+                   name="checkmark-circle-outline"
+                   size={22}
+                   color="#10B981"
+                 />
+                 <Text style={tw`ml-3 text-gray-700 text-base`}>{service}</Text>
+               </View>
+             ))}
+           </View>
+         )}
+       </TouchableOpacity>
+       
+        )}
         {/* Contact Section */}
         {shopData && (
-          <View style={tw`mb-4 bg-white rounded-xl p-4 shadow-xl`}>
+          <View style={tw`mb-4 bg-white rounded-xl p-4 shadow-xl `}>
             <TouchableOpacity
               style={tw`flex-row justify-between items-center`}
               onPress={() => setShowPhone(!showPhone)}
             >
               <View style={tw`flex-row items-center`}>
                 <MaterialIcons name="phone" size={25} color="#EF5350" />
-                <Text style={tw`ml-2 text-gray-700`}>𝗖𝗼𝗻𝘁𝗮𝗰𝘁</Text>
+                <Text style={tw`ml-3 text-xl font-bold text-gray-800`}>Cantact</Text>
               </View>
               <Ionicons
                 name={showPhone ? "eye-off-outline" : "eye-outline"}
@@ -241,22 +274,128 @@ const ProfilShop = (props: any) => {
             )}
           </View>
         )}
-
         {/* Hours Section */}
         {shopData && (
-          <View style={tw`mb-4 bg-white rounded-xl p-4 shadow-sm shadow-xl`}>
-            <Text style={tw`text-lg font-semibold text-gray-900 mb-3`}>
-              𝗛𝗼𝗿𝗮𝗶𝗿𝗲𝘀
-            </Text>
-            <View style={tw`flex-row justify-between mb-2`}>
-              <Text style={tw`text-gray-600`}>Lundi - Vendredi</Text>
-              <Text style={tw`text-gray-800 font-medium`}>
-                {shopData.shop_date_ouv} - {shopData.shop_date_ferm}
+  <View style={tw`mb-12 bg-white rounded-xl p-4 shadow-sm shadow-xl`}>
+    <View style={tw`flex-row items-center mb-3`}>
+      <MaterialIcons name="access-time" size={25} color="#EF5350" style={tw`mr-2`} />
+      <Text style={tw`text-lg font-semibold text-gray-900`}>
+        𝗛𝗼𝗿𝗮𝗶𝗿𝗲𝘀
+      </Text>
+    </View>
+    <View style={tw`flex-row justify-between mb-2`}>
+      <Text style={tw`text-gray-600`}>Lundi - Vendredi</Text>
+      <Text style={tw`text-gray-800 font-medium`}>
+        {shopData.shop_date_ouv} - {shopData.shop_date_ferm}
+      </Text>
+    </View>
+  </View>
+)}
+
+
+       <View>
+  <TouchableOpacity
+    activeOpacity={0.9}
+    onPress={() => setShowevents((prev) => !prev)}
+  >
+    {event && (
+      <View style={tw`mb-6 bg-white rounded-xl p-4 shadow-lg`}>
+        <View style={tw`flex-row items-center justify-between`}>
+          <Text style={tw`ml-1 text-xl font-bold text-gray-800 mb-2`}>🎉 Evénements</Text>
+          <Ionicons
+            name={showevents ? "chevron-up" : "chevron-down"}
+            size={25}
+            color="#EF5350"
+          />
+        </View>
+
+        {/* Vérifie si showevents est vrai et si event est un tableau et non vide */}
+        {showevents && Array.isArray(event) && event.length > 0 ? (
+          event.map((ev: any, index: number) => (
+            <View key={index} style={tw`mb-6`}>
+              {/* Titre de l'événement avec une icône */}
+              <View style={tw`flex flex-row`}>
+                <FontAwesome
+                  name="calendar"
+                  size={18}
+                  color="#32cd32"
+                  style={tw`mr-2 mt-1`} // Utilisation de tailwind pour la marge
+                />
+                <Text style={tw`text-xl font-bold text-green-500 mb-3`}>
+                  {ev.titre}
+                </Text>
+              </View>
+
+              {/* Description de l'événement */}
+              <Text style={tw`text-sm text-gray-700 mt-1 mb-4 font-medium`}>
+                {ev.description}
+              </Text>
+
+              {/* Date de début */}
+              <View style={tw`flex-row items-center`}>
+                <FontAwesome name="clock-o" size={16} color="#6b7280" />
+                <Text style={tw`text-lg text-gray-500 ml-2`}>
+                  Début :{" "}
+                  {ev?.date_debut
+                    ? new Date(ev.date_debut)
+                        .toISOString()
+                        .slice(0, 16)
+                        .replace("T", " ")
+                    : "N/A"}
+                </Text>
+              </View>
+
+              {/* Date de fin */}
+              <View style={tw`flex-row items-center mb-2`}>
+                <FontAwesome name="clock-o" size={16} color="#6b7280" />
+                <Text style={tw`text-lg text-gray-500 ml-2`}>
+                  Fin :{" "}
+                  {ev?.date_fin
+                    ? new Date(ev.date_fin)
+                        .toISOString()
+                        .slice(0, 16)
+                        .replace("T", " ")
+                    : "N/A"}
+                </Text>
+              </View>
+
+              {/* Prix */}
+              {ev.prix && (
+                <View style={tw`flex-row items-center mb-2`}>
+                  <FontAwesome name="money" size={16} color="#f59e0b" />
+                  <Text style={tw`text-md text-gray-700 ml-2`}>
+                    Prix : {ev.prix} dt /personne
+                  </Text>
+                </View>
+              )}
+
+              {/* Nombre de places disponibles */}
+              {ev.nbr_place && (
+                <View style={tw`flex-row items-center`}>
+                  <FontAwesome name="users" size={16} color="#6b7280" />
+                  <Text style={tw`text-md text-gray-700 ml-2`}>
+                    Places dispo : {ev.nbr_place}
+                  </Text>
+                </View>
+              )}
+            </View>
+          ))
+        ) : (
+          showevents && (
+            <View>
+              <Text style={tw`text-base font-bold text-red-500`}>
+                {"Aucun événement pour le moment, mais restez à l'écoute !"}
               </Text>
             </View>
-          </View>
+          )
         )}
+      </View>
+    )}
+  </TouchableOpacity>
+</View>
 
+
+       
         {/* Address Section */}
         {shopData && shopData.shop_local && (
           <View
@@ -284,8 +423,7 @@ const ProfilShop = (props: any) => {
               <MapView
                 style={tw`w-full h-full`}
                 showsUserLocation={true}
-        minZoomLevel={15}
-        
+                minZoomLevel={15}
                 initialRegion={{
                   latitude: coordinates?.latitude || 0,
                   longitude: coordinates?.longitude || 0,
@@ -298,7 +436,6 @@ const ProfilShop = (props: any) => {
                     coordinate={{
                       latitude: coordinates.latitude,
                       longitude: coordinates.longitude,
-                      
                     }}
                     pinColor="#3b82f6"
                   />
@@ -307,7 +444,6 @@ const ProfilShop = (props: any) => {
             </View>
           </View>
         )}
-
         {/* Reviews Section */}
         <View style={tw`p-4 bg-white rounded-lg shadow-md`}>
           <Text style={tw`mb-2 text-lg font-bold`}>𝗔𝘃𝗶𝘀</Text>
@@ -327,7 +463,7 @@ const ProfilShop = (props: any) => {
                 );
               })}
             </Text>
-             <Text style={tw`ml-1 text-xl font-bold`}>
+            <Text style={tw`ml-1 text-xl font-bold`}>
               {averageRatings.total.toFixed(2)}
             </Text>
             <Text style={tw`ml-2 text-sm text-gray-600`}>83 avis</Text>
@@ -365,7 +501,6 @@ const ProfilShop = (props: any) => {
             </View>
           </View>
         </View>
-
         <TouchableOpacity
           style={tw`flex-row items-center justify-center w-1/2 py-2 mt-3 mb-5 ml-40 bg-red-300 rounded-full`}
           onPress={goToReviewShop}
@@ -373,7 +508,6 @@ const ProfilShop = (props: any) => {
           <Icon name="eye" size={20} color="black" style={tw`mr-2`} />
           <Text style={tw`text-lg text-center`}>𝑽𝒐𝒊𝒓 𝒂𝒗𝒊𝒔</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={tw`flex-row items-center justify-center w-full py-2 mb-5 bg-red-300 rounded-full px-14`}
           onPress={goToReviewForm}
