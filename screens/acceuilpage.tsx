@@ -28,38 +28,35 @@ const AcceuilPage = (props: any) => {
   const [userRole, setUserRole] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
 const [shopsid , setshopsid] = useState();
+const [Error , setError] = useState("");
 
-  const fetchShopsData = useCallback(async () => {
+const fetchShopsData = useCallback(async () => {
+  try {
+    const response = await axios.get(`${apiUrl}/shops/getallshops`);
+    setShopsData(response.data);
+    console.log("++++++++++++++ " + JSON.stringify(response.data, null, 2));
+  } catch (error) {
+    setError('Erreur de chargement des shops');
+  }
+}, []);
+
+useEffect(() => {
+  const fetchUserRole = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/shops/shops/search`, {
-        params: { query: searchQuery } 
-      });
-      console.log("Fetched shops:", JSON.stringify(response.data, null, 2));
-      setShopsData(response.data);
+      const response = await axios.get(`${apiUrl}/user/users/${props.route.params.id}`);
+      setUserRole(response.data.role);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Erreur lors de la récupération du rôle utilisateur :", error);
     }
-  }, [searchQuery]);
+  };
+  fetchUserRole();
+}, [props.route.params.id]);
 
-  
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/user/users/${props.route.params.id}`);
-        setUserRole(response.data.role); // Supposons que l'API renvoie le rôle de l'utilisateur
-      } catch (error) {
-        console.error("Erreur lors de la récupération du rôle utilisateur :", error);
-      }
-    };
-    
-    fetchUserRole();
-  }, [props.route.params.id]);
-  useFocusEffect(
-    useCallback(() => {
-      fetchShopsData();
-    }, [fetchShopsData])
-  );
-  console.log(userRole);
+useFocusEffect(
+  useCallback(() => {
+    fetchShopsData();
+  }, [fetchShopsData])
+);
 //partiii favoriii 
 
 const [reviews, setReviews] = useState({});
@@ -87,11 +84,11 @@ const fetchReviews = async (shop_id : any) => {
 
 // Charger les avis au montage du composant
 useEffect(() => {
-  shopsData.forEach((shop) => {
-    fetchReviews(shop.id);
+  shopsData.forEach((shop : any) => {
+    fetchReviews(shop._id);
   });
 }, [shopsData]);
-
+ 
   const handleAddToFavorites = async (shop_id: string) => {
     console.log("userId:", props.route.params.id);
     try {
@@ -138,7 +135,7 @@ useEffect(() => {
 
   const goToprofileshop = (shop: any) => {
     props.navigation.navigate("profileshop",{
-      shopId: shop.id,
+      shopId: shop._id,
       id: props.route.params.id
      
     }); 
@@ -159,7 +156,7 @@ useEffect(() => {
   };
   const goToMyEstablishment = (shop: any) => {
     props.navigation.navigate("myshop", {
-      shopId: shop.id,  
+      shopId: shop._id,  
       id: props.route.params.id
     });
   };
@@ -266,25 +263,13 @@ useEffect(() => {
       >
         <FontAwesome name="bars" size={20} color="white" />
       </TouchableOpacity>
-      <View
-        style={tw`px-16 pt-4 pb-2 bg-white flex-row items-center border-b border-gray-300`}
-      >
-        <FontAwesome name="search" size={20} color="gray" style={tw`mr-3`} />
-        <TextInput
-          style={tw`flex-1 text-lg py-1 mb-3`}
-          placeholder="Rechercher..."
-          placeholderTextColor="gray"
-          value={searchQuery}
-          onChangeText={(text) => setSearchQuery(text)} // Update search query
-        />
-      </View>
       {/* Liste des établissements */}
       <ScrollView
         contentContainerStyle={tw`px-2 pt-20 pb-4`}
         showsVerticalScrollIndicator={true}
       >
         <View style={tw`flex-row flex-wrap justify-between`}>
-          {shopsData.map((shop, index) => (
+          {shopsData.map((shop : any, index  :any) => (
             <View key={shop.id} style={tw`w-1/2 px-2 mb-4`}>
               <TouchableOpacity onPress={() => goToprofileshop(shop)}>
                 <Card style={tw`overflow-hidden bg-white rounded-lg shadow-md`}>
@@ -333,14 +318,14 @@ useEffect(() => {
                           name="star"
                           size={20}
                           color={
-                            reviews[shop.id] && reviews[shop.id] >= i + 1
+                            reviews[shop._id] && reviews[shop._id] >= i + 1
                               ? "#FBBF24"
                               : "#D1D5DB"
                           }
                         />
                       ))}
                       <Text style={tw`ml-1 text-lg font-bold text-red-300`}>
-                        {reviews[shop.id] ? reviews[shop.id].toFixed(1) : "0.0"}
+                        {reviews[shop._id] ? reviews[shop._id].toFixed(1) : "0.0"}
                       </Text>
                     </View>
                   </Card.Content>
@@ -350,7 +335,7 @@ useEffect(() => {
                     <TouchableOpacity
                       style={tw`p-2 bg-red-100 rounded-full`}
                       onPress={() => {
-                        handleAddToFavorites(shop.id);
+                        handleAddToFavorites(shop._id);
                       }}
                     >
                       <Icon name="heart" size={20} color="#F56565" />
