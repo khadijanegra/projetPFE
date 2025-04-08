@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -92,12 +92,24 @@ console.log("********* " + JSON.stringify(event, null, 2));
       total: totalAverage,
     });
   };
-
   useFocusEffect(
     React.useCallback(() => {
       fetchShopData();
     }, [fetchShopData])
   );
+
+  useEffect(() => {
+    const incrementVisites = async () => {
+      try {
+        await axios.put(`${apiUrl}/shops/${shopId}/visites`);
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour des visites:', error);
+      }
+    };
+
+    incrementVisites();
+  }, [shopId]);
+
 
   const toggleDescription = () => {
     setShowDescription((prev) => !prev);
