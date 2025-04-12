@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { ScrollView } from "react-native-gesture-handler";
 const apiUrl = process.env.API_URL;
 
 export default function Signup(props: any) {
@@ -52,6 +53,7 @@ export default function Signup(props: any) {
 
 
   return (
+    <ScrollView>
     <SafeAreaView style={tw`flex-1 bg-white`}>
       {/* Image avant le texte d'inscription */}
       <Image 
@@ -101,5 +103,6 @@ export default function Signup(props: any) {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+    </ScrollView>
   );
 }

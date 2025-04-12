@@ -3,11 +3,13 @@ import * as Animatable from "react-native-animatable";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { Dimensions } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 const { width, height } = Dimensions.get("window");
 const homepage = ({ navigation }: { navigation: any }) => {
   const goTo = () => navigation.navigate("Login");
   const GoTO = () => navigation.navigate("signup");
   return (
+    <ScrollView>
     <View style={tw`items-center justify-center flex-1 px-6 bg-white`}>
         <View style={tw` mr-52 mb-12`}>
           <Image
@@ -51,6 +53,7 @@ const homepage = ({ navigation }: { navigation: any }) => {
         </Animatable.View>
       </View>
     </View>
+    </ScrollView>
   );
 };
 //khadij nhebekk barchaaaaaaaaaaaaaaaaaaaaaaa
