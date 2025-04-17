@@ -291,18 +291,35 @@ useEffect(() => {
         <FontAwesome name="bars" size={20} color="white" />
       </TouchableOpacity>
       <View style={tw`flex-1 bg-white`}>
-        {/* Search bar */}
-        <View style={tw`p-4`}>
-          <TextInput
-            style={tw`border p-2 rounded-md`}
-            placeholder="Rechercher un magasin"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            onSubmitEditing={handleSearch}
-          />
-        </View>
+  {/* Search bar */}
+  <View style={tw`px-6 pt-4 ml-10`}>
+    <View style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-3 shadow-md`}>
+      <Text style={tw`text-gray-400 `}></Text>
+      <TextInput
+        style={tw`flex-1 text-base text-gray-800`}
+        placeholder="🔍 Rechercher un magasin..."
+        placeholderTextColor="#9CA3AF" // gris clair
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        onSubmitEditing={handleSearch}
+      />
+    </View>
+    
+  </View>
+ 
 
-        <ScrollView contentContainerStyle={tw`px-2 pt-20 pb-4`}>
+ {/* Link to map view */}
+ <TouchableOpacity onPress={gotoallshopsinmaps}>
+      <Text style={tw`text-pink-700  mt-6 ml-52
+         text-xl pb-2 `}>
+      𝐕𝐨𝐢𝐫 𝐞𝐧 𝐦𝐨𝐝𝐞 𝐜𝐚𝐫𝐭𝐞
+
+
+ 
+      </Text>
+    </TouchableOpacity>
+        <ScrollView contentContainerStyle={tw`px-2 pt-14  `}>
+
           <View style={tw`flex-row flex-wrap justify-between`}>
             {(searchQuery.trim() ? searchResults : shopsData).map((shop: any, index: number) => (
               <View key={shop.id} style={tw`w-1/2 px-2 mb-4`}>

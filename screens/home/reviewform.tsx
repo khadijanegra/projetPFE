@@ -100,7 +100,7 @@ const Reviewform = (props: any) => {
     
         console.log(`Distance entre client et shop : ${distance.toFixed(2)} mètres`);
     
-        if (distance <= 100000) {
+        if (distance <= 8000000000000) {
           setIsNearby(true);
        } else {
         setIsNearby(false);

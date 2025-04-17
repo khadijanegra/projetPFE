@@ -1,62 +1,86 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, TextInput, StyleSheet } from "react-native";
+import { View, Text, Button, TextInput, StyleSheet, ScrollView } from "react-native";
 import axios from "axios";
 import uuid from "react-native-uuid";
 
-const API_URL = process.env.API_URL; // L'URL de ton backend
-const sessionId = uuid.v4(); // Génère un ID unique de session (une seule fois)
+const API_URL = process.env.API_URL; // URL de ton backend chatbot
+const sessionId = uuid.v4(); // ID unique de session
 
 const Chatbot = () => {
-  const [messages, setMessages] = useState<any[]>([]); // Tableau des messages
-  const [userMessage, setUserMessage] = useState<string>(''); // Le message de l'utilisateur
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Indicateur de chargement
+  const [messages, setMessages] = useState<any[]>([]);
+  const [userMessage, setUserMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    // Lancer une première requête de bienvenue lorsque la composant se charge
-    sendMessage("Hello"); 
+    sendMessage("Hello");
   }, []);
 
-  // Fonction pour envoyer le message de l'utilisateur
   const sendMessage = async (message: string) => {
-    if (!message.trim()) return; // Ne rien envoyer si le message est vide
-    setIsLoading(true); // Afficher un indicateur de chargement
+    if (!message.trim()) return;
+    setIsLoading(true);
 
     try {
-      // Envoie du message à l'API backend
+      // 🔹 Appel API Chatbot
       const response = await axios.post(`${API_URL}/chatbot/`, {
-        message, 
+        message,
         sessionId,
       });
 
       const botResponse = response.data.response;
-      setMessages((prevMessages) => [...prevMessages, { text: message, from: "user" }, { text: botResponse, from: "bot" }]);
-      setUserMessage(''); // Réinitialiser le champ de texte après l'envoi
+
+      // 🔹 Mise à jour des messages
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: message, from: "user" },
+        { text: botResponse, from: "bot" }
+      ]);
+      setUserMessage('');
+
+      // 🔹 Appel API Webhook après la réponse du bot
+      await axios.post(`${API_URL}/web/webhook`, {
+        message,
+        response: botResponse,
+        sessionId,
+      });
+
     } catch (error) {
       console.error("Erreur avec le serveur Express", error);
     } finally {
-      setIsLoading(false); // Désactiver l'indicateur de chargement
+      setIsLoading(false);
     }
   };
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Chatbot</Text>
-      <View style={{ flex: 1 }}>
-        {messages.map((msg, index) => (
-          <Text key={index} style={{ marginBottom: 10, fontSize: 18 }}>
-            {msg.from === "bot" ? `Bot: ${msg.text}` : `You: ${msg.text}`}
-          </Text>
-        ))}
-        {isLoading && <Text>Loading...</Text>} {/* Affiche le message de chargement */}
+    <ScrollView style={{ flex: 1 }}>
+      <View style={{ padding: 20 }}>
+        <Text style={{ fontSize: 24, marginBottom: 20 }}>Chatbot</Text>
+
+        <View style={{ flex: 1 }}>
+          {messages.map((msg, index) => (
+            <View key={index} style={{ marginBottom: 10 }}>
+              {msg.from === "bot" ? (
+                msg.text.split("\n").map((line: string, i: number) => (
+                  <Text key={i} style={{ fontSize: 18, color: "#333" }}>
+                    {i === 0 ? `Bot: ${line}` : line}
+                  </Text>
+                ))
+              ) : (
+                <Text style={{ fontSize: 18, color: "#000" }}>You: {msg.text}</Text>
+              )}
+            </View>
+          ))}
+          {isLoading && <Text>Loading...</Text>}
+        </View>
+
+        <TextInput
+          style={styles.input}
+          value={userMessage}
+          onChangeText={setUserMessage}
+          placeholder="Type your message here"
+        />
+        <Button title="Send" onPress={() => sendMessage(userMessage)} />
       </View>
-      <TextInput
-        style={styles.input}
-        value={userMessage}
-        onChangeText={setUserMessage} // Met à jour l'état de userMessage
-        placeholder="Type your message here"
-      />
-      <Button title="Send" onPress={() => sendMessage(userMessage)} />
-    </View>
+    </ScrollView>
   );
 };
 
