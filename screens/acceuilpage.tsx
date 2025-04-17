@@ -32,38 +32,39 @@ const [searchQuery, setSearchQuery] = useState('');
 const [searchResults, setSearchResults] = useState([]);
 
 
-const fetchShopsData = useCallback(async () => {
-  try {
-    const response = await axios.get(`${apiUrl}/shops/getallshops`);
-    setShopsData(response.data);
-    console.log("++++++++++++++ " + JSON.stringify(response.data, null, 2));
-  } catch (error) {
-    console.error('Erreur de chargement des shops');
-  }
-}, []);
-
-// Handle search query
-const handleSearch = async () => {
-  try {
-    if (!searchQuery.trim()) {
-      setSearchResults([]); // Clear search results if query is empty
-      fetchShopsData(); // Fetch all shops if no search query
-      return;
+  // Fetch all shops
+  const fetchShopsData = useCallback(async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/shops/getallshops`);
+      setShopsData(response.data);
+      console.log("++++++++++++++ " + JSON.stringify(response.data, null, 2));
+    } catch (error) {
+      console.error('Erreur de chargement des shops');
     }
+  }, []);
 
-    const response = await axios.get(`${apiUrl}/search`, {
-      params: { q: searchQuery },
-    });
-    
-    setSearchResults(response.data); // Update search results based on query
-  } catch (error) {
-    console.error("Erreur lors de la recherche des shops :", error);
-  }
-};
+  // Handle search query
+  const handleSearch = async () => {
+    try {
+      if (!searchQuery.trim()) {
+        setSearchResults([]); // Clear search results if query is empty
+        fetchShopsData(); // Fetch all shops if no search query
+        return;
+      }
 
-useEffect(() => {
-  fetchShopsData();
-}, [fetchShopsData]);
+      const response = await axios.get(`${apiUrl}/shops/search`, {
+        params: { q: searchQuery },
+      });
+      
+      setSearchResults(response.data); // Update search results based on query
+    } catch (error) {
+      console.error("Erreur lors de la recherche des shops :", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchShopsData();
+  }, [fetchShopsData]);
 
 
 useEffect(() => {
@@ -289,130 +290,104 @@ useEffect(() => {
       >
         <FontAwesome name="bars" size={20} color="white" />
       </TouchableOpacity>
-
-      <View style={tw`p-4`}>
-        <TextInput
-          style={tw`border p-2 rounded-md`}
-          placeholder="Rechercher un magasin"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onSubmitEditing={handleSearch} // Handle search on Enter key press
-        />
-      </View>
-
-      {/* Liste des établissements */}
-      <ScrollView
-        contentContainerStyle={tw`px-2 pt-20 pb-4`}
-        showsVerticalScrollIndicator={true}
-      >
-        <View style={tw`flex-row flex-wrap justify-between`}>
-          {shopsData.map((shop : any, index  :any) => (
-            <View key={shop.id} style={tw`w-1/2 px-2 mb-4`}>
-              <TouchableOpacity onPress={() => goToprofileshop(shop)}>
-                <Card style={tw`overflow-hidden bg-white rounded-lg shadow-md`}>
-                  {/* Badge d'état */}
-                  <View
-                    style={tw`absolute z-10 px-2 py-1 bg-red-300 rounded-full top-2 right-2`}
-                  >
-                    <Text style={tw`text-xs font-bold text-white`}>𝐎𝐏𝐄𝐍</Text>
-                  </View>
-
-                  {/* Image */}
-                  <Card.Cover
-                    source={{
-                      uri: `${apiUrl}/fetchshopImages/${shop.shopImage}`,
-                    }}
-                    style={tw`w-full h-40`}
-                  />
-
-                  {/* Contenu principal */}
-                  <Card.Content style={tw`pt-3`}>
-                    <View
-                      style={tw`flex-row items-center justify-between mb-2`}
-                    >
-                      <Text style={tw`flex-1 text-lg font-bold text-gray-800`}>
-                        {shop.shop_nom}
-                      </Text>
-                      <Icon name="map-marker" size={16} color="#F56565" />
-                    </View>
-
-                    <View style={tw`flex-row items-center mb-2`}>
-                      <Icon
-                        name="clock-o"
-                        size={14}
-                        color="#718096"
-                        style={tw`mr-2`}
-                      />
-                      <Text style={tw`text-sm text-gray-600`}>
-                        {shop.shop_date_ouv} - {shop.shop_date_ferm}
-                      </Text>
-                    </View>
-
-                    <View style={tw`flex-row items-center`}>
-                      {[...Array(5)].map((_, i) => (
-                        <Icon
-                          key={i}
-                          name="star"
-                          size={20}
-                          color={
-                            reviews[shop._id] && reviews[shop._id] >= i + 1
-                              ? "#FBBF24"
-                              : "#D1D5DB"
-                          }
-                        />
-                      ))}
-                      <Text style={tw`ml-1 text-lg font-bold text-red-300`}>
-                        {reviews[shop._id] ? reviews[shop._id].toFixed(1) : "0.0"}
-                      </Text>
-                    </View>
-                  </Card.Content>
-
-                  {/* Actions */}
-                  <Card.Actions style={tw`justify-between px-4 pb-3`}>
-                    <TouchableOpacity
-                      style={tw`p-2 bg-red-100 rounded-full`}
-                      onPress={() => {
-                        handleAddToFavorites(shop._id);
-                      }}
-                    >
-                      <Icon name="heart" size={20} color="#F56565" />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={tw`flex-row items-center px-3 py-2 bg-red-300 rounded-full`}
-                      onPress={() => handleCardExpand(index)}
-                    >
-                      <Text style={tw`mr-2 text-sm text-white`}>
-                        {expandedIndex === index ? "𝑴𝒐𝒊𝒏𝒔" : "𝑷𝒍𝒖𝒔"}
-                      </Text>
-                      <Icon
-                        name={
-                          expandedIndex === index
-                            ? "chevron-up"
-                            : "chevron-down"
-                        }
-                        size={14}
-                        color="white"
-                      />
-                    </TouchableOpacity>
-                  </Card.Actions>
-
-                  {/* Description étendue */}
-                  {expandedIndex === index && (
-                    <Card.Content
-                      style={tw`px-4 py-3 border-t border-gray-200 bg-gray-50`}
-                    >
-                      <Text style={tw`text-sm leading-5 text-gray-600`}>
-                        {shop.categorie}
-                      </Text>
-                    </Card.Content>
-                  )}
-                </Card>
-              </TouchableOpacity>
-            </View>
-          ))}
+      <View style={tw`flex-1 bg-white`}>
+        {/* Search bar */}
+        <View style={tw`p-4`}>
+          <TextInput
+            style={tw`border p-2 rounded-md`}
+            placeholder="Rechercher un magasin"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+          />
         </View>
-      </ScrollView>
+
+        <ScrollView contentContainerStyle={tw`px-2 pt-20 pb-4`}>
+          <View style={tw`flex-row flex-wrap justify-between`}>
+            {(searchQuery.trim() ? searchResults : shopsData).map((shop: any, index: number) => (
+              <View key={shop.id} style={tw`w-1/2 px-2 mb-4`}>
+                <TouchableOpacity>
+                  <Card style={tw`overflow-hidden bg-white rounded-lg shadow-md`}>
+                    <View style={tw`absolute z-10 px-2 py-1 bg-red-300 rounded-full top-2 right-2`}>
+                      <Text style={tw`text-xs font-bold text-white`}>𝐎𝐏𝐄𝐍</Text>
+                    </View>
+
+                    <Card.Cover
+                      source={{ uri: `${apiUrl}/fetchshopImages/${shop.shopImage}` }}
+                      style={tw`w-full h-40`}
+                    />
+
+                    <Card.Content style={tw`pt-3`}>
+                      <View style={tw`flex-row items-center justify-between mb-2`}>
+                        <Text style={tw`flex-1 text-lg font-bold text-gray-800`}>
+                          {shop.shop_nom}
+                        </Text>
+                        <Icon name="map-marker" size={16} color="#F56565" />
+                      </View>
+
+                      <View style={tw`flex-row items-center mb-2`}>
+                        <Icon name="clock-o" size={14} color="#718096" style={tw`mr-2`} />
+                        <Text style={tw`text-sm text-gray-600`}>
+                          {shop.shop_date_ouv} - {shop.shop_date_ferm}
+                        </Text>
+                      </View>
+
+                      <View style={tw`flex-row items-center`}>
+                        {[...Array(5)].map((_, i) => (
+                          <Icon
+                            key={i}
+                            name="star"
+                            size={20}
+                            color={
+                              reviews[shop._id] && reviews[shop._id] >= i + 1
+                                ? "#FBBF24"
+                                : "#D1D5DB"
+                            }
+                          />
+                        ))}
+                        <Text style={tw`ml-1 text-lg font-bold text-red-300`}>
+                          {reviews[shop._id] ? reviews[shop._id].toFixed(1) : "0.0"}
+                        </Text>
+                      </View>
+                    </Card.Content>
+
+                    <Card.Actions style={tw`justify-between px-4 pb-3`}>
+                      <TouchableOpacity
+                        style={tw`p-2 bg-red-100 rounded-full`}
+                        onPress={() => handleAddToFavorites(shop._id)}
+                      >
+                        <Icon name="heart" size={20} color="#F56565" />
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={tw`flex-row items-center px-3 py-2 bg-red-300 rounded-full`}
+                        onPress={() => handleCardExpand(index)}
+                      >
+                        <Text style={tw`mr-2 text-sm text-white`}>
+                          {expandedIndex === index ? "𝑴𝒐𝒊𝒏𝒔" : "𝑷𝒍𝒖𝒔"}
+                        </Text>
+                        <Icon
+                          name={expandedIndex === index ? "chevron-up" : "chevron-down"}
+                          size={14}
+                          color="white"
+                        />
+                      </TouchableOpacity>
+                    </Card.Actions>
+
+                    {expandedIndex === index && (
+                      <Card.Content style={tw`px-4 py-3 border-t border-gray-200 bg-gray-50`}>
+                        <Text style={tw`text-sm leading-5 text-gray-600`}>
+                          {shop.categorie}
+                        </Text>
+                      </Card.Content>
+                    )}
+                  </Card>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
     </View>
   );
 };
