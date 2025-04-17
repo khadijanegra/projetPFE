@@ -26,9 +26,11 @@ const AcceuilPage = (props: any) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [favorites, setFavorites] = useState<any[]>([]); 
   const [userRole, setUserRole] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState("");
 const [shopsid , setshopsid] = useState();
 const [Error , setError] = useState("");
+const [searchQuery, setSearchQuery] = useState('');
+const [searchResults, setSearchResults] = useState([]);
+
 
 const fetchShopsData = useCallback(async () => {
   try {
@@ -36,9 +38,33 @@ const fetchShopsData = useCallback(async () => {
     setShopsData(response.data);
     console.log("++++++++++++++ " + JSON.stringify(response.data, null, 2));
   } catch (error) {
-    setError('Erreur de chargement des shops');
+    console.error('Erreur de chargement des shops');
   }
 }, []);
+
+// Handle search query
+const handleSearch = async () => {
+  try {
+    if (!searchQuery.trim()) {
+      setSearchResults([]); // Clear search results if query is empty
+      fetchShopsData(); // Fetch all shops if no search query
+      return;
+    }
+
+    const response = await axios.get(`${apiUrl}/search`, {
+      params: { q: searchQuery },
+    });
+    
+    setSearchResults(response.data); // Update search results based on query
+  } catch (error) {
+    console.error("Erreur lors de la recherche des shops :", error);
+  }
+};
+
+useEffect(() => {
+  fetchShopsData();
+}, [fetchShopsData]);
+
 
 useEffect(() => {
   const fetchUserRole = async () => {
@@ -263,6 +289,17 @@ useEffect(() => {
       >
         <FontAwesome name="bars" size={20} color="white" />
       </TouchableOpacity>
+
+      <View style={tw`p-4`}>
+        <TextInput
+          style={tw`border p-2 rounded-md`}
+          placeholder="Rechercher un magasin"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onSubmitEditing={handleSearch} // Handle search on Enter key press
+        />
+      </View>
+
       {/* Liste des établissements */}
       <ScrollView
         contentContainerStyle={tw`px-2 pt-20 pb-4`}
