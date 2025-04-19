@@ -192,53 +192,51 @@ const Reviewform = (props: any) => {
     }
   };
 
-const [result , setresult] = useState("")
+const [resultaaa , setresultaaa] = useState("")
 const [quality , setquality] = useState("")
-const [message , setmessage] = useState("")
+const [status , setstatus] = useState("")
 const [iscompatibel, setiscompatible] = useState(true);
 
-  const verificationreview = async () => {
-    try {
-      const response = await axios.post(
-        `${apiUrl}/analyse-review/`, 
-        {
-          texte: commentaire,  // Assure-toi que tu envoies un champ "commentaire" et non "Texte"
-        }, 
-        {
-          headers: {
-            "Content-Type": "application/json",  // Envoie les données sous forme JSON
-          },
-        }
-      );
-      console.log("✅ Données envoyées :", {
-        commentaire,
-        reviewImages
-      });
-      
-      setModalVisible(true);
-      console.log("✅ Résultat:", response.data);
-      console.log("✅ response.data.statusReview:", response.data.statusReview);
-      console.log("✅ response.data.imageQuality:", response.data.imageQuality);
-      setresult(response.data.statusReview);
-      setquality(response.data.imageQuality);
-      const moyenne = (note_service + note_ambiance + note_cuisine) / 3;
-      if (result === 'good' && moyenne < 2.5) {
-        setiscompatible(false); 
-        console.log("❌ Vos notes et votre commentaire ne sont pas compatibles.");
-      }
+const verificationreview = async () => {
+  try {
+    const response = await axios.post(`${apiUrl}/analyse-review/`, {
+      texte: commentaire,
+    });
 
-      if (response.data.statusReview === "good" && response.data.imageQuality === "clear") {
-        console.log("✅ Commentaire accepté");
-        setmessage(" ✅ Votre commentaire a été accepté");
-      } else {
-        console.warn("⚠️ Commentaire jugé toxique ou inapproprié ou verifier la qualite de l'image");
-        setmessage(" ⚠️ Votre commentaire a été jugé inapproprié ou verifier la qualite de l'image");
-      }
-    } catch (error) {
-      console.error("❌ Erreur lors de l'analyse du commentaire:", error);
+    const { statusReview, imageQuality } = response.data;
+    const moyenne = (note_service + note_ambiance + note_cuisine) / 3;
+
+    const compatibleComment = !(
+      (statusReview === 'good' && moyenne < 2.5) ||
+      (statusReview === 'not good' && moyenne >= 2.5)
+    );
+
+    const compatibleImage = !reviewImages || imageQuality === 'clear';
+
+    const everythingIsCompatible = compatibleComment && compatibleImage && statusReview === 'good';
+
+    setstatus(statusReview);
+    setquality(imageQuality);
+    setiscompatible(everythingIsCompatible);
+
+    // Affichage des messages selon les cas
+    if (!compatibleComment) {
+      setresultaaa("❌ Incohérence entre les notes et le commentaire.");
+    } else if (!compatibleImage) {
+      setresultaaa("⚠️ Image inappropriée ou floue.");
+    } else if (statusReview === 'not good') {
+      setresultaaa("⚠️ Commentaire toxique ou inapproprié.");
+    } else {
+      setresultaaa("✅ Avis validé !");
     }
-  };
-  
+
+    setModalVisible(true);
+  } catch (error) {
+    console.error("❌ Erreur lors de l'analyse du commentaire:", error);
+    setresultaaa("❌ Une erreur est survenue.");
+  }
+};
+
 
 
 
@@ -394,91 +392,91 @@ const [iscompatibel, setiscompatible] = useState(true);
         <Modal animationType="fade" transparent={true} visible={modalVisible}>
   <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
     <View style={tw`w-[350px] p-2 bg-white rounded-2xl items-center`}>
-    {result ? (
-  result === 'not good' || quality === 'blurry' ? (
-    <Text style={tw`text-red-500 text-lg mb-3 text-center`}>
-      ❌ Commentaire toxique détecté ou qualité de l’image insuffisante
-    </Text>
-  ) : iscompatibel === true ? (
-    <Text style={tw`text-red-500 text-lg mb-3 text-center`}>
-      ❌ Vos notes et votre commentaire ne sont pas compatibles.
-    </Text>
-  ) : (
-    <>
-      <Text style={tw`text-green-600 text-lg mb-3 text-center`}>
-        ✅ Commentaire acceptable
+      
+      {/* Message principal */}
+      <Text
+        style={tw`text-lg mb-3 text-center ${
+          iscompatibel ? (status === 'not good' || quality !== 'clear'
+            ? 'text-yellow-600'
+            : 'text-green-600')
+          : 'text-red-500'
+        }`}
+      >
+        {resultaaa}
       </Text>
 
-            <Text style={tw`text-gray-500 text-center mb-4 mt-4`}>
-              Pour garantir l’authenticité des avis, votre localisation doit être vérifiée près de l’établissement.
-            </Text>
+      {/* Cas compatible → demande de localisation */}
+      {iscompatibel && (
+        <>
+          <Text style={tw`text-gray-500 text-center mb-4 mt-4`}>
+            Pour garantir l’authenticité des avis, votre localisation doit être vérifiée près de l’établissement.
+          </Text>
 
-            <TouchableOpacity
-              onPress={getLocationHandler}
-              style={tw`p-3 bg-black rounded-lg w-full items-center`}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="white" />
-              ) : (
-                <Text style={tw`text-white`}>📍 Vérification de votre position</Text>
-              )}
-            </TouchableOpacity>
-
-            {errorMsg && <Text style={tw`text-red-500 mt-2`}>{errorMsg}</Text>}
-
-            {location && (
-              <View style={tw`p-2`}>
-                <MapView
-                  style={{
-                    width: 300,
-                    height: 200,
-                    marginTop: 15,
-                    borderRadius: 40,
-                    borderWidth: 2,
-                    borderColor: "#000",
-                    overflow: "hidden",
-                  }}
-                  showsUserLocation={true}
-                  minZoomLevel={15}
-                  initialRegion={{
-                    latitude: location.latitude,
-                    longitude: location.longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
-                  }}
-                >
-                  <Marker
-                    coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-                    title="Votre position"
-                  />
-                </MapView>
-
-                <View style={tw`mt-6 p-3 rounded-lg`}>
-                  {isNearby ? (
-                    <>
-                      <Text style={tw`text-green-600 text-center p-3 font-bold text-lg`}>
-                        Vous êtes proche de l'établissement. Votre avis sera envoyé !
-                      </Text>
-                      <TouchableOpacity
-                        style={tw`mt-3 bg-red-400 p-3 rounded-lg`}
-                        onPress={handleSubmit}
-                      >
-                        <Text style={tw`text-white text-center font-bold`}>
-                          Publier
-                        </Text>
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <Text style={tw`text-red-600 text-center font-bold text-lg`}>
-                      Vous êtes trop loin. Votre avis ne sera pas publié.
-                    </Text>
-                  )}
-                </View>
-              </View>
+          <TouchableOpacity
+            onPress={getLocationHandler}
+            style={tw`p-3 bg-black rounded-lg w-full items-center`}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <Text style={tw`text-white`}>📍 Vérification de votre position</Text>
             )}
-          </>
-        )
-      ) : null}
+          </TouchableOpacity>
+
+          {errorMsg && <Text style={tw`text-red-500 mt-2`}>{errorMsg}</Text>}
+
+          {location && (
+            <View style={tw`p-2`}>
+              <MapView
+                style={{
+                  width: 300,
+                  height: 200,
+                  marginTop: 15,
+                  borderRadius: 40,
+                  borderWidth: 2,
+                  borderColor: "#000",
+                  overflow: "hidden",
+                }}
+                showsUserLocation={true}
+                minZoomLevel={15}
+                initialRegion={{
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                }}
+              >
+                <Marker
+                  coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+                  title="Votre position"
+                />
+              </MapView>
+
+              <View style={tw`mt-6 p-3 rounded-lg`}>
+                {isNearby ? (
+                  <>
+                    <Text style={tw`text-green-600 text-center p-3 font-bold text-lg`}>
+                      Vous êtes proche de l'établissement. Votre avis sera envoyé !
+                    </Text>
+                    <TouchableOpacity
+                      style={tw`mt-3 bg-red-400 p-3 rounded-lg`}
+                      onPress={handleSubmit}
+                    >
+                      <Text style={tw`text-white text-center font-bold`}>
+                        Publier
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <Text style={tw`text-red-600 text-center font-bold text-lg`}>
+                    Vous êtes trop loin. Votre avis ne sera pas publié.
+                  </Text>
+                )}
+              </View>
+            </View>
+          )}
+        </>
+      )}
 
       <TouchableOpacity
         onPress={() => setModalVisible(false)}
@@ -489,6 +487,8 @@ const [iscompatibel, setiscompatible] = useState(true);
     </View>
   </View>
 </Modal>
+
+
 
         </View>
       </View>
