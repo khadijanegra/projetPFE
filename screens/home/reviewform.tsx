@@ -161,36 +161,26 @@ const Reviewform = (props: any) => {
     const currentDate = new Date().toISOString(); // Récupère la date actuelle au format ISO
     setDate(currentDate);
     
-    const formData = new FormData();
-    formData.append('note_service', note_service);
-    formData.append('note_ambiance', note_ambiance);
-    formData.append('note_cuisine', note_cuisine);
-    formData.append('commentaire', commentaire);
-    formData.append('user_id', props.route.params.user_id); 
-    formData.append('shop_id', props.route.params.shop_id);
-    formData.append('date', currentDate);
-
-    // Ajouter les images au formData
-    reviewImages.forEach((image, index) => {
-      formData.append('reviewImages', {
-        uri: image.uri, // URI de l'image (assure-toi que cette propriété est correcte selon la source de l'image)
-        type: 'image/jpeg', // ou un autre type MIME selon ton image
-        name: `image_${index}.jpg`, // ou un autre nom
-      });
-    });
-
+    const ReviewDtata = {
+      note_service: note_service,
+      note_ambiance: note_ambiance,
+      note_cuisine: note_cuisine,
+      commentaire: commentaire,
+      user_id: props.route.params.user_id, 
+      shop_id: props.route.params.shop_id,
+      date: currentDate,
+      reviewImages // ism il dossier illi chykounou fih les images 
+    };
+    
     try {
-      const response = await axios.post(`${apiUrl}/review/postreviews`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Spécifie que tu envoies des fichiers
-        },
-      });
-
+      const response = await axios.post(`${apiUrl}/review/postreviews`, ReviewDtata);
       if (response.status === 201) {
+        console.log(note_ambiance);
         const review_id = response.data.id;
         setReview_id(review_id);
-        setModalVisible(false);
-        navigateToHome();
+        setModalVisible(false)
+        navigateToHome()
+        console.log(props.route.params.user_id)
         return true;
       } else {
         Alert.alert("Erreur lors de la création de votre Review");
@@ -202,6 +192,10 @@ const Reviewform = (props: any) => {
     }
   };
 
+const [result , setresult] = useState("")
+const [quality , setquality] = useState("")
+const [message , setmessage] = useState("")
+const [iscompatibel, setiscompatible] = useState(true);
 
   const verificationreview = async () => {
     try {
@@ -224,10 +218,21 @@ const Reviewform = (props: any) => {
       setModalVisible(true);
       console.log("✅ Résultat:", response.data);
       console.log("✅ response.data.statusReview:", response.data.statusReview);
-      if (response.data.statusReview === "good") {
+      console.log("✅ response.data.imageQuality:", response.data.imageQuality);
+      setresult(response.data.statusReview);
+      setquality(response.data.imageQuality);
+      const moyenne = (note_service + note_ambiance + note_cuisine) / 3;
+      if (result === 'good' && moyenne < 2.5) {
+        setiscompatible(false); 
+        console.log("❌ Vos notes et votre commentaire ne sont pas compatibles.");
+      }
+
+      if (response.data.statusReview === "good" && response.data.imageQuality === "clear") {
         console.log("✅ Commentaire accepté");
+        setmessage(" ✅ Votre commentaire a été accepté");
       } else {
-        console.warn("⚠️ Commentaire jugé toxique ou inapproprié");
+        console.warn("⚠️ Commentaire jugé toxique ou inapproprié ou verifier la qualite de l'image");
+        setmessage(" ⚠️ Votre commentaire a été jugé inapproprié ou verifier la qualite de l'image");
       }
     } catch (error) {
       console.error("❌ Erreur lors de l'analyse du commentaire:", error);
@@ -386,75 +391,105 @@ const Reviewform = (props: any) => {
             Publier mon avis 🌟
           </Text>
         </TouchableOpacity>
-
         <Modal animationType="fade" transparent={true} visible={modalVisible}>
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-    <View style={{ width: 350, padding: 8, backgroundColor: 'white', borderRadius: 25, alignItems: 'center' }}>
-      { }
-     
-      <Text style={{ fontSize: 15, color: 'gray-500', textAlign: 'center', marginBottom: 15 , marginTop:15 }}>
-        Pour garantir l’authenticité des avis, votre localisation doit être verifiée près de l’établissement.
+  <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
+    <View style={tw`w-[350px] p-2 bg-white rounded-2xl items-center`}>
+    {result ? (
+  result === 'not good' || quality === 'blurry' ? (
+    <Text style={tw`text-red-500 text-lg mb-3 text-center`}>
+      ❌ Commentaire toxique détecté ou qualité de l’image insuffisante
+    </Text>
+  ) : iscompatibel === true ? (
+    <Text style={tw`text-red-500 text-lg mb-3 text-center`}>
+      ❌ Vos notes et votre commentaire ne sont pas compatibles.
+    </Text>
+  ) : (
+    <>
+      <Text style={tw`text-green-600 text-lg mb-3 text-center`}>
+        ✅ Commentaire acceptable
       </Text>
 
-      <TouchableOpacity 
-        onPress={getLocationHandler} 
-        style={{ padding: 10, backgroundColor: 'black', borderRadius: 10, width: '100%', alignItems: 'center' }}
-      >
-        {isLoading ? <ActivityIndicator color="white" /> : <Text style={{ color: 'white' }}> 📍 Vérification de votre position</Text>}
-      </TouchableOpacity>
+            <Text style={tw`text-gray-500 text-center mb-4 mt-4`}>
+              Pour garantir l’authenticité des avis, votre localisation doit être vérifiée près de l’établissement.
+            </Text>
 
-      {errorMsg && <Text style={{ color: 'red', marginTop: 10 }}>{errorMsg}</Text>}
+            <TouchableOpacity
+              onPress={getLocationHandler}
+              style={tw`p-3 bg-black rounded-lg w-full items-center`}
+            >
+              {isLoading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={tw`text-white`}>📍 Vérification de votre position</Text>
+              )}
+            </TouchableOpacity>
 
-      {location && (
-       <View style={tw`p-2`}>
-       <MapView
-          style={{ width: 300, height: 200, marginTop: 15, borderRadius: 40 ,  borderWidth: 2,   borderColor: "#000", overflow: "hidden",  }}
-          showsUserLocation={true}
-          minZoomLevel={15}  
-          initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-        >
-          <Marker coordinate={{ latitude: location.latitude, longitude: location.longitude }} title="Votre position" />
-        </MapView>
-   
-       <View style={tw` mt-6 p-3 rounded-lg`}>
-         {isNearby ? (
-           <>
-             <Text style={tw`text-green-600  text-center p-3 font-bold text-lg`}>
-               Vous êtes proche de l'établissement. votre avis sera envoyer !
-             </Text>
-             <TouchableOpacity
-               style={tw`mt-3 bg-red-400 p-3 rounded-lg`}
-               onPress={handleSubmit}
-             >
-               <Text style={tw`text-white text-center font-bold`}>
-                 Publier 
-               </Text>
-             </TouchableOpacity>
-           </>
-         ) : (
-           <Text style={tw`text-red-600 text-center font-bold text-lg`}>
-             Vous êtes trop loin , Votre avis ne sera pas être publier .
-           </Text>
-         )}
-       </View>
-     </View>
-      )}
-      
-      <TouchableOpacity 
-        onPress={() => setModalVisible(false)} 
-        style={tw `mt-3 bg-black p-3 rounded-lg`}
+            {errorMsg && <Text style={tw`text-red-500 mt-2`}>{errorMsg}</Text>}
+
+            {location && (
+              <View style={tw`p-2`}>
+                <MapView
+                  style={{
+                    width: 300,
+                    height: 200,
+                    marginTop: 15,
+                    borderRadius: 40,
+                    borderWidth: 2,
+                    borderColor: "#000",
+                    overflow: "hidden",
+                  }}
+                  showsUserLocation={true}
+                  minZoomLevel={15}
+                  initialRegion={{
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  }}
+                >
+                  <Marker
+                    coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+                    title="Votre position"
+                  />
+                </MapView>
+
+                <View style={tw`mt-6 p-3 rounded-lg`}>
+                  {isNearby ? (
+                    <>
+                      <Text style={tw`text-green-600 text-center p-3 font-bold text-lg`}>
+                        Vous êtes proche de l'établissement. Votre avis sera envoyé !
+                      </Text>
+                      <TouchableOpacity
+                        style={tw`mt-3 bg-red-400 p-3 rounded-lg`}
+                        onPress={handleSubmit}
+                      >
+                        <Text style={tw`text-white text-center font-bold`}>
+                          Publier
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <Text style={tw`text-red-600 text-center font-bold text-lg`}>
+                      Vous êtes trop loin. Votre avis ne sera pas publié.
+                    </Text>
+                  )}
+                </View>
+              </View>
+            )}
+          </>
+        )
+      ) : null}
+
+      <TouchableOpacity
+        onPress={() => setModalVisible(false)}
+        style={tw`mt-3 bg-black p-3 rounded-lg`}
       >
         <Text style={tw`text-white text-center font-bold`}>Fermer</Text>
       </TouchableOpacity>
-
     </View>
   </View>
 </Modal>
+
         </View>
       </View>
     </ScrollView>
