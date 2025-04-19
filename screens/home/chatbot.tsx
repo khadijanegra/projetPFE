@@ -126,7 +126,8 @@ const Chatbot = () => {
                       <View style={tw`flex-row items-center mt-1`}>
                         <Ionicons name="pricetag" size={16} color="#4f46e5" />
                         <Text style={tw`ml-2 text-gray-700`}>
-                          Prix: {hotel.price || "Non disponible"}
+                        Prix: {hotel.estimated_price|| "Prix estimé non disponible"}
+
                         </Text>
                       </View>
                       <View style={tw`flex-row items-center mt-1`}>
