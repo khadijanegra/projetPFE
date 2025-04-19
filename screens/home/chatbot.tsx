@@ -10,6 +10,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState<any[]>([]); // Stockage des messages
   const [userMessage, setUserMessage] = useState<string>(''); // Message de l'utilisateur
   const [isLoading, setIsLoading] = useState<boolean>(false); // Indicateur de chargement
+  const [error, setError] = useState<string>(''); // Gestion des erreurs
 
   useEffect(() => {
     sendMessage("Hello"); // Envoie un message initial
@@ -19,6 +20,7 @@ const Chatbot = () => {
   const sendMessage = async (message: string) => {
     if (!message.trim()) return; // Ne pas envoyer de message vide
     setIsLoading(true); // Mettre à jour l'état de chargement
+    setError(''); // Réinitialiser l'erreur
 
     try {
       // Appel API pour envoyer le message au chatbot Gemini
@@ -40,6 +42,7 @@ const Chatbot = () => {
 
     } catch (error) {
       console.error("Erreur avec l'API Gemini:", error); // Loguer l'erreur
+      setError("Erreur de communication avec l'API. Veuillez réessayer plus tard.");
     } finally {
       setIsLoading(false); // Mettre à jour l'état de chargement
     }
@@ -59,25 +62,24 @@ const Chatbot = () => {
               ) : (
                 <View>
                   <Text style={{ fontSize: 18, color: "#333" }}>Bot: {msg.text}</Text>
-                  {/* Affichage des résultats (ex: shops) */}
-                  {msg.results?.map((shop: any, idx: number) => (
-                    <View key={idx} style={{ marginTop: 10 }}>
-                      {shop.image && (
-                        <Image source={{ uri: shop.image }} style={{ width: "100%", height: 150, borderRadius: 10 }} />
-                      )}
-                      <Text style={{ fontWeight: "bold" }}>{shop.name}</Text>
-                      <Text>Prix: {shop.price} DT</Text>
-                      <Text>Note: {shop.rating} ⭐</Text>
-                      <Text>Équipements: {shop.amenities.join(", ")}</Text>
-                    </View>
-                  ))}
+                  {/* Affichage des résultats (ex: hôtels) */}
+                  {msg.results?.map((hotel: any, idx: number) => (
+  <View key={idx} style={{ marginTop: 10 }}>
+    <Text style={{ fontWeight: "bold" }}>{hotel.name}</Text>
+    <Text>Prix: {hotel.price || "Non disponible"}</Text> {/* Affichage du prix */}
+    <Text>Description: {hotel.description || "Aucune description disponible"}</Text> {/* Affichage de la description */}
+  </View>
+))}
                 </View>
               )}
             </View>
           ))}
-          
+
           {/* Affichage d'un message de chargement si nécessaire */}
           {isLoading && <Text style={{ fontSize: 18, color: "#aaa" }}>Chargement...</Text>}
+
+          {/* Affichage d'une erreur si nécessaire */}
+          {error && <Text style={{ fontSize: 18, color: "red" }}>{error}</Text>}
         </View>
 
         {/* Champ de texte pour saisir un message */}
