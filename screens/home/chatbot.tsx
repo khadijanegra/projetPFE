@@ -1,52 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, TextInput, StyleSheet, ScrollView } from "react-native";
+import { View, Text, Button, TextInput, StyleSheet, ScrollView, Image } from "react-native";
 import axios from "axios";
 import uuid from "react-native-uuid";
 
-const API_URL = process.env.API_URL; // URL de ton backend chatbot
-const sessionId = uuid.v4(); // ID unique de session
+const apiUrl = process.env.API_URL; // L'URL de ton API
+const sessionId = uuid.v4(); // Session unique pour chaque utilisateur
 
 const Chatbot = () => {
-  const [messages, setMessages] = useState<any[]>([]);
-  const [userMessage, setUserMessage] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messages, setMessages] = useState<any[]>([]); // Stockage des messages
+  const [userMessage, setUserMessage] = useState<string>(''); // Message de l'utilisateur
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Indicateur de chargement
 
   useEffect(() => {
-    sendMessage("Hello");
+    sendMessage("Hello"); // Envoie un message initial
   }, []);
 
+  // Fonction pour envoyer le message à l'API
   const sendMessage = async (message: string) => {
-    if (!message.trim()) return;
-    setIsLoading(true);
+    if (!message.trim()) return; // Ne pas envoyer de message vide
+    setIsLoading(true); // Mettre à jour l'état de chargement
 
     try {
-      // 🔹 Appel API Chatbot
-      const response = await axios.post(`${API_URL}/chatbot/`, {
+      // Appel API pour envoyer le message au chatbot Gemini
+      const response = await axios.post(`${apiUrl}/chatgemini/chat`, {
         message,
-        sessionId,
+        context: "" // Ici tu peux ajouter du contexte si nécessaire
       });
 
-      const botResponse = response.data.response;
+      const data = response.data; // La réponse de l'API (attendue en JSON)
 
-      // 🔹 Mise à jour des messages
+      // Ajouter le message utilisateur et la réponse du bot dans l'état
       setMessages((prevMessages) => [
         ...prevMessages,
         { text: message, from: "user" },
-        { text: botResponse, from: "bot" }
+        { text: data.reply, from: "bot", results: data.results || [] }
       ]);
-      setUserMessage('');
 
-      // 🔹 Appel API Webhook après la réponse du bot
-      await axios.post(`${API_URL}/web/webhook`, {
-        message,
-        response: botResponse,
-        sessionId,
-      });
+      setUserMessage(''); // Réinitialiser le champ de texte de l'utilisateur
 
     } catch (error) {
-      console.error("Erreur avec le serveur Express", error);
+      console.error("Erreur avec l'API Gemini:", error); // Loguer l'erreur
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Mettre à jour l'état de chargement
     }
   };
 
@@ -56,34 +51,50 @@ const Chatbot = () => {
         <Text style={{ fontSize: 24, marginBottom: 20 }}>Chatbot</Text>
 
         <View style={{ flex: 1 }}>
+          {/* Affichage des messages */}
           {messages.map((msg, index) => (
-            <View key={index} style={{ marginBottom: 10 }}>
-              {msg.from === "bot" ? (
-                msg.text.split("\n").map((line: string, i: number) => (
-                  <Text key={i} style={{ fontSize: 18, color: "#333" }}>
-                    {i === 0 ? `Bot: ${line}` : line}
-                  </Text>
-                ))
-              ) : (
+            <View key={index} style={{ marginBottom: 15 }}>
+              {msg.from === "user" ? (
                 <Text style={{ fontSize: 18, color: "#000" }}>You: {msg.text}</Text>
+              ) : (
+                <View>
+                  <Text style={{ fontSize: 18, color: "#333" }}>Bot: {msg.text}</Text>
+                  {/* Affichage des résultats (ex: shops) */}
+                  {msg.results?.map((shop: any, idx: number) => (
+                    <View key={idx} style={{ marginTop: 10 }}>
+                      {shop.image && (
+                        <Image source={{ uri: shop.image }} style={{ width: "100%", height: 150, borderRadius: 10 }} />
+                      )}
+                      <Text style={{ fontWeight: "bold" }}>{shop.name}</Text>
+                      <Text>Prix: {shop.price} DT</Text>
+                      <Text>Note: {shop.rating} ⭐</Text>
+                      <Text>Équipements: {shop.amenities.join(", ")}</Text>
+                    </View>
+                  ))}
+                </View>
               )}
             </View>
           ))}
-          {isLoading && <Text>Loading...</Text>}
+          
+          {/* Affichage d'un message de chargement si nécessaire */}
+          {isLoading && <Text style={{ fontSize: 18, color: "#aaa" }}>Chargement...</Text>}
         </View>
 
+        {/* Champ de texte pour saisir un message */}
         <TextInput
           style={styles.input}
           value={userMessage}
           onChangeText={setUserMessage}
-          placeholder="Type your message here"
+          placeholder="Écris ton message ici"
         />
-        <Button title="Send" onPress={() => sendMessage(userMessage)} />
+        {/* Bouton pour envoyer le message */}
+        <Button title="Envoyer" onPress={() => sendMessage(userMessage)} />
       </View>
     </ScrollView>
   );
 };
 
+// Styles de la page
 const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
