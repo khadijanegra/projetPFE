@@ -290,34 +290,29 @@ useEffect(() => {
       >
         <FontAwesome name="bars" size={20} color="white" />
       </TouchableOpacity>
-      <View style={tw`flex-1 bg-white`}>
-  {/* Search bar */}
-  <View style={tw`px-6 pt-4 ml-10`}>
-    <View style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-3 shadow-md`}>
-      <Text style={tw`text-gray-400 `}></Text>
-      <TextInput
-        style={tw`flex-1 text-base text-gray-800`}
-        placeholder="🔍 Rechercher un magasin..."
-        placeholderTextColor="#9CA3AF" // gris clair
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        onSubmitEditing={handleSearch}
-      />
+      <View style={tw`flex-1`}>
+    {/* Tout ton contenu ici, y compris la SearchBar */}
+    <View style={tw`bg-white`}>
+      {/* Search bar + Map Icon */}
+      <View style={tw`px-6 pt-4 ml-10 mb-1`}>
+        <View style={tw`flex-row items-center bg-gray-100 rounded-full px-4 py-3 shadow-md`}>
+          <TextInput
+            style={tw`flex-1 text-base text-gray-800 ml-5`}
+            placeholder="🔍 Rechercher ..."
+            placeholderTextColor="#9CA3AF"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+          />
+          <TouchableOpacity onPress={gotoallshopsinmaps} style={tw`ml-2`}>
+            <Icon name="map-marker" size={24} color="#be185d" />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
-    
-  </View>
  
 
- {/* Link to map view */}
- <TouchableOpacity onPress={gotoallshopsinmaps}>
-      <Text style={tw`text-pink-700  mt-6 ml-52
-         text-xl pb-2 `}>
-      𝐕𝐨𝐢𝐫 𝐞𝐧 𝐦𝐨𝐝𝐞 𝐜𝐚𝐫𝐭𝐞
-
-
  
-      </Text>
-    </TouchableOpacity>
         <ScrollView contentContainerStyle={tw`px-2 pt-14  `}>
 
           <View style={tw`flex-row flex-wrap justify-between`}>
