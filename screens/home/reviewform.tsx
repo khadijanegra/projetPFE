@@ -108,6 +108,8 @@ const Reviewform = (props: any) => {
       }
     }, [location, locationshop]);
 
+    
+
 
   const pickReviewImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -157,28 +159,38 @@ const Reviewform = (props: any) => {
 
   const handleSubmit = async () => {
     const currentDate = new Date().toISOString(); // Récupère la date actuelle au format ISO
-      setDate(currentDate);
-      
-    const ReviewDtata = {
-      note_service: note_service,
-      note_ambiance: note_ambiance,
-      note_cuisine: note_cuisine,
-      commentaire: commentaire,
-      user_id: props.route.params.user_id, 
-      shop_id: props.route.params.shop_id,
-      date: currentDate,
-      reviewImages // ism il dossier illi chykounou fih les images 
-    };
+    setDate(currentDate);
     
+    const formData = new FormData();
+    formData.append('note_service', note_service);
+    formData.append('note_ambiance', note_ambiance);
+    formData.append('note_cuisine', note_cuisine);
+    formData.append('commentaire', commentaire);
+    formData.append('user_id', props.route.params.user_id); 
+    formData.append('shop_id', props.route.params.shop_id);
+    formData.append('date', currentDate);
+
+    // Ajouter les images au formData
+    reviewImages.forEach((image, index) => {
+      formData.append('reviewImages', {
+        uri: image.uri, // URI de l'image (assure-toi que cette propriété est correcte selon la source de l'image)
+        type: 'image/jpeg', // ou un autre type MIME selon ton image
+        name: `image_${index}.jpg`, // ou un autre nom
+      });
+    });
+
     try {
-      const response = await axios.post(`${apiUrl}/review/postreviews`,ReviewDtata);
+      const response = await axios.post(`${apiUrl}/review/postreviews`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Spécifie que tu envoies des fichiers
+        },
+      });
+
       if (response.status === 201) {
-        console.log(note_ambiance);
         const review_id = response.data.id;
         setReview_id(review_id);
-        setModalVisible(false)
-        navigateToHome()
-        console.log(props.route.params.user_id)
+        setModalVisible(false);
+        navigateToHome();
         return true;
       } else {
         Alert.alert("Erreur lors de la création de votre Review");
@@ -189,6 +201,39 @@ const Reviewform = (props: any) => {
       return false;
     }
   };
+
+
+  const verificationreview = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}/analyse-review/`, 
+        {
+          texte: commentaire,  // Assure-toi que tu envoies un champ "commentaire" et non "Texte"
+        }, 
+        {
+          headers: {
+            "Content-Type": "application/json",  // Envoie les données sous forme JSON
+          },
+        }
+      );
+      console.log("✅ Données envoyées :", {
+        commentaire,
+        reviewImages
+      });
+      
+      setModalVisible(true);
+      console.log("✅ Résultat:", response.data);
+      console.log("✅ response.data.statusReview:", response.data.statusReview);
+      if (response.data.statusReview === "good") {
+        console.log("✅ Commentaire accepté");
+      } else {
+        console.warn("⚠️ Commentaire jugé toxique ou inapproprié");
+      }
+    } catch (error) {
+      console.error("❌ Erreur lors de l'analyse du commentaire:", error);
+    }
+  };
+  
 
 
 
@@ -334,7 +379,7 @@ const Reviewform = (props: any) => {
 
           {/* Bouton d'envoi */}
 
-          <TouchableOpacity onPress={() => setModalVisible(true)} >
+          <TouchableOpacity onPress={verificationreview} >
           <Text
             style={tw`p-4 text-lg font-bold text-center text-white bg-red-300 rounded-full mt-8`}
           >
@@ -345,7 +390,7 @@ const Reviewform = (props: any) => {
         <Modal animationType="fade" transparent={true} visible={modalVisible}>
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
     <View style={{ width: 350, padding: 8, backgroundColor: 'white', borderRadius: 25, alignItems: 'center' }}>
-      
+      { }
      
       <Text style={{ fontSize: 15, color: 'gray-500', textAlign: 'center', marginBottom: 15 , marginTop:15 }}>
         Pour garantir l’authenticité des avis, votre localisation doit être verifiée près de l’établissement.

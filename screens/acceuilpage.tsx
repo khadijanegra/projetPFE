@@ -318,7 +318,9 @@ useEffect(() => {
           <View style={tw`flex-row flex-wrap justify-between`}>
             {(searchQuery.trim() ? searchResults : shopsData).map((shop: any, index: number) => (
               <View key={shop.id} style={tw`w-1/2 px-2 mb-4`}>
-                <TouchableOpacity>
+                <TouchableOpacity 
+                  onPress={() => goToprofileshop(shop)}
+                  >
                   <Card style={tw`overflow-hidden bg-white rounded-lg shadow-md`}>
                     <View style={tw`absolute z-10 px-2 py-1 bg-red-300 rounded-full top-2 right-2`}>
                       <Text style={tw`text-xs font-bold text-white`}>𝐎𝐏𝐄𝐍</Text>
