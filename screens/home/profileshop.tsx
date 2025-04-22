@@ -41,7 +41,7 @@ const ProfilShop = (props: any) => {
 
   
   const shopId = props.route.params.shopId;
-
+  console.log("********"+props.route.params.id);
   const fetchShopData = useCallback(async () => {
     try {
       setLoading(true);
@@ -461,7 +461,8 @@ console.log("********* " + JSON.stringify(event, null, 2));
   <TouchableOpacity
     onPress={() => props.navigation.navigate("commande", {
       shop_id: shopId,
-      shop_nom: shopData?.shop_nom
+      shop_nom: shopData?.shop_nom,
+      user_id: props.route.params.id,
     })}
     style={tw`bg-red-500 py-3 rounded-full items-center shadow-lg`}
   >

@@ -1,6 +1,8 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
+const apiUrl = process.env.API_URL;
 
 interface MenuItem {
   id: number;
@@ -21,7 +23,7 @@ interface GroupedMenuItems {
   [key: string]: MenuItem[];
 }
 
-const OrderPage = () => {
+const OrderPage = ( props : any) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([
     { id: 1, name: 'Poulet rôti', price: 35, category: 'Plats principaux', selected: false, image: 'https://bing.com/th?id=OSK.28306a0266c15343416f9be125e8ba93&idpbck=1&sim=4&pageurl=a2c69d40f93ee512d847787d8b7741d1&idpp=recipe&ajaxhist=0&ajaxserp=0' },
     { id: 2, name: 'Couscous', price: 25, category: 'Plats principaux', selected: false, image: 'https://i.pinimg.com/originals/8a/a9/cb/8aa9cb5e7c3dd2b1a511e12ce2d1159a.jpg' },
@@ -47,69 +49,82 @@ const OrderPage = () => {
     { id: 3, time: '12:30 - 13:00', selected: false },
     { id: 4, time: '13:00 - 13:30', selected: false },
   ]);
-
+  console.log("userrrriddd", props.route.params.user_id);
   const [total, setTotal] = useState(0);
 
-  const handleSubmitOrder = () => {
+  const handleSubmitOrder = async () => {
     const selectedItems = menuItems.filter(item => item.selected);
     const selectedTime = timeSlots.find(slot => slot.selected);
-  
+
     if (selectedItems.length === 0) {
       Alert.alert('Erreur', 'Veuillez sélectionner au moins un plat');
       return;
     }
-  
+
     if (!selectedTime) {
       Alert.alert('Erreur', 'Veuillez sélectionner un créneau horaire');
       return;
     }
-  
-    Alert.alert(
-      'Commande confirmée!',
-      `Votre commande:\n\n${selectedItems.map(i => `• ${i.name} (${i.price} TND)`).join('\n')}\n\nHeure de retrait: ${selectedTime.time}\n\nTotal: ${total} TND`,
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            Alert.alert(
-              'Paiement 💳',
-              'Tu veux payer en ligne ?',
-              [
-                {
-                  text: 'Oui',
-                  onPress: () => {
-                    console.log('Paiement en ligne choisi');
-                    // Tu peux ici rediriger vers une page de paiement
-                  }
-                },
-                {
-                  text: 'Non',
-                  onPress: () => {
-                    console.log('Paiement sur place choisi');
-                  },
-                  style: 'cancel'
-                }
-              ]
-            );
-            // Reset la commande
-            setMenuItems(menuItems.map(item => ({ ...item, selected: false })));
-            setTotal(0);
-          }
-        }
-      ]
-    );
+
+    const orderData = {
+      date_creation: new Date().toISOString(),
+      date_recuperation: selectedTime.time,
+      plats_menu: selectedItems,
+      prix_total: total,
+      user_id: props.route.params.user_id,
+      shop_id: props.route.params.shop_id, // <-- à remplacer dynamiquement selon la boutique
+      random_code: Math.floor(100000 + Math.random() * 900000).toString(),
+    };
+
+    console.log('Données de la commande:', orderData);
+
+    try {
+      const response = await axios.post(`${apiUrl}/commande/createcommande`, orderData);
+      if (response.status === 200 || response.status === 201) {
+        Alert.alert(
+          'Commande confirmée!',
+          `Votre commande:\n\n${selectedItems.map(i => `• ${i.name} (${i.price} TND)`).join('\n')}\n\nHeure de retrait: ${selectedTime.time}\n\nTotal: ${total} TND`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                Alert.alert(
+                  'Paiement 💳',
+                  'Tu veux payer en ligne ?',
+                  [
+                    {
+                      text: 'Oui',
+                      onPress: () => console.log('Paiement en ligne choisi'),
+                    },
+                    {
+                      text: 'Non',
+                      onPress: () => console.log('Paiement sur place choisi'),
+                      style: 'cancel',
+                    },
+                  ]
+                );
+                setMenuItems(menuItems.map(item => ({ ...item, selected: false })));
+                setTotal(0);
+              },
+            },
+          ]
+        );
+      } else {
+        console.log("Status non 200 ou 201:", response.status, response.data);
+        Alert.alert('Erreur', 'Échec de la commande, veuillez réessayer.');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la soumission de la commande:', error);
+      Alert.alert('Erreur', 'Échec de la commande, veuillez réessayer.');
+    }
   };
-  
+
   const toggleMenuItem = (id: number) => {
     const updatedItems = menuItems.map(item => {
       if (item.id === id) {
-        const newSelectedState = !item.selected;
-        if (newSelectedState) {
-          setTotal(prevTotal => prevTotal + item.price);
-        } else {
-          setTotal(prevTotal => prevTotal - item.price);
-        }
-        return { ...item, selected: newSelectedState };
+        const isNowSelected = !item.selected;
+        setTotal(prev => prev + (isNowSelected ? item.price : -item.price));
+        return { ...item, selected: isNowSelected };
       }
       return item;
     });
@@ -117,11 +132,10 @@ const OrderPage = () => {
   };
 
   const selectTimeSlot = (id: number) => {
-    const updatedTimeSlots = timeSlots.map(slot => ({
+    setTimeSlots(timeSlots.map(slot => ({
       ...slot,
-      selected: slot.id === id
-    }));
-    setTimeSlots(updatedTimeSlots);
+      selected: slot.id === id,
+    })));
   };
 
   const groupedMenuItems = menuItems.reduce<GroupedMenuItems>((acc, item) => {
@@ -141,7 +155,7 @@ const OrderPage = () => {
       </View>
 
       <ScrollView style={tw`flex-1 p-4`}>
-        {/* Section Créneau horaire */}
+        {/* Créneau */}
         <View style={tw`mb-8 bg-white p-5 rounded-xl shadow-sm`}>
           <Text style={tw`text-xl font-bold mb-4 text-gray-800`}>⏰ Heure de récupération</Text>
           <View style={tw`flex-row flex-wrap justify-center`}>
@@ -151,8 +165,8 @@ const OrderPage = () => {
                 onPress={() => selectTimeSlot(slot.id)}
                 style={[
                   tw`p-3 m-1 rounded-lg border w-1/3 items-center`,
-                  slot.selected 
-                    ? tw`bg-red-500 border-red-500 shadow-md` 
+                  slot.selected
+                    ? tw`bg-red-500 border-red-500 shadow-md`
                     : tw`bg-white border-gray-200`
                 ]}
               >
@@ -164,7 +178,7 @@ const OrderPage = () => {
           </View>
         </View>
 
-        {/* Menu par catégorie */}
+        {/* Menu */}
         {Object.entries(groupedMenuItems).map(([category, items]) => (
           <View key={category} style={tw`mb-8`}>
             <Text style={tw`text-xl font-bold mb-3 text-gray-800 px-2`}>{category}</Text>
@@ -178,8 +192,8 @@ const OrderPage = () => {
                     item.selected && tw`bg-red-50`
                   ]}
                 >
-                  <Image 
-                    source={{ uri: item.image }} 
+                  <Image
+                    source={{ uri: item.image }}
                     style={tw`w-16 h-16 rounded-lg mr-4`}
                   />
                   <View style={tw`flex-1`}>
@@ -188,8 +202,8 @@ const OrderPage = () => {
                   </View>
                   <View style={[
                     tw`w-6 h-6 rounded-full items-center justify-center border-2`,
-                    item.selected 
-                      ? tw`bg-red-500 border-red-500` 
+                    item.selected
+                      ? tw`bg-red-500 border-red-500`
                       : tw`border-gray-300`
                   ]}>
                     {item.selected && <Text style={tw`text-white`}>✓</Text>}
@@ -201,7 +215,7 @@ const OrderPage = () => {
         ))}
       </ScrollView>
 
-      {/* Panier et Total */}
+      {/* Footer */}
       <View style={tw`p-5 bg-white border-t border-gray-200 shadow-lg`}>
         <View style={tw`flex-row justify-between items-center mb-4`}>
           <Text style={tw`font-bold text-lg text-gray-800`}>Total:</Text>
