@@ -1,5 +1,14 @@
 import React, { useCallback, useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import { 
+  View, 
+  Text, 
+  Image, 
+  TouchableOpacity, 
+  ScrollView, 
+  ActivityIndicator,
+  RefreshControl,
+  StyleSheet 
+} from "react-native";
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
@@ -8,77 +17,136 @@ const apiUrl = process.env.API_URL;
 
 const TaskCard = (props: any) => {
   const [shopsData, setShopsData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchUserData = useCallback(async () => {
-    /** chne5dhou mil bil userid chne5shou mil user ken il favorite khw il favorite deha il 
-     shop details puisque il favorite bil id_shop donc c'est logique et automatiquement chyo5rjou il favorites shop data */
-
-    //puisque il favorissssss fehaa ken il shop id , donc mayo5rjou ken les data mte3 les shop adhoukom khw
     try {
+      setLoading(true);
       const response = await axios.get(
-        `${apiUrl}/user/favorites/${props.route.params.id}`); // il id user chne5dhou min les donnness mte3ou lkoll ken les favoriisss
-      // w puisque les favoriii fihon=m les shop id donc chnal9aw les shop dataa fihomm
-      const userData = response.data;
-      setShopsData(userData);
-      console.log(JSON.stringify(userData, null, 2));
+        `${apiUrl}/user/favorites/${props.route.params.id}`);
+      setShopsData(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
   }, [props.route.params.id]);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchUserData();
+  }, [fetchUserData]);
+
   useFocusEffect(
     React.useCallback(() => {
-      console.log(
-        "user ID  : " + props.route.params.id + "*******************");
       fetchUserData();
     }, [fetchUserData])
   );
 
+  if (loading && !refreshing) {
+    return (
+      <View style={[tw`flex-1 justify-center items-center`, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color="#FBBF24" />
+        <Text style={tw`mt-4 text-lg text-gray-600`}>Chargement des favoris...</Text>
+      </View>
+    );
+  }
+
+  if (shopsData.length === 0 && !loading) {
+    return (
+      <View style={[tw`flex-1 justify-center items-center p-8`, styles.emptyContainer]}>
+        <Icon name="heart" size={60} color="#E5E7EB" />
+        <Text style={tw`text-xl font-bold text-gray-500 mt-4 text-center`}>
+          Aucun favori trouvé
+        </Text>
+        <Text style={tw`text-gray-400 mt-2 text-center`}>
+          Ajoutez des boutiques à vos favoris pour les voir apparaître ici
+        </Text>
+        <TouchableOpacity 
+          onPress={onRefresh}
+          style={tw`mt-6 bg-red-300 px-6 py-3 rounded-full`}
+        >
+          <Text style={tw`text-white font-bold`}>Actualiser</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
-    <ScrollView>
-      <View>
-        {shopsData.map((shop, index) => (
+    <ScrollView
+      refreshControl={
+        <RefreshControl 
+          refreshing={refreshing} 
+          onRefresh={onRefresh}
+          colors={["#FBBF24", "#EF4444"]}
+        />
+      }
+      contentContainerStyle={tw`pb-4`}
+    >
+      <View style={tw`px-2`}>
+        {shopsData.map((shop) => (
           <View
             key={shop._id}
-            style={tw`p-4 m-2 bg-white border border-gray-300 shadow-lg rounded-2xl`}
+            style={[
+              tw`p-4 m-2 bg-white rounded-2xl`,
+              styles.cardShadow,
+              { borderLeftWidth: 4, borderLeftColor: "#EF4444" }
+            ]}
           >
-            <Image
-               source={{
-                uri: `${apiUrl}/fetchshopImages/${shop.shopImage}`,
-              }} 
-              style={tw`w-full h-40 rounded-xl mb-2`}
-            />
-
-            {/* Localisation */}
-            <View style={tw`flex-row items-center mb-1`}>
-              <Text
-                style={tw`px-2 py-1 text-xs font-bold text-white bg-red-300 rounded-full`}
-              >
-                {"Kairouan"}
-              </Text>
-            </View>
-
-            {/* Titre du restaurant */}
-            <Text style={tw`mb-1 text-lg font-bold text-gray-800`}>
-              {shop.shop_nom} 
-            </Text>
-            <Text style={tw`mb-1 text-md text-gray-500`}>
-              {shop.phone} 
-            </Text>
-
-            {/* Note et avis */}
-            <View style={tw`flex-row items-center  mt-2`}>
-              <View style={tw`flex-row items-center`}>
-                {[...Array(5)].map((_, j) => (
-                  <Icon key={j} name="star" size={20} color="#FBBF24" />
-                ))}
+            <View style={tw`flex-row`}>
+              <Image
+                source={{
+                  uri: `${apiUrl}/fetchshopImages/${shop.shopImage}`,
+                }} 
+                style={tw`w-24 h-24 rounded-xl`}
+                resizeMode="cover"
+              />
+              
+              <View style={tw`ml-4 flex-1`}>
+                {/* Titre et localisation */}
+                <View style={tw`flex-row justify-between items-start`}>
+                  <Text style={tw`text-lg font-bold text-gray-800 flex-shrink`} numberOfLines={2}>
+                    {shop.shop_nom}
+                  </Text>
+                  <TouchableOpacity>
+                    <Icon name="heart" size={24} color="#EF4444" />
+                  </TouchableOpacity>
+                </View>
+                
+                <View style={tw`flex-row items-center my-1`}>
+                  <Icon name="map-marker" size={14} color="#9CA3AF" />
+                  <Text style={tw`ml-1 text-xs text-gray-500`}>
+                    {shop.address || "Kairouan"}
+                  </Text>
+                </View>
+                
+                <View style={tw`flex-row items-center my-1`}>
+                  <Icon name="phone" size={14} color="#9CA3AF" />
+                  <Text style={tw`ml-1 text-sm text-gray-700`}>
+                    {shop.phone}
+                  </Text>
+                </View>
+                
+                {/* Note et avis */}
+                <View style={tw`flex-row items-center mt-2`}>
+                  <View style={tw`flex-row items-center`}>
+                    {[...Array(5)].map((_, j) => (
+                      <Icon key={j} name={j < 4 ? "star" : "star-half"} size={16} color="#FBBF24" />
+                    ))}
+                  </View>
+                  <Text style={tw`ml-2 text-sm font-bold text-gray-700`}>4.9</Text>
+                  <Text style={tw`ml-2 text-sm text-gray-400`}>(128 avis)</Text>
+                </View>
               </View>
-              <Text style={tw`ml-4 text-lg font-bold text-red-300`}>4.9</Text>
             </View>
-
-            {/* Icône favoris */}
-            <TouchableOpacity>
-              <Text style={tw`text-2xl self-end `}>🩷   </Text>
+            
+            <TouchableOpacity 
+              style={tw`mt-4 bg-red-100 py-2 rounded-full items-center`}
+              activeOpacity={0.8}
+            >
+              <Text style={tw`text-red-500 font-bold`}>Voir la boutique</Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -86,5 +154,24 @@ const TaskCard = (props: any) => {
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  cardShadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  loadingContainer: {
+    backgroundColor: "#F9FAFB"
+  },
+  emptyContainer: {
+    backgroundColor: "#F9FAFB"
+  }
+});
 
 export default TaskCard;

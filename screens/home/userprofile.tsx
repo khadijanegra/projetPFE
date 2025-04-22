@@ -4,53 +4,46 @@ import tw from "tailwind-react-native-classnames";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 
+// ✅ Déclaration du type Avatar
+type AvatarType = 'homme' | 'femme' | 'neutre';
+
 const UserProfile = (props: any) => {
   const [name, setName] = useState("");
-  const [prenom, setPrenom] = useState(""); // Correcte l'état pour prénom
+  const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState<AvatarType>("homme");
   const apiUrl = process.env.API_URL;
-
-  
   const [isEditing, setIsEditing] = useState(false);
 
-
-
-  //bech nchouf se3a 9bal el fetch andy les donnes edhouma wala leeeee 
-  console.log("ID utilisateur reçu :", props.route.params.id);
   const fetchUserData = useCallback(async () => {
     try {
       const response = await axios.get(`${apiUrl}/user/users/${props.route.params.id}`);
-
-      
-  
       const userData = response.data;
-      console.log(userData);
-      // Consommer seulement le nom, prénom et email
-      setName(userData.nom); 
+      setName(userData.nom);
       setPrenom(userData.prenom);
       setEmail(userData.email);
-      //console.log(name, prenom, email);
-  
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
-  }, [props.route.params.id]); // Utiliser l'ID comme dépendance
-  // Utiliser l'ID comme dépendance
+  }, [props.route.params.id]);
 
-  // Exécuter la récupération des données quand l'écran est focalisé
   useFocusEffect(
     React.useCallback(() => {
-      console.log("***************"+props.route.params.id+"*******************")
-      fetchUserData(); 
-    }, [fetchUserData]) 
+      fetchUserData();
+    }, [fetchUserData])
   );
-  const handleSave = async () => {
 
+  const avatars: Record<AvatarType, any> = {
+    homme: require('../../images/homme.jpg'),
+    femme: require('../../images/OIP2.jpg'),
+    
+    
+  };
+
+  const handleSave = async () => {
     try {
-      console.log("Données envoyées :", { nom: name }, { prenom: prenom });
       await axios.put(`${apiUrl}/user/users/${props.route.params.id}/nom`, { nom: name });
       await axios.put(`${apiUrl}/user/users/${props.route.params.id}/prenom`, { prenom: prenom });
-  
       alert("Modifications enregistrées !");
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
@@ -58,83 +51,123 @@ const UserProfile = (props: any) => {
     }
     setIsEditing(false);
   };
+
   const goToDeleteAccount = () => {
     props.navigation.navigate("deleteAccount", {
-      user_id: props.route.params.id, 
-      
+      user_id: props.route.params.id,
     });
-  
   };
-  
-  
-   
+
   return (
-    <ScrollView style={tw`flex-1 bg-red-100`} contentContainerStyle={tw`p-4`}>
-      <View style={tw`flex-1 p-4`}>
-        {/* Header */}
-        <View style={tw`items-center mt-4`}>
+    <ScrollView style={tw`flex-1 bg-red-50`} contentContainerStyle={tw`pb-8`}>
+      <View style={tw`items-center py-6 bg-red-100 rounded-b-3xl shadow-md`}>
+        <View style={tw`bg-white p-1 rounded-full shadow-lg`}>
           <Image
-            source={require('../../images/Illustration.png')}
-            style={tw`w-40 h-40 border-4 border-white rounded-full shadow-lg`}
+            source={avatars[selectedAvatar]}
+            style={tw`w-32 h-32 rounded-full border-4 border-red-200`}
           />
         </View>
 
-        {/* Personal Info */}
-        <Text style={tw`mt-6 text-xl font-bold`}>𝐕𝐨𝐬 𝐢𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧𝐬 𝐩𝐞𝐫𝐬𝐨𝐧𝐧𝐞𝐥𝐥𝐞𝐬</Text>
-        <View>
-          <View style={tw`p-4 mt-2 bg-gray-100 rounded-lg shadow-lg`}>
-            <Text style={tw`text-lg font-bold text-gray-600`}>𝑽𝒐𝒕𝒓𝒆 𝒏𝒐𝒎</Text>
+        {isEditing && (
+          <View style={tw`flex-row mt-4`}>
+            <TouchableOpacity
+              style={tw`mx-2 ${selectedAvatar === 'homme' ? 'border-2 border-red-500 rounded-full' : ''}`}
+              onPress={() => setSelectedAvatar('homme')}
+            >
+              <Image source={avatars.homme} style={tw`w-12 h-12 rounded-full`} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={tw`mx-2 ${selectedAvatar === 'femme' ? 'border-2 border-red-500 rounded-full' : ''}`}
+              onPress={() => setSelectedAvatar('femme')}
+            >
+              <Image source={avatars.femme} style={tw`w-12 h-12 rounded-full`} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={tw`mx-2 ${selectedAvatar === 'neutre' ? 'border-2 border-red-500 rounded-full' : ''}`}
+              onPress={() => setSelectedAvatar('neutre')}
+            >
+              <Image source={avatars.neutre} style={tw`w-12 h-12 rounded-full`} />
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <Text style={tw`mt-4 text-xl font-bold text-gray-800`}>
+          {name} {prenom}
+        </Text>
+        <Text style={tw`text-gray-600`}>{email}</Text>
+      </View>
+
+      {/* Informations personnelles */}
+      <View style={tw`px-5 mt-6`}>
+        <Text style={tw`text-2xl font-bold text-gray-800 mb-4`}>Informations Personnelles</Text>
+
+        {/* Nom */}
+        <View style={tw`mb-5`}>
+          <Text style={tw`text-gray-600 font-medium mb-1 ml-1`}>Nom</Text>
+          <View style={tw`bg-white rounded-xl shadow-sm p-1`}>
             <TextInput
-              style={tw`p-4 mt-1 bg-white border border-gray-300 rounded-lg`}
+              style={tw`p-4 text-gray-800 ${!isEditing ? 'opacity-80' : ''}`}
               value={name}
               onChangeText={setName}
               editable={isEditing}
+              placeholder="Votre nom"
             />
           </View>
-          <View style={tw`p-4 mt-2 bg-gray-100 rounded-lg shadow-lg`}>
-            <Text style={tw`text-lg font-bold text-gray-600`}>𝑽𝒐𝒕𝒓𝒆 𝒑𝒓𝒆́𝒏𝒐𝒎</Text>
+        </View>
+
+        {/* Prénom */}
+        <View style={tw`mb-5`}>
+          <Text style={tw`text-gray-600 font-medium mb-1 ml-1`}>Prénom</Text>
+          <View style={tw`bg-white rounded-xl shadow-sm p-1`}>
             <TextInput
-              style={tw`p-4 mt-1 bg-white border border-gray-300 rounded-lg`}
+              style={tw`p-4 text-gray-800 ${!isEditing ? 'opacity-80' : ''}`}
               value={prenom}
               onChangeText={setPrenom}
               editable={isEditing}
+              placeholder="Votre prénom"
             />
           </View>
         </View>
-
-        {/* Contact Info */}
-        <Text style={tw`mt-6 text-xl font-bold`}>𝐂𝐨𝐨𝐫𝐝𝐨𝐧𝐧𝐞́𝐞𝐬</Text>
-        <View style={tw`p-4 mt-2 bg-gray-100 rounded-lg shadow-lg`}>
-          <Text style={tw`text-gray-600`}>Votre localisation : </Text>
-          <View>
-            {/* 3abiha bil localisation */}
-          </View>
-          <Text style={tw`mt-2 text-gray-600`}>Email : <Text style={tw`font-bold text-black`}>{email}</Text></Text>
-        </View>
-
-        {/* Edit Button */}
-        <TouchableOpacity
-  style={tw`items-center py-3 mt-2 ${isEditing ? 'bg-pink-400' : 'bg-black'} rounded-lg`}
-  onPress={() => {
-    if (isEditing) {
-      handleSave(); // Enregistrer les modifications
-    } 
-    setIsEditing(!isEditing);
-  }}
->
-  <Text style={tw`text-lg font-bold text-white`}>
-    {isEditing ? "Enregistrer" : "𝘌́𝘥𝘪𝘵𝘦𝘳 𝘭𝘦 𝘱𝘳𝘰𝘧𝘪𝘭"}
-  </Text>
-</TouchableOpacity>
-
       </View>
-      <TouchableOpacity
-  style={tw`items-center py-3  rounded-lg bg-yellow-500`}
-  onPress={goToDeleteAccount} // Appel de la fonctiongit 
->
-  <Text style={tw`text-lg font-bold text-white`}>𝘎𝘦́𝘳𝘦𝘳 𝘮𝘰𝘯 𝘤𝘰𝘮𝘱𝘵𝘦</Text>
-</TouchableOpacity>
 
+      {/* Coordonnées */}
+      <View style={tw`px-5 mt-2`}>
+        <Text style={tw`text-2xl font-bold text-gray-800 mb-4`}>Coordonnées</Text>
+        <View style={tw`bg-white rounded-xl p-5 shadow-sm`}>
+          <View style={tw`mb-4`}>
+            <Text style={tw`text-gray-600 font-medium mb-1`}>Localisation</Text>
+            <Text style={tw`text-gray-400 italic`}>Fonctionnalité à venir</Text>
+          </View>
+          <View>
+            <Text style={tw`text-gray-600 font-medium mb-1`}>Email</Text>
+            <Text style={tw`text-gray-800`}>{email}</Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Boutons d'action */}
+      <View style={tw`px-5 mt-8`}>
+        <TouchableOpacity
+          style={tw`py-4 rounded-xl ${isEditing ? 'bg-pink-500' : 'bg-black'} shadow-lg mb-4`}
+          onPress={() => {
+            if (isEditing) handleSave();
+            setIsEditing(!isEditing);
+          }}
+        >
+          <Text style={tw`text-center text-white font-bold text-lg`}>
+            {isEditing ? "Enregistrer les modifications" : "Modifier mon profil"}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={tw`py-4 rounded-xl bg-yellow-500 shadow-lg`}
+          onPress={goToDeleteAccount}
+        >
+          <Text style={tw`text-center text-white font-bold text-lg`}>
+            Gérer mon compte
+          </Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };

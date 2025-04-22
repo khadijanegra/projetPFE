@@ -24,6 +24,7 @@ import Consultshop from "screens/consultshop";
 import Chatbot from "screens/home/chatbot";
 import LocationsMap from "screens/home/allshopsinmaps"
 import EventForm from "screens/home/formevent";
+import commande from "screens/home/commande";
 const Stack = createStackNavigator();
 
 export default function Root() {
@@ -51,6 +52,7 @@ export default function Root() {
       <Stack.Screen name="consultshop" component={Consultshop} />
       <Stack.Screen name="chatbot" component={Chatbot} />
       <Stack.Screen name="formevent" component={EventForm}/>
+      <Stack.Screen name="commande" component={commande}/>
 
     </Stack.Navigator> 
       

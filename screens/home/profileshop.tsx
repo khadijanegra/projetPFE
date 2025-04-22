@@ -457,6 +457,19 @@ console.log("********* " + JSON.stringify(event, null, 2));
             )}
           </TouchableOpacity>
         </View>
+        <View style={tw`px-4 mb-10`}>
+  <TouchableOpacity
+    onPress={() => props.navigation.navigate("commande", {
+      shop_id: shopId,
+      shop_nom: shopData?.shop_nom
+    })}
+    style={tw`bg-red-500 py-3 rounded-full items-center shadow-lg`}
+  >
+    <Text style={tw`text-white text-lg font-bold`}>
+      Passer vos commande
+    </Text>
+  </TouchableOpacity>
+</View>
 
         {/* Address Section */}
         {shopData && shopData.shop_local && (
