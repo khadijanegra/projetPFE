@@ -408,6 +408,7 @@ const verificationreview = async () => {
       {/* Cas compatible → demande de localisation */}
       {iscompatibel && (
         <>
+
           <Text style={tw`text-gray-500 text-center mb-4 mt-4`}>
             Pour garantir l’authenticité des avis, votre localisation doit être vérifiée près de l’établissement.
           </Text>
