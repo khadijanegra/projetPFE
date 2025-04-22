@@ -191,7 +191,9 @@ useEffect(() => {
     setIsMenuOpen(false);  // Close the menu
     props.navigation.navigate('chatbot');  // Navigate to the chatbot screen
   };
-  
+  const goToOrders = () => {
+    props.navigation.navigate("order");
+  };
   
 
   return (
@@ -244,6 +246,16 @@ useEffect(() => {
                   <Text style={tw`text-lg text-white`}>𝙈𝙚𝙨 𝙚́𝙩𝙖𝙗𝙡𝙞𝙨𝙨𝙚𝙢𝙚𝙣𝙩𝙨</Text>
                 </TouchableOpacity>
               )}
+               {userRole === "manager" && (
+  <TouchableOpacity
+    onPress={goToOrders}
+    style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
+  >
+    <Icon name="list-alt" size={20} color="black" style={tw`mr-2`} />
+    <Text style={tw`text-lg text-white`}>Mes commandes</Text>
+  </TouchableOpacity>
+)}
+
               <TouchableOpacity
                 style={tw`flex-row items-center p-2 mt-3 bg-red-300 rounded-full`}
                 onPress={goToChatbot} // Navigate to chatbot

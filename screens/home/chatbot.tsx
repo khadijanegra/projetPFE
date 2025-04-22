@@ -74,7 +74,7 @@ const Chatbot = () => {
   return (
     <View style={tw`flex-1 bg-gray-50`}>
       {/* En-tête */}
-      <View style={[tw`p-4 pt-8 pb-4 bg-indigo-600 shadow-md`, styles.header]}>
+      <View style={[tw`p-4 pt-8 pb-4 bg-yellow-600 shadow-md`, styles.header]}>
         <Text style={tw`text-2xl font-bold text-white text-center`}>Assistant Virtuel</Text>
       </View>
 
@@ -122,7 +122,7 @@ const Chatbot = () => {
                         styles.cardShadow
                       ]}
                     >
-                      <Text style={tw`font-bold text-lg text-indigo-600`}>{hotel.name}</Text>
+                      <Text style={tw`font-bold text-lg text-yellow-600`}>{hotel.name}</Text>
                       <View style={tw`flex-row items-center mt-1`}>
                         <Ionicons name="pricetag" size={16} color="#4f46e5" />
                         <Text style={tw`ml-2 text-gray-700`}>
@@ -169,7 +169,7 @@ const Chatbot = () => {
                 />
                 
                 <TouchableOpacity
-                  style={tw`ml-3 bg-indigo-600 p-3 rounded-full`}
+                  style={tw`ml-3 bg-yellow-600 p-3 rounded-full`}
                   onPress={() => sendMessage(userMessage)}
                   disabled={isLoading || !userMessage.trim()}
                 >
