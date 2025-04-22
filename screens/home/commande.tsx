@@ -177,9 +177,11 @@ const OrderPage = ( props : any) => {
         <View style={tw`mb-8 bg-white p-5 rounded-xl shadow-sm`}>
           <Text style={tw`text-xl font-bold mb-4 text-gray-800`}>⏰ Heure de récupération</Text>
           <View style={tw`flex-row flex-wrap justify-center`}>
+            {/*mapina 3ala il timeSlots w n7otouh fil Slot 3yayatnaa lil fonction illi tselectilna*/}
             {timeSlots.map(slot => (
               <TouchableOpacity
                 key={slot.id}
+                 
                 onPress={() => selectTimeSlot(slot.id)}
                 style={[
                   tw`p-3 m-1 rounded-lg border w-1/3 items-center`,
@@ -188,6 +190,7 @@ const OrderPage = ( props : any) => {
                     : tw`bg-white border-gray-200`
                 ]}
               >
+                {/* haw  affichage mte3 slot slecter   */}
                 <Text style={slot.selected ? tw`text-white font-bold` : tw`text-gray-700`}>
                   {slot.time}
                 </Text>
@@ -197,10 +200,14 @@ const OrderPage = ( props : any) => {
         </View>
 
         {/* Menu */}
+        <Text style={tw`text-2xl font-bold mb-4 text-gray-800`}>🍽️ Menu</Text>
+        {/* mapina 3ala il groupedMenuItems w n7otouh fil item 3yayatnaa lil fonction illi tselectilna*/}
+         {/* hadhna l'object mte3 le groupedMenuItems illi 7attineh fil menuItems */}
         {Object.entries(groupedMenuItems).map(([category, items]) => (
           <View key={category} style={tw`mb-8`}>
             <Text style={tw`text-xl font-bold mb-3 text-gray-800 px-2`}>{category}</Text>
             <View style={tw`bg-white rounded-xl shadow-sm overflow-hidden`}>
+              {/* dej il items feha kol chy tawa min les attribue illi mawjoudin fi il groupemenuitems*/}
               {items.map(item => (
                 <TouchableOpacity
                   key={item.id}

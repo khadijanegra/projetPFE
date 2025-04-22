@@ -1,6 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import tw from 'tailwind-react-native-classnames';
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  Animated,
+  Easing,
+  TouchableOpacity
+} from "react-native";
+import tw from "tailwind-react-native-classnames";
+import { Ionicons } from "@expo/vector-icons";
+
+const apiUrl = process.env.API_URL;
 
 interface OrderItem {
   name: string;
@@ -8,62 +20,49 @@ interface OrderItem {
   price: number;
 }
 
-interface Order {
+interface user {
   id: string;
-  customerName: string;
-  items: OrderItem[];
-  total: number;
-  pickupTime: string;
-  status: 'pending' | 'ready' | 'completed' | 'cancelled';
+  nom: string;
+  prenom: string;
+  email: string;
+}
+
+interface Order {
+  _id: string;
+  prix_total: number;
+  date_creation: Date;
+  date_recuperation: string;
+  plats_menu: OrderItem[];
+  random_code: string;
+  user_id: user;
 }
 
 const OrderScreen: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<string>('all');
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const scale = useState(new Animated.Value(1))[0];
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const mockOrders: Order[] = [
-          {
-            id: '1',
-            customerName: 'Jean Dupont',
-            items: [
-              { name: 'Pizza Margherita', quantity: 1, price: 12 },
-              { name: 'Coca-Cola', quantity: 2, price: 3 },
-            ],
-            total: 18,
-            pickupTime: '12:30',
-            status: 'pending',
-          },
-          {
-            id: '2',
-            customerName: 'Marie Martin',
-            items: [
-              { name: 'Salade César', quantity: 1, price: 8 },
-              { name: 'Eau minérale', quantity: 1, price: 2 },
-            ],
-            total: 10,
-            pickupTime: '13:15',
-            status: 'ready',
-          },
-          {
-            id: '3',
-            customerName: 'Pierre Lambert',
-            items: [
-              { name: 'Burger Classique', quantity: 2, price: 10 },
-              { name: 'Frites', quantity: 1, price: 4 },
-            ],
-            total: 24,
-            pickupTime: '19:00',
-            status: 'completed',
-          },
-        ];
-        setOrders(mockOrders);
-        setLoading(false);
+        const response = await axios.get(`${apiUrl}/commande/getallcommandes`);
+        if (response.status === 200) {
+          setOrders(response.data);
+          console.log(
+            "Commande recuperer  " + JSON.stringify(response.data, null, 2)
+          );
+
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 800,
+            easing: Easing.out(Easing.exp),
+            useNativeDriver: true,
+          }).start();
+        }
       } catch (error) {
-        console.error('Erreur lors du chargement des commandes :', error);
+        console.error("Erreur lors de la récupération des commandes :", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -71,99 +70,162 @@ const OrderScreen: React.FC = () => {
     fetchOrders();
   }, []);
 
-  const filteredOrders = orders.filter((order) => {
-    return filter === 'all' || order.status === filter;
-  });
+  const [completedOrders, setCompletedOrders] = useState<Set<string>>(
+    new Set()
+  );
 
-  const updateOrderStatus = (orderId: string, newStatus: Order['status']) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
+  const markAsCompleted = (id: string) => {
+    setCompletedOrders((prev) => new Set(prev).add(id));
   };
 
   if (loading) {
     return (
-      <View style={tw`flex-1 items-center justify-center`}>
-        <ActivityIndicator size="large" color="#4F46E5" />
-        <Text style={tw`mt-4`}>Chargement des commandes...</Text>
+      <View style={tw`flex-1 items-center justify-center bg-blue-50`}>
+        <View style={tw`flex items-center`}>
+          <Ionicons
+            name="fast-food"
+            size={60}
+            color="#4F46E5"
+            style={tw`mb-4 animate-ping`}
+          />
+          <Text style={tw`text-2xl font-bold text-indigo-700 mt-4`}>
+            Préparation des données...
+          </Text>
+          <Text style={tw`text-gray-500 mt-2`}>Vos commandes arrivent !</Text>
+        </View>
       </View>
     );
   }
 
-  const statusLabels: Record<string, string> = {
-    all: 'Toutes',
-    pending: 'En attente',
-    ready: 'Prête',
-    completed: 'Récupérée',
-    cancelled: 'Annulée',
-  };
-
   return (
-    <ScrollView style={tw`p-4 bg-yellow-50`}>
-      <Text style={tw`text-2xl font-bold mb-4`}>Commandes</Text>
-
-      <View style={tw`flex-row justify-around mb-4`}>
-  {['all', 'pending', 'ready', 'completed', 'cancelled'].map((status) => (
-    <TouchableOpacity
-      key={status}
-      onPress={() => setFilter(status)}
-      style={tw`${filter === status ? 'bg-gray-600 rounded px-3 py-1' : ''}`}
+    <ScrollView
+      style={tw`bg-gradient-to-b from-blue-50 to-purple-50 px-4 py-6`}
     >
-      <Text style={tw`${filter === status ? 'text-white font-bold' : 'text-gray-600'}`}>
-        {statusLabels[status]}
-      </Text>
-    </TouchableOpacity>
-  ))}
-</View>
+      <View style={tw`flex items-center mb-8`}>
+        <Text style={tw`text-gray-700 mt-1 text-xl font-bold  `}>
+          {" "}
+          🍽️ Commandes en attente
+        </Text>
+      </View>
 
-
-      {filteredOrders.map((order) => (
-        <View key={order.id} style={tw`bg-white p-4 mb-4 rounded-lg shadow`}>
-          <Text style={tw`font-bold`}>Commande #{order.id} - {order.customerName}</Text>
-          <Text style={tw`text-gray-500`}>Heure de retrait : {order.pickupTime}</Text>
-
-          {order.items.map((item, idx) => (
-            <View key={idx} style={tw`flex-row justify-between mt-1`}>
-              <Text>{item.quantity}x {item.name}</Text>
-              <Text>{item.price.toFixed(2)} €</Text>
+      {orders.map((order) => (
+        <Animated.View
+          key={order._id}
+          style={[
+            tw`bg-white p-6 mb-6 rounded-3xl shadow-2xl border-2 border-indigo-50`,
+            { opacity: fadeAnim },
+          ]}
+        >
+          <View style={tw`flex-row justify-between items-start mb-4`}>
+            <View>
+              <Text style={tw`text-xs text-purple-400 font-semibold`}>
+                #{order.random_code}
+              </Text>
+              <Text style={tw`text-xl font-black text-indigo-900`}>
+                👤 {order.user_id.nom} {order.user_id.prenom}
+              </Text>
             </View>
-          ))}
-
-          <View style={tw`flex-row justify-between mt-2 border-t pt-2`}>
-            <Text style={tw`font-bold`}>Total</Text>
-            <Text style={tw`font-bold`}>{order.total.toFixed(2)} €</Text>
+            <View
+              style={tw`${
+                completedOrders.has(order._id) ? "bg-blue-100" : "bg-green-100"
+              } px-3 py-1 rounded-full`}
+            >
+              <Text
+                style={tw`${
+                  completedOrders.has(order._id)
+                    ? "text-blue-700"
+                    : "text-green-700"
+                } text-xs font-bold`}
+              >
+                {completedOrders.has(order._id)
+                  ? "✅ Terminée"
+                  : "🕒 En préparation"}
+              </Text>
+            </View>
+            
           </View>
 
-          <View style={tw`flex-row justify-end mt-2`}>
-            {order.status === 'pending' && (
-              <TouchableOpacity
-                onPress={() => updateOrderStatus(order.id, 'ready')}
-                style={tw`bg-blue-500 px-3 py-1 rounded mr-2`}
-              >
-                <Text style={tw`text-white`}>Marquer comme prête</Text>
-              </TouchableOpacity>
-            )}
-            {order.status === 'ready' && (
-              <TouchableOpacity
-                onPress={() => updateOrderStatus(order.id, 'completed')}
-                style={tw`bg-green-500 px-3 py-1 rounded mr-2`}
-              >
-                <Text style={tw`text-white`}>Marquer comme récupérée</Text>
-              </TouchableOpacity>
-            )}
-            {order.status !== 'completed' && order.status !== 'cancelled' && (
-              <TouchableOpacity
-                onPress={() => updateOrderStatus(order.id, 'cancelled')}
-                style={tw`bg-red-500 px-3 py-1 rounded`}
-              >
-                <Text style={tw`text-white`}>Annuler</Text>
-              </TouchableOpacity>
-            )}
+          <View style={tw`mb-4 bg-indigo-100 p-3 rounded-xl`}>
+            <View style={tw`flex-row items-center mb-2`}>
+              <Ionicons name="time-outline" size={16} color="#4F46E5" />
+              <Text style={tw`ml-2 text-indigo-700 font-medium`}>
+                {new Date(order.date_creation).toLocaleDateString("fr-FR", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                })}
+              </Text>
+            </View>
+            <View style={tw`flex-row items-center`}>
+              <Ionicons name="alarm-outline" size={16} color="#4F46E5" />
+              <Text style={tw`ml-2 text-indigo-700 font-medium`}>
+                Retrait à {order.date_recuperation}
+              </Text>
+            </View>
           </View>
-        </View>
+
+          <View style={tw`mb-4`}>
+            <Text style={tw`text-lg font-black text-indigo-900 mb-3`}>
+              🍔 Votre menu
+            </Text>
+            {order.plats_menu.map((item, idx) => (
+              <View
+                key={idx}
+                style={tw`flex-row justify-between items-center py-2 border-b border-gray-100`}
+              >
+                <View style={tw`flex-row items-center`}>
+                  <View style={tw`w-2 h-2 bg-purple-400 rounded-full mr-2`} />
+                  <Text style={tw`text-gray-700 font-medium`}>{item.name}</Text>
+                </View>
+                <Text style={tw`text-gray-700 font-semibold`}>
+                  {item.price} TND
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          <View
+            style={tw`flex-row justify-between items-center mt-4 pt-4 border-t border-indigo-100`}
+          >
+            <Text
+              style={tw`text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600`}
+            >
+              Total à régler
+            </Text>
+            <View style={tw`flex-row items-center`}>
+              <Text style={tw`text-2xl font-black text-indigo-900`}>
+                {" "}
+                💰 {order.prix_total.toFixed(2)}
+              </Text>
+              <Text style={tw`text-sm text-gray-500 ml-1`}>TND</Text>
+            </View>
+          </View>
+          {!completedOrders.has(order._id) && (
+  <TouchableOpacity 
+    onPress={() => markAsCompleted(order._id)}
+    activeOpacity={0.1}
+    style={tw`mt-5 flex-row justify-center items-center  p-3 rounded-full shadow-lg bg-indigo-100`}
+  >
+    <Ionicons name="checkmark-circle" size={20} color="purple" />
+    <Text style={tw`ml-2 text-black font-bold text-sm uppercase `}>
+      Marquer comme terminée
+    </Text>
+  </TouchableOpacity>
+)}
+        </Animated.View>
+        
+        
       ))}
+
+      {orders.length === 0 && (
+        <View style={tw`flex items-center mt-20`}>
+          <Ionicons name="restaurant-outline" size={60} color="#CBD5E1" />
+          <Text style={tw`text-xl text-gray-400 font-bold mt-4`}>
+            Aucune commande en attente
+          </Text>
+          <Text style={tw`text-gray-400 mt-2`}>Commencez à commander ! 🍔</Text>
+        </View>
+      )}
     </ScrollView>
   );
 };

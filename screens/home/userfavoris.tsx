@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { 
   View, 
   Text, 
@@ -44,6 +44,38 @@ const TaskCard = (props: any) => {
       fetchUserData();
     }, [fetchUserData])
   );
+
+  const [reviews, setReviews] = useState({});
+  
+  const fetchReviews = async (shop_id : any) => {
+    try {
+      const response = await axios.get(`${apiUrl}/review/getreviews/${shop_id}`);
+      const data = response.data;
+  
+      if (data.length > 0) {
+        const totalCuisine = data.reduce((sum :any, review: any) => sum + review.note_cuisine, 0);
+        const totalAmbiance = data.reduce((sum : any, review : any) => sum + review.note_ambiance, 0);
+        const totalService = data.reduce((sum : any, review : any) => sum + review.note_service, 0);
+        const averageRating = (totalCuisine + totalAmbiance + totalService) / (3 * data.length);
+  
+        setReviews((prev) => ({ ...prev, [shop_id]: averageRating }));
+      } else {
+        setReviews((prev) => ({ ...prev, [shop_id]: 0 }));
+      }
+    } catch (err) {
+      console.error(err);
+      setReviews((prev) => ({ ...prev, [shop_id]: 0 }));
+    }
+  };
+  
+  useEffect(() => {
+    if (shopsData.length > 0) {
+      shopsData.forEach((shop) => {
+        fetchReviews(shop._id);
+      });
+    }
+  }, [shopsData]);
+  
 
   if (loading && !refreshing) {
     return (
@@ -131,14 +163,25 @@ const TaskCard = (props: any) => {
                 
                 {/* Note et avis */}
                 <View style={tw`flex-row items-center mt-2`}>
-                  <View style={tw`flex-row items-center`}>
-                    {[...Array(5)].map((_, j) => (
-                      <Icon key={j} name={j < 4 ? "star" : "star-half"} size={16} color="#FBBF24" />
-                    ))}
-                  </View>
-                  <Text style={tw`ml-2 text-sm font-bold text-gray-700`}>4.9</Text>
-                  <Text style={tw`ml-2 text-sm text-gray-400`}>(128 avis)</Text>
-                </View>
+  <View style={tw`flex-row items-center`}>
+    {[...Array(5)].map((_, j) => (
+      <Icon
+        key={j}
+        name="star"
+        size={16}
+        color={
+          reviews[shop._id] && reviews[shop._id] >= j + 1
+            ? "#FBBF24"
+            : "#D1D5DB"
+        }
+      />
+    ))}
+  </View>
+  <Text style={tw`ml-2 text-sm font-bold text-gray-700`}>
+    {reviews[shop._id] ? reviews[shop._id].toFixed(1) : "0.0"}
+  </Text>
+</View>
+
               </View>
             </View>
             
