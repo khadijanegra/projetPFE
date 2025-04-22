@@ -4,6 +4,7 @@ import { View, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-na
 import tw from 'tailwind-react-native-classnames';
 const apiUrl = process.env.API_URL;
 
+//hadharna les types mte3 kol objet
 interface MenuItem {
   id: number;
   name: string;
@@ -22,7 +23,7 @@ interface TimeSlot {
 interface GroupedMenuItems {
   [key: string]: MenuItem[];
 }
-
+// l'objet loul illi howa MenuItem
 const OrderPage = ( props : any) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([
     { id: 1, name: 'Poulet rôti', price: 35, category: 'Plats principaux', selected: false, image: 'https://bing.com/th?id=OSK.28306a0266c15343416f9be125e8ba93&idpbck=1&sim=4&pageurl=a2c69d40f93ee512d847787d8b7741d1&idpp=recipe&ajaxhist=0&ajaxserp=0' },
@@ -43,39 +44,50 @@ const OrderPage = ( props : any) => {
 { id: 8, name: 'Café turc', price: 4, category: 'Boissons', selected: false, image: 'https://toutistanbul.com/wp-content/uploads/2023/01/le-cafe-turc.jpg' }
   ]);
 
+  // hadharna il contenu mte3 le timeSlots
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([
     { id: 1, time: '11:30 - 12:00', selected: false },
     { id: 2, time: '12:00 - 12:30', selected: true },
     { id: 3, time: '12:30 - 13:00', selected: false },
     { id: 4, time: '13:00 - 13:30', selected: false },
   ]);
+
+  // thabatna l'id mte3 le user est ce que mawoud walee 
   console.log("userrrriddd", props.route.params.user_id);
+
+  // variable nitokiw feha total prix 
   const [total, setTotal] = useState(0);
 
   const handleSubmitOrder = async () => {
+    //nthabtou idha 3alla9al famma un plat mte3 menuItems selectionner walee
+    // hadha l'object mte3 le menuItems illi 7attineh fil selectedItems
     const selectedItems = menuItems.filter(item => item.selected);
-    const selectedTime = timeSlots.find(slot => slot.selected);
-
     if (selectedItems.length === 0) {
       Alert.alert('Erreur', 'Veuillez sélectionner au moins un plat');
       return;
     }
-
+    // nthabtou idha 3alla9al famma un créneau horaire mte3 timeSlots selectionner walee
+    // hadha l'object mte3 le timeSlots illii 7attineh fil selectedTime
+    const selectedTime = timeSlots.find(slot => slot.selected);
     if (!selectedTime) {
       Alert.alert('Erreur', 'Veuillez sélectionner un créneau horaire');
       return;
     }
 
-    const orderData = {
-      date_creation: new Date().toISOString(),
-      date_recuperation: selectedTime.time,
-      plats_menu: selectedItems,
-      prix_total: total,
-      user_id: props.route.params.user_id,
-      shop_id: props.route.params.shop_id, // <-- à remplacer dynamiquement selon la boutique
-      random_code: Math.floor(100000 + Math.random() * 900000).toString(),
-    };
 
+   
+
+ // tawa hadharna l'object mte3 le orderData lkolllll illi tlem dinya w din lkolll 
+    const orderData = {
+      date_creation: new Date().toISOString(),//hedhy l'heure illi 7attina fil date_creation min 3nd rabiii hedhaa yitsna3
+      date_recuperation: selectedTime.time,// haw l'heure mte3 le créneau horaire illi 7attineh fil selectedTime
+      plats_menu: selectedItems,//ahawaaa il contenu mte3 le menuItems illi deja il selectedItems
+      prix_total: total,// haw il prix_total illi 7attina fil total
+      user_id: props.route.params.user_id,
+      shop_id: props.route.params.shop_id, 
+      random_code: Math.floor(100000 + Math.random() * 900000).toString(),// hedhya l'code illi 7attina fil random_code min 3nd rabii yitsna3 
+    };
+//khalina nchoufouhomm ayya illi fil orderdata
     console.log('Données de la commande:', orderData);
 
     try {
@@ -83,6 +95,7 @@ const OrderPage = ( props : any) => {
       if (response.status === 200 || response.status === 201) {
         Alert.alert(
           'Commande confirmée!',
+          //konna najmou nistamlou zeda orderdata.plats_menu.map(i => `• ${i.name} (${i.price} TND)`).join('\n')
           `Votre commande:\n\n${selectedItems.map(i => `• ${i.name} (${i.price} TND)`).join('\n')}\n\nHeure de retrait: ${selectedTime.time}\n\nTotal: ${orderData.prix_total} TND\n\n${orderData.random_code}`,
           [
             {
@@ -103,6 +116,7 @@ const OrderPage = ( props : any) => {
                     },
                   ]
                 );
+                // Réinitialiser les sélections bech nraj3ou il total 0 w il menuitem selected 0
                 setMenuItems(menuItems.map(item => ({ ...item, selected: false })));
                 setTotal(0);
               },
@@ -119,6 +133,8 @@ const OrderPage = ( props : any) => {
     }
   };
 
+  //fonctionbech nselectiw les plats mte3 menuItems
+  //prev w jaww w .selected w ndourou 3ala il menuItems illi 3andou id mte3ou w n7otouh fil selectedItems
   const toggleMenuItem = (id: number) => {
     const updatedItems = menuItems.map(item => {
       if (item.id === id) {
@@ -128,9 +144,11 @@ const OrderPage = ( props : any) => {
       }
       return item;
     });
+    // hadhna l'object mte3 le menuItems illi 7attineh fil updatedItems a chaque fois yitbaddel grace a updatedItems
     setMenuItems(updatedItems);
   };
-
+// hadhna l'object mte3 le timeSlots illi 7attineh fil selectedTime
+  //... w .map w ndourou 3ala il timeSlots illi 3andou id mte3ou w n7otouh fil selectedTime bil id 
   const selectTimeSlot = (id: number) => {
     setTimeSlots(timeSlots.map(slot => ({
       ...slot,
