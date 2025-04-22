@@ -83,7 +83,7 @@ const OrderPage = ( props : any) => {
       if (response.status === 200 || response.status === 201) {
         Alert.alert(
           'Commande confirmée!',
-          `Votre commande:\n\n${selectedItems.map(i => `• ${i.name} (${i.price} TND)`).join('\n')}\n\nHeure de retrait: ${selectedTime.time}\n\nTotal: ${total} TND`,
+          `Votre commande:\n\n${selectedItems.map(i => `• ${i.name} (${i.price} TND)`).join('\n')}\n\nHeure de retrait: ${selectedTime.time}\n\nTotal: ${orderData.prix_total} TND\n\n${orderData.random_code}`,
           [
             {
               text: 'OK',
