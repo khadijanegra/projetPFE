@@ -323,11 +323,11 @@ useEffect(() => {
       </View>
       <TouchableOpacity 
   onPress={goToChatbot}
-  style={tw`mt-4 flex-row items-center justify-center bg-indigo-500 rounded-full px-3 py-1.5 shadow-md`}
+  style={tw`mt-4 w-52 flex-row  bg-pink-800 rounded-full px-3 py-1.5 shadow-md ml-36`}
 >
   <Icon name="magic" size={14} color="white" style={tw`mr-1`} />
   <Text style={tw`text-white text-sm font-medium`}>Choix personnalisés</Text>
-</TouchableOpacity>
+</TouchableOpacity>  
 
     </View>
  
