@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet } from "react-native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
-import tw from "tailwind-react-native-classnames";
 
 const apiUrl = process.env.API_URL;
 
@@ -10,7 +9,6 @@ const Consultshop = (props: any) => {
   const [shopData, setShopData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [shop_id, setshop_id] = useState();
   const [isEditing, setIsEditing] = useState(false);
   const shopId = props.route.params.shopId;
 
@@ -44,40 +42,38 @@ const Consultshop = (props: any) => {
   };
 
   if (loading) return (
-    <View style={tw`flex-1 justify-center items-center bg-white`}>
-      <ActivityIndicator size="large" color="#EC4899" />
-      <Text style={tw`mt-4 text-gray-600`}>Chargement des données...</Text>
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#6366F1" />
+      <Text style={styles.loadingText}>Chargement des données...</Text>
     </View>
   );
 
   if (error) return (
-    <View style={tw`flex-1 justify-center items-center bg-white p-4`}>
+    <View style={styles.errorContainer}>
       <Ionicons name="alert-circle" size={48} color="#EF4444" />
-      <Text style={tw`text-lg text-gray-800 mt-4 text-center`}>
-        Erreur lors du chargement des données du magasin
-      </Text>
+      <Text style={styles.errorText}>Erreur lors du chargement des données du magasin</Text>
       <TouchableOpacity
-        style={tw`mt-6 bg-pink-600 px-6 py-3 rounded-full`}
+        style={styles.retryButton}
         onPress={() => setError(false)}
       >
-        <Text style={tw`text-white font-medium`}>Réessayer</Text>
+        <Text style={styles.buttonText}>Réessayer</Text>
       </TouchableOpacity>
     </View>
   );
 
   return (
-    <ScrollView style={tw`bg-white`}>
+    <ScrollView style={styles.container}>
       {shopData && (
-        <View style={tw`pb-8`}>
+        <View style={styles.contentContainer}>
           {/* Header avec image */}
-          <View style={tw`relative`}>
+          <View style={styles.headerImageContainer}>
             <Image
               source={{ uri: `${apiUrl}/fetchshopImages/${shopData.shopImage}` }}
-              style={tw`w-full h-56`}
+              style={styles.headerImage}
               resizeMode="cover"
             />
             <TouchableOpacity
-              style={tw`absolute top-4 left-4 bg-black bg-opacity-50 rounded-full p-2`}
+              style={styles.backButton}
               onPress={() => props.navigation.goBack()}
             >
               <Ionicons name="arrow-back" size={24} color="white" />
@@ -85,35 +81,26 @@ const Consultshop = (props: any) => {
           </View>
 
           {/* Contenu principal */}
-          <View style={tw`px-5 -mt-6`}>
-            <View style={tw`bg-white rounded-2xl shadow-lg p-6`}>
+          <View style={styles.mainContent}>
+            <View style={styles.infoCard}>
               {/* Titre */}
-              <View style={tw`flex-row justify-between items-center mb-4`}>
-                <Text style={tw`text-2xl font-bold text-gray-900`}>
-                  {shopData.shop_nom}
-                </Text>
-                <View style={tw`flex-row items-center`}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.shopName}>{shopData.shop_nom}</Text>
+                <View style={styles.ratingContainer}>
                   <Ionicons name="star" size={20} color="#F59E0B" />
-                  <Text style={tw`ml-1 text-gray-700`}>4.8</Text>
+                  <Text style={styles.ratingText}>4.8</Text>
                 </View>
               </View>
 
               {/* Section informations */}
-              <View style={tw`mb-6`}>
-                <Text style={tw`text-lg font-semibold text-gray-800 mb-3`}>
-                  Informations du magasin
-                </Text>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Informations du magasin</Text>
 
                 {/* Champ Description */}
-                <View style={tw`mb-4`}>
-                  <Text style={tw`text-sm font-medium text-gray-500 mb-1`}>
-                    Description
-                  </Text>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Description</Text>
                   <TextInput
-                    style={[
-                      tw`p-3 bg-gray-50 rounded-xl text-gray-800`,
-                      isEditing && tw`bg-white border border-pink-200`
-                    ]}
+                    style={[styles.input, isEditing && styles.editableInput]}
                     value={shopData.shop_desc}
                     onChangeText={(text) =>
                       setShopData({ ...shopData, shop_desc: text })
@@ -125,22 +112,12 @@ const Consultshop = (props: any) => {
                 </View>
 
                 {/* Champ Localisation */}
-                <View style={tw`mb-4`}>
-                  <Text style={tw`text-sm font-medium text-gray-500 mb-1`}>
-                    Localisation
-                  </Text>
-                  <View style={tw`flex-row items-center`}>
-                    <Ionicons
-                      name="location-outline"
-                      size={18}
-                      color="#EC4899"
-                      style={tw`mr-2`}
-                    />
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Localisation</Text>
+                  <View style={styles.inputWithIcon}>
+                    <Ionicons name="location-outline" size={18} color="#6366F1" />
                     <TextInput
-                      style={[
-                        tw`flex-1 p-3 bg-gray-50 rounded-xl text-gray-800`,
-                        isEditing && tw`bg-white border border-pink-200`
-                      ]}
+                      style={[styles.input, isEditing && styles.editableInput]}
                       value={shopData.shop_local}
                       onChangeText={(text) =>
                         setShopData({ ...shopData, shop_local: text })
@@ -151,22 +128,12 @@ const Consultshop = (props: any) => {
                 </View>
 
                 {/* Champ Numéro de téléphone */}
-                <View style={tw`mb-4`}>
-                  <Text style={tw`text-sm font-medium text-gray-500 mb-1`}>
-                    Téléphone
-                  </Text>
-                  <View style={tw`flex-row items-center`}>
-                    <Ionicons
-                      name="call-outline"
-                      size={18}
-                      color="#EC4899"
-                      style={tw`mr-2`}
-                    />
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Téléphone</Text>
+                  <View style={styles.inputWithIcon}>
+                    <Ionicons name="call-outline" size={18} color="#6366F1" />
                     <TextInput
-                      style={[
-                        tw`flex-1 p-3 bg-gray-50 rounded-xl text-gray-800`,
-                        isEditing && tw`bg-white border border-pink-200`
-                      ]}
+                      style={[styles.input, isEditing && styles.editableInput]}
                       value={shopData.phone}
                       onChangeText={(text) =>
                         setShopData({ ...shopData, phone: text })
@@ -178,18 +145,13 @@ const Consultshop = (props: any) => {
                 </View>
 
                 {/* Horaires */}
-                <View style={tw`mb-6`}>
-                  <Text style={tw`text-sm font-medium text-gray-500 mb-2`}>
-                    Horaires d'ouverture
-                  </Text>
-                  <View style={tw`flex-row justify-between`}>
-                    <View style={tw`w-1/2 pr-2`}>
-                      <Text style={tw`text-xs text-gray-400 mb-1`}>Ouverture</Text>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Horaires d'ouverture</Text>
+                  <View style={styles.timeContainer}>
+                    <View style={styles.timeInput}>
+                      <Text style={styles.timeLabel}>Ouverture</Text>
                       <TextInput
-                        style={[
-                          tw`p-3 bg-gray-50 rounded-xl text-gray-800`,
-                          isEditing && tw`bg-white border border-pink-200`
-                        ]}
+                        style={[styles.input, isEditing && styles.editableInput]}
                         value={shopData.shop_date_ouv}
                         onChangeText={(text) =>
                           setShopData({ ...shopData, shop_date_ouv: text })
@@ -197,13 +159,10 @@ const Consultshop = (props: any) => {
                         editable={isEditing}
                       />
                     </View>
-                    <View style={tw`w-1/2 pl-2`}>
-                      <Text style={tw`text-xs text-gray-400 mb-1`}>Fermeture</Text>
+                    <View style={styles.timeInput}>
+                      <Text style={styles.timeLabel}>Fermeture</Text>
                       <TextInput
-                        style={[
-                          tw`p-3 bg-gray-50 rounded-xl text-gray-800`,
-                          isEditing && tw`bg-white border border-pink-200`
-                        ]}
+                        style={[styles.input, isEditing && styles.editableInput]}
                         value={shopData.shop_date_ferm}
                         onChangeText={(text) =>
                           setShopData({ ...shopData, shop_date_ferm: text })
@@ -216,53 +175,44 @@ const Consultshop = (props: any) => {
               </View>
 
               {/* Boutons d'action */}
-              <View style={tw`flex-row justify-between`}>
+              <View style={styles.buttonsContainer}>
                 <TouchableOpacity
-                  style={[
-                    tw`flex-1 py-3 rounded-xl items-center justify-center mr-2`,
-                    isEditing ? tw`bg-green-500` : tw`bg-pink-500`
-                  ]}
+                  style={[styles.button, isEditing ? styles.saveButton : styles.editButton]}
                   onPress={() => {
-                    if (isEditing) {
-                      handleSave();
-                    }
+                    if (isEditing) handleSave();
                     setIsEditing(!isEditing);
                   }}
                 >
-                  <View style={tw`flex-row items-center`}>
+                  <View style={styles.buttonContent}>
                     <Ionicons
                       name={isEditing ? "checkmark-circle" : "pencil"}
                       size={20}
                       color="white"
                     />
-                    <Text style={tw`text-white font-medium ml-2`}>
+                    <Text style={styles.buttonText}>
                       {isEditing ? "Enregistrer" : "Modifier"}
                     </Text>
                   </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={tw`flex-1 py-3 bg-black rounded-xl items-center justify-center ml-2`}
+                  style={[styles.button, styles.eventButton]}
                   onPress={handleCreateEvent}
                 >
-                  <View style={tw`flex-row items-center`}>
+                  <View style={styles.buttonContent}>
                     <Ionicons name="add-circle" size={20} color="white" />
-                    <Text style={tw`text-white font-medium ml-2`}>
-                      Évènement
-                    </Text>
+                    <Text style={styles.buttonText}>Évènement</Text>
                   </View>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
 
-          {/* Section supplémentaire (optionnelle) */}
-          <View style={tw`mt-6 px-5`}>
-            <Text style={tw`text-lg font-semibold text-gray-800 mb-3`}>
-              À propos
-            </Text>
-            <View style={tw`bg-gray-50 p-4 rounded-xl`}>
-              <Text style={tw`text-gray-600`}>
+          {/* Section supplémentaire */}
+          <View style={styles.aboutSection}>
+            <Text style={styles.sectionTitle}>À propos</Text>
+            <View style={styles.aboutCard}>
+              <Text style={styles.aboutText}>
                 Ce magasin propose une sélection de produits de qualité pour répondre à vos besoins.
               </Text>
             </View>
@@ -272,5 +222,191 @@ const Consultshop = (props: any) => {
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
+  contentContainer: {
+    paddingBottom: 24,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  loadingText: {
+    marginTop: 16,
+    color: '#64748B',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 24,
+  },
+  errorText: {
+    fontSize: 18,
+    color: '#1E293B',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 24,
+    backgroundColor: '#6366F1',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  headerImageContainer: {
+    position: 'relative',
+  },
+  headerImage: {
+    width: '100%',
+    height: 240,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 48,
+    left: 24,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 20,
+    padding: 8,
+  },
+  mainContent: {
+    paddingHorizontal: 16,
+    marginTop: -24,
+  },
+  infoCard: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  shopName: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1E293B',
+    flex: 1,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 16,
+  },
+  ratingText: {
+    marginLeft: 4,
+    color: '#64748B',
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1E293B',
+    marginBottom: 16,
+  },
+  inputGroup: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#64748B',
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: '#F1F5F9',
+    borderRadius: 12,
+    padding: 16,
+    color: '#1E293B',
+    fontSize: 16,
+  },
+  editableInput: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#E0E7FF',
+  },
+  inputWithIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F5F9',
+    borderRadius: 12,
+    paddingLeft: 16,
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  timeInput: {
+    width: '48%',
+  },
+  timeLabel: {
+    fontSize: 12,
+    color: '#94A3B8',
+    marginBottom: 4,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+  },
+  button: {
+    flex: 1,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  editButton: {
+    backgroundColor: '#6366F1',
+    marginRight: 8,
+  },
+  saveButton: {
+    backgroundColor: '#10B981',
+    marginRight: 8,
+  },
+  eventButton: {
+    backgroundColor: '#1E293B',
+    marginLeft: 8,
+  },
+  aboutSection: {
+    paddingHorizontal: 16,
+    marginTop: 24,
+  },
+  aboutCard: {
+    backgroundColor: '#F1F5F9',
+    borderRadius: 12,
+    padding: 16,
+  },
+  aboutText: {
+    color: '#64748B',
+    fontSize: 16,
+    lineHeight: 24,
+  },
+});
 
 export default Consultshop;

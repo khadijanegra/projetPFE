@@ -10,24 +10,28 @@ import {
   Animated,
   Alert,
   TouchableWithoutFeedback,
+  StyleSheet
 } from "react-native";
 import { Keyboard } from "react-native";
-import tw from "tailwind-react-native-classnames";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import axios from "axios";
+
 const apiUrl = process.env.API_URL;
 
-const formevent = (props: any) => {
-  // Couleurs personnalisées
+const FormEvent = (props: any) => {
+  // Couleurs modernes
   const colors = {
-    primary: "#000000",       // Noir
+    primary: "#4F46E5",       // Indigo
     secondary: "#FFFFFF",     // Blanc
-    accent: "#FFEBF1",       // Rose très clair
-    text: "#333333",         // Gris foncé
-    muted: "#888888",        // Gris moyen
-    border: "#E0E0E0"       // Gris clair pour bordures
+    background: "#F8FAFC",    // Fond très clair
+    accent: "#EC4899",        // Rose vif
+    textDark: "#1E293B",      // Gris très foncé
+    textMedium: "#64748B",    // Gris moyen
+    textLight: "#94A3B8",     // Gris clair
+    border: "#E2E8F0",        // Bordure claire
+    success: "#10B981"        // Vert
   };
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -87,7 +91,6 @@ const formevent = (props: any) => {
     }
   };
 
-  // Fonctions pour le date picker...
   const showStartDatePicker = () => setStartDatePickerVisibility(true);
   const hideStartDatePicker = () => setStartDatePickerVisibility(false);
   const showEndDatePicker = () => setEndDatePickerVisibility(true);
@@ -115,75 +118,61 @@ const formevent = (props: any) => {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: colors.secondary }} contentContainerStyle={tw`p-4`}>
-      <View style={[tw`p-6 rounded-3xl`, { backgroundColor: colors.accent }]}>
+    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+      <View style={styles.formContainer}>
         {/* Header */}
-        <View style={tw`items-center mb-8`}>
-          <Text style={[tw`text-3xl font-bold`, { color: colors.primary }]}>
-            𝐏𝐎𝐔𝐑 𝐕𝐎𝐓𝐑𝐄 𝐄́𝐕𝐄́𝐍𝐄𝐌𝐄𝐍𝐓
-          </Text>
-          <Text style={[tw`mt-2`, { color: colors.muted }]}>
-            Créez un événement mémorable 🎉💫
-          </Text>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Créez votre événement</Text>
+          <Text style={styles.headerSubtitle}>Rendez-le mémorable 🎉💫</Text>
         </View>
 
         {/* Basic Info Section */}
-        <View style={tw`mb-8`}>
-          <Text style={[tw`mb-4 text-xl font-bold`, { color: colors.primary }]}>
-            𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧𝐬 𝐩𝐫𝐢𝐧𝐜𝐢𝐩𝐚𝐥𝐞𝐬
-          </Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Informations principales</Text>
 
           {/* Event Title */}
-          <View style={[tw`flex-row items-center p-3 mb-4 rounded-xl`, 
-                       { backgroundColor: colors.secondary, borderWidth: 1, borderColor: colors.border }]}>
-            <Ionicons name="calendar" size={20} color={colors.primary} style={tw`mr-3`} />
+          <View style={styles.inputContainer}>
+            <Ionicons name="calendar" size={20} color={colors.primary} style={styles.inputIcon} />
             <TextInput
-              style={[tw`flex-1`, { color: colors.text }]}
+              style={styles.input}
               placeholder="Titre de l'événement"
-              placeholderTextColor={colors.muted}
+              placeholderTextColor={colors.textLight}
               value={titre}
               onChangeText={setTitle}
             />
           </View>
 
           {/* Description */}
-          <View style={[tw`p-3 mb-4 rounded-xl`, 
-                       { backgroundColor: colors.secondary, borderWidth: 1, borderColor: colors.border }]}>
+          <View style={[styles.inputContainer, { height: 120 }]}>
             <TextInput
-              style={[tw`h-32`, { color: colors.text }]}
+              style={[styles.input, { textAlignVertical: 'top' }]}
               multiline
               placeholder="Description détaillée..."
-              placeholderTextColor={colors.muted}
+              placeholderTextColor={colors.textLight}
               value={description}
               onChangeText={setDescription}
             />
           </View>
+        </View>
 
-          {/* Dates Section */}
-          <Text style={[tw`mb-4 text-xl font-bold`, { color: colors.primary }]}>
-            𝗗𝗮𝘁𝗲𝘀 𝗲𝘁 𝗵𝗼𝗿𝗮𝗶𝗿𝗲𝘀
-          </Text>
+        {/* Dates Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Dates et horaires</Text>
 
           <TouchableOpacity
-            style={[tw`flex-row items-center p-3 mb-4 rounded-xl`, 
-                   { backgroundColor: colors.secondary, borderWidth: 1, borderColor: colors.border }]}
+            style={styles.inputContainer}
             onPress={showStartDatePicker}
           >
-            <Ionicons name="time" size={20} color={colors.primary} style={tw`mr-3`} />
-            <Text style={{ color: colors.text }}>
-              {formatDate(date_debut)}
-            </Text>
+            <Ionicons name="time" size={20} color={colors.primary} style={styles.inputIcon} />
+            <Text style={styles.dateText}>{formatDate(date_debut)}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[tw`flex-row items-center p-3 mb-4 rounded-xl`, 
-                   { backgroundColor: colors.secondary, borderWidth: 1, borderColor: colors.border }]}
+            style={styles.inputContainer}
             onPress={showEndDatePicker}
           >
-            <Ionicons name="time" size={20} color={colors.primary} style={tw`mr-3`} />
-            <Text style={{ color: colors.text }}>
-              {formatDate(date_fin)}
-            </Text>
+            <Ionicons name="time" size={20} color={colors.primary} style={styles.inputIcon} />
+            <Text style={styles.dateText}>{formatDate(date_fin)}</Text>
           </TouchableOpacity>
 
           <DateTimePickerModal
@@ -199,104 +188,89 @@ const formevent = (props: any) => {
             onConfirm={handleEndDateConfirm}
             onCancel={hideEndDatePicker}
           />
+        </View>
 
-          {/* Price */}
-          <View style={[tw`flex-row items-center p-3 mb-4 rounded-xl`, 
-                       { backgroundColor: colors.secondary, borderWidth: 1, borderColor: colors.border }]}>
-            <FontAwesome name="money" size={20} color={colors.primary} style={tw`mr-3`} />
+        {/* Price Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Tarification</Text>
+          <View style={styles.inputContainer}>
+            <FontAwesome name="money" size={20} color={colors.primary} style={styles.inputIcon} />
             <TextInput
-              style={[tw`flex-1`, { color: colors.text }]}
+              style={styles.input}
               placeholder="Prix (€)"
-              placeholderTextColor={colors.muted}
+              placeholderTextColor={colors.textLight}
               keyboardType="numeric"
               value={prix}
               onChangeText={setPrice}
             />
           </View>
+        </View>
 
-          {/* Places Limit */}
-          <View style={tw`mb-4`}>
-            <Text style={{ color: colors.text }}>Nombre de places</Text>
-            <View style={tw`flex-row items-center mb-2`}>
-              <TouchableOpacity
-                style={tw`mr-4 flex-row items-center`}
-                onPress={() => setPlaceLimit(false)}
-              >
-                <View style={[tw`w-5 h-5 rounded-full mr-2 items-center justify-center`, 
-                            { borderWidth: 1, borderColor: colors.muted }]}>
-                  {!limite && <View style={[tw`w-3 h-3 rounded-full`, { backgroundColor: colors.primary }]} />}
-                </View>
-                <Text style={{ color: colors.text }}>Non limité</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={tw`flex-row items-center`}
-                onPress={() => setPlaceLimit(true)}
-              >
-                <View style={[tw`w-5 h-5 rounded-full mr-2 items-center justify-center`, 
-                            { borderWidth: 1, borderColor: colors.muted }]}>
-                  {limite && <View style={[tw`w-3 h-3 rounded-full`, { backgroundColor: colors.primary }]} />}
-                </View>
-                <Text style={{ color: colors.text }}>Limité</Text>
-              </TouchableOpacity>
-            </View>
-
-            {limite && (
-              <View style={[tw`flex-row items-center p-3 rounded-xl`, 
-                          { backgroundColor: colors.secondary, borderWidth: 1, borderColor: colors.border }]}>
-                <Ionicons name="people" size={20} color={colors.primary} style={tw`mr-3`} />
-                <TextInput
-                  style={[tw`flex-1`, { color: colors.text }]}
-                  placeholder="Nombre maximum de places"
-                  placeholderTextColor={colors.muted}
-                  keyboardType="numeric"
-                  value={nbr_place}
-                  onChangeText={setMaxPlaces}
-                />
+        {/* Places Limit Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Places disponibles</Text>
+          <View style={styles.radioGroup}>
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => setPlaceLimit(false)}
+            >
+              <View style={styles.radioCircle}>
+                {!limite && <View style={styles.radioSelected} />}
               </View>
-            )}
+              <Text style={styles.radioLabel}>Non limité</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.radioOption}
+              onPress={() => setPlaceLimit(true)}
+            >
+              <View style={styles.radioCircle}>
+                {limite && <View style={styles.radioSelected} />}
+              </View>
+              <Text style={styles.radioLabel}>Limité</Text>
+            </TouchableOpacity>
           </View>
+
+          {limite && (
+            <View style={styles.inputContainer}>
+              <Ionicons name="people" size={20} color={colors.primary} style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Nombre maximum de places"
+                placeholderTextColor={colors.textLight}
+                keyboardType="numeric"
+                value={nbr_place}
+                onChangeText={setMaxPlaces}
+              />
+            </View>
+          )}
         </View>
 
         {/* Submit Button */}
         <TouchableOpacity 
           onPress={handleSubmit}
-          style={[tw`p-4 rounded-xl`, { backgroundColor: colors.primary }]}
+          style={styles.submitButton}
         >
-          <Text style={[tw`text-lg font-bold text-center`, { color: colors.secondary }]}>
-            CRÉER L'ÉVÉNEMENT
-          </Text>
+          <Text style={styles.submitButtonText}>CRÉER L'ÉVÉNEMENT</Text>
         </TouchableOpacity>
 
         {/* Success Modal */}
         <Modal animationType="fade" transparent={true} visible={modalVisible}>
-          <View style={[tw`items-center justify-end flex-1`, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+          <View style={styles.modalOverlay}>
             <Animated.View
-              style={[
-                tw`items-center w-full p-8 rounded-t-3xl`,
-                { 
-                  transform: [{ translateY: slideAnim }],
-                  backgroundColor: colors.secondary
-                },
-              ]}
+              style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}
             >
               <Image
                 source={require("../../images/Illustration.png")}
-                style={tw`w-40 h-40 mb-4 rounded-full`}
+                style={styles.modalImage}
               />
-              <Text style={[tw`mb-2 text-2xl font-bold`, { color: colors.primary }]}>
-                Félicitations !
-              </Text>
-              <Text style={[tw`mb-6 text-center`, { color: colors.muted }]}>
-                Votre événement a été créé avec succès !
-              </Text>
+              <Text style={styles.modalTitle}>Félicitations !</Text>
+              <Text style={styles.modalText}>Votre événement a été créé avec succès !</Text>
               <TouchableOpacity
-                style={[tw`px-12 py-4 rounded-full`, { backgroundColor: colors.primary }]}
+                style={styles.modalButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={[tw`text-xl font-bold`, { color: colors.secondary }]}>
-                  Confirmer
-                </Text>
+                <Text style={styles.modalButtonText}>Confirmer</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -306,4 +280,154 @@ const formevent = (props: any) => {
   );
 };
 
-export default formevent;
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+  },
+  formContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1E293B',
+    marginBottom: 8,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: '#64748B',
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1E293B',
+    marginBottom: 16,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  inputIcon: {
+    marginRight: 12,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#1E293B',
+  },
+  dateText: {
+    flex: 1,
+    fontSize: 16,
+    color: '#1E293B',
+  },
+  radioGroup: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  radioOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 24,
+  },
+  radioCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#94A3B8',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
+  radioSelected: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#4F46E5',
+  },
+  radioLabel: {
+    fontSize: 16,
+    color: '#1E293B',
+  },
+  submitButton: {
+    backgroundColor: '#4F46E5',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#4F46E5',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: 160,
+    height: 160,
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1E293B',
+    marginBottom: 8,
+  },
+  modalText: {
+    fontSize: 16,
+    color: '#64748B',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: '#4F46E5',
+    borderRadius: 12,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+});
+
+export default FormEvent;
