@@ -438,7 +438,7 @@ const ProfilShop = (props: any) => {
         </View>
 
         {/* Boutons Avis */}
-        <View style={tw`flex-row justify-between mt-4`}>
+        <View style={tw`flex-row justify-between mt-4 mb-10`}>
           <TouchableOpacity
             style={[styles.outlineButton, { flex: 1, marginRight: 8 }]}
             onPress={goToReviewShop}

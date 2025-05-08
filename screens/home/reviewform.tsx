@@ -300,6 +300,7 @@ const Reviewform = (props: any) => {
         locationshop.longitude
       );
       setIsNearby(distance <= 8000000000000);
+      console.log("Distance que tu as par rapport :", distance);
     }
   }, [location, locationshop]);
 
