@@ -26,6 +26,7 @@ import LocationsMap from "screens/home/allshopsinmaps"
 import EventForm from "screens/home/formevent";
 import commande from "screens/home/commande";
 import OrderScreen from "screens/home/order";
+import PaymentScreen from "screens/home/payment";
 const Stack = createStackNavigator();
 
 export default function Root() {
@@ -55,6 +56,7 @@ export default function Root() {
       <Stack.Screen name="formevent" component={EventForm}/>
       <Stack.Screen name="commande" component={commande}/>
       <Stack.Screen name="order" component={OrderScreen}/>
+      <Stack.Screen name="payement" component={PaymentScreen}/>
       
 
     </Stack.Navigator> 

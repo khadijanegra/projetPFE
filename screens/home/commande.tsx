@@ -73,6 +73,11 @@ const OrderPage = (props: any) => {
       random_code: Math.floor(100000 + Math.random() * 900000).toString(),
     };
 
+     const navigateTopayement = () => {
+    props.navigation.navigate("payment");
+  };
+
+
     console.log('Données de la commande:', orderData);
 
     try {
@@ -91,7 +96,10 @@ const OrderPage = (props: any) => {
                   [
                     {
                       text: 'Oui',
-                      onPress: () => console.log('Paiement en ligne choisi'),
+                      onPress: () => {
+                        navigateTopayement();
+                        console.log('Paiement en ligne choisi');
+                      },
                     },
                     {
                       text: 'Non',
@@ -135,6 +143,7 @@ const OrderPage = (props: any) => {
     })));
   };
 
+
   const groupedMenuItems = menuItems.reduce<GroupedMenuItems>((acc, item) => {
     if (!acc[item.category]) {
       acc[item.category] = [];
@@ -142,6 +151,8 @@ const OrderPage = (props: any) => {
     acc[item.category].push(item);
     return acc;
   }, {});
+
+  
 
   return (
     <View style={tw`flex-1 bg-gray-50`}>
