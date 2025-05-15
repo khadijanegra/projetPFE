@@ -56,7 +56,7 @@ export default function Root() {
       <Stack.Screen name="formevent" component={EventForm}/>
       <Stack.Screen name="commande" component={commande}/>
       <Stack.Screen name="order" component={OrderScreen}/>
-      <Stack.Screen name="payement" component={PaymentScreen}/>
+      <Stack.Screen name="payment" component={PaymentScreen}/>
       
 
     </Stack.Navigator> 

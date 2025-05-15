@@ -74,7 +74,7 @@ const OrderPage = (props: any) => {
     };
 
      const navigateTopayement = () => {
-    props.navigation.navigate("payment");
+    props.navigation.navigate('payment');
   };
 
 
