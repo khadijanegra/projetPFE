@@ -38,7 +38,6 @@ export default function Login(props: any) {
       });
 
       if (response.data.token) {
-        Alert.alert("Succès", "Connexion réussie !");
         setId(response.data.id);
         setTimeout(() => {
           props.navigation.navigate("acceuilpage", { id: response.data.id });

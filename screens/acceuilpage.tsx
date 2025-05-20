@@ -18,8 +18,12 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Card } from "react-native-paper";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+  import { Alert } from "react-native";  // Import Alert
+import CustomAlert from "./costurmalerte";
 
 const apiUrl = process.env.API_URL;
+const apiUrlpython = process.env.FLASK_API_URL
+
 const { width } = Dimensions.get("window");
 
 const AcceuilPage = (props: any) => {
@@ -32,6 +36,85 @@ const AcceuilPage = (props: any) => {
   const [searchResults, setSearchResults] = useState([]);
   const [reviews, setReviews] = useState({});
   const menuAnimation = useState(new Animated.Value(-300))[0];
+const [user_id, setUser_id] = useState<string | null>(null);
+  const [recommendedShops, setRecommendedShops] = useState<string[]>([]);
+  const [shopsDetails, setShopsDetails] = useState<any[]>([]);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+
+
+  // Récupère user_id depuis les params
+  useEffect(() => {
+    if (props.route.params?.id) {
+      setUser_id(props.route.params.id);
+    }
+  }, [props.route.params?.id]);
+
+  // Récupère les recommandations à partir du user_id
+  const fetchRecommendations = async () => {
+    if (!user_id) return;
+
+    try {
+      const data = await getRecommendations(user_id);
+      setRecommendedShops(data.recommandations); // supposé être un tableau d'IDs
+    } catch (error) {
+      Alert.alert("Erreur", "Erreur lors de la récupération des recommandations");
+    }
+  };
+
+  // Quand user_id est disponible, lance la récupération
+  useEffect(() => {
+    if (user_id) {
+      fetchRecommendations();
+    }
+  }, [user_id]);
+
+  // Dès qu'on a la liste des shops recommandés, récupère les détails
+  useEffect(() => {
+    if (recommendedShops.length > 0) {
+      Promise.all(recommendedShops.map(id => getShopById(id)))
+        .then(results => {
+          setShopsDetails(results.filter(shop => shop !== null));
+        });
+    }
+  }, [recommendedShops]);
+
+  // Quand les détails sont prêts, affiche une alerte avec les noms
+  useEffect(() => {
+  if (shopsDetails.length > 0) {
+    const recommandationsText = shopsDetails
+      .map((shop, index) => `⭐ ${shop.shop_nom || "Nom inconnu"}`)
+      .join('\n');
+
+    setAlertTitle("🎯 Recommandations pour vous !");
+    setAlertMessage(recommandationsText || "Aucune recommandation");
+    setAlertVisible(true);
+  }
+}, [shopsDetails]);
+  // Fonctions API
+
+  async function getRecommendations(user_id: string) {
+    try {
+      const response = await axios.get(`${apiUrl}/api/recommend`, {
+        params: { user_id }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erreur Flask API :', error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+  async function getShopById(id: string) {
+    try {
+      const response = await axios.get(`${apiUrl}/shops/${id}`);
+      return response.data; // doit contenir au minimum un champ "name"
+    } catch (error) {
+      console.error(`Erreur en récupérant le shop ${id} :`, error);
+      return null;
+    }
+  }
 
   useEffect(() => {
     Animated.timing(menuAnimation, {
@@ -156,6 +239,17 @@ const AcceuilPage = (props: any) => {
 
   return (
     <View style={[tw`flex-1`, { backgroundColor: 'white' }]}>
+
+     <View style={{ flex: 1 }}>
+      {/* Ton UI habituel ici */}
+
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        onClose={() => setAlertVisible(false)}
+      />
+    </View>
       {/* Menu Overlay */}
       {isMenuOpen && (
         <TouchableWithoutFeedback onPress={() => setIsMenuOpen(false)}>
@@ -194,7 +288,7 @@ const AcceuilPage = (props: any) => {
       )}
 
       {/* Main Content */}
-      <View style={tw`flex-1`}>
+      <View >
         {/* Header */}
         <View style={tw`flex-row justify-between items-center p-4 bg-indigo-600`}>
           <TouchableOpacity
