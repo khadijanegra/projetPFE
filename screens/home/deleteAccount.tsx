@@ -12,41 +12,61 @@ import {
 import tw from "tailwind-react-native-classnames";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from '@react-navigation/native';  
+const apiUrl = process.env.API_URL;
+
 
 export default function DeleteAccount(props: any) {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigation = useNavigation();
+  const [user_id, setUserId] = useState();
+
+  React.useEffect(() => {
+    if (props?.route?.params?.user_id) {
+      setUserId(props.route.params.user_id);
+    }
+  }, []);
 
   const handleDeleteAccount = () => {
     if (!password) {
       Alert.alert("Champ requis", "Veuillez entrer votre mot de passe pour confirmer.");
       return;
     }
-
-    setIsSubmitting(true);
-
+    if (!user_id) {
+      Alert.alert("Erreur", "Identifiant de l'utilisateur non chargé.");
+      return;
+    }
+  
     Alert.alert(
       "Confirmer la suppression",
       "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.",
       [
-        {
-          text: "Annuler",
-          style: "cancel",
-          onPress: () => setIsSubmitting(false)
-        },
+        { text: "Annuler", style: "cancel" },
         {
           text: "Supprimer",
           style: "destructive",
-          onPress: () => {
-            setTimeout(() => {
+          onPress: async () => {
+            setIsSubmitting(true);
+            try {
+              const response = await fetch(`${apiUrl}/user/deletuser/${user_id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                Alert.alert("Compte supprimé", data.message, [
+                   { text: "OK", onPress: () => props.navigation.navigate("firstpage") }
+                 ]);
+              } else {
+                Alert.alert("Erreur", data.message || "Impossible de supprimer le compte.");
+              }
+            } catch (error) {
+              Alert.alert("Erreur réseau", error?.message);
+            } finally {
               setIsSubmitting(false);
-              Alert.alert(
-                "Compte supprimé",
-                "Votre compte a été supprimé avec succès.",
-                [{ text: "OK", onPress: () => props.navigation.navigate("firstpage") }]
-              );
-            }, 1500);
+            }
           }
         }
       ]
