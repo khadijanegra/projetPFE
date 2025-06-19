@@ -13,6 +13,9 @@ const UserProfile = (props: any) => {
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarType>("homme");
   const apiUrl = process.env.API_URL;
   const [isEditing, setIsEditing] = useState(false);
+  const [newNom, setNewNom] = useState("");
+const [newPrenom, setNewPrenom] = useState("");
+
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -21,6 +24,9 @@ const UserProfile = (props: any) => {
       setName(userData.nom);
       setPrenom(userData.prenom);
       setEmail(userData.email);
+      setNewNom(userData.nom);         // pour pré-remplir les champs modifiables
+      setNewPrenom(userData.prenom);
+
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -41,8 +47,11 @@ const UserProfile = (props: any) => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`${apiUrl}/user/users/${props.route.params.id}/nom`, { nom: name });
-      await axios.put(`${apiUrl}/user/users/${props.route.params.id}/prenom`, { prenom: prenom });
+    await axios.put(`${apiUrl}/user/users/${props.route.params.id}/nom`, { nom: newNom });
+await axios.put(`${apiUrl}/user/users/${props.route.params.id}/prenom`, { prenom: newPrenom });
+setName(newNom);
+setPrenom(newPrenom);
+
       alert("Modifications enregistrées !");
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
@@ -107,9 +116,9 @@ const UserProfile = (props: any) => {
             <Ionicons name="person-outline" size={20} color="#64748B" style={styles.inputIcon} />
             <TextInput
               style={[styles.input, !isEditing && styles.inputDisabled]}
-              value={name}
-              onChangeText={setName}
-              editable={isEditing}
+             value={newNom}
+  onChangeText={setNewNom}
+  editable={isEditing}
               placeholder="Votre nom"
             />
           </View>
@@ -121,9 +130,9 @@ const UserProfile = (props: any) => {
             <Ionicons name="person-outline" size={20} color="#64748B" style={styles.inputIcon} />
             <TextInput
               style={[styles.input, !isEditing && styles.inputDisabled]}
-              value={prenom}
-              onChangeText={setPrenom}
-              editable={isEditing}
+              value={newPrenom}
+  onChangeText={setNewPrenom}
+  editable={isEditing}
               placeholder="Votre prénom"
             />
           </View>
