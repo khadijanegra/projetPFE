@@ -122,7 +122,7 @@ const OrderScreen: React.FC = () => {
                 #{order.random_code}
               </Text>
               <Text style={tw`text-xl font-black text-indigo-900`}>
-                👤 {order.user_id.nom} {order.user_id.prenom}
+                👤{order.user_id ? `${order.user_id.nom} ${order.user_id.prenom}` : 'Utilisateur inconnu'}
               </Text>
             </View>
             <View
